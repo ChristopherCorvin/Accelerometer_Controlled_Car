@@ -1,0 +1,8 @@
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/CortexM0/ARM_GCC_493/Debug/CyBootAsmGnu.o : D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyBootAsmGnu.s D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cydevicegnu_trm.inc D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfittergnu.inc 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyBootAsmGnu.s : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cydevicegnu_trm.inc : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfittergnu.inc : 
+

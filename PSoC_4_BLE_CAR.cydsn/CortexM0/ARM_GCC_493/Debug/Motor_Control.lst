@@ -1,0 +1,807 @@
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"Motor_Control.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.UpdateMotor,"ax",%progbits
+  18              		.align	2
+  19              		.global	UpdateMotor
+  20              		.code	16
+  21              		.thumb_func
+  22              		.type	UpdateMotor, %function
+  23              	UpdateMotor:
+  24              	.LFB37:
+  25              		.file 1 ".\\Motor_Control.c"
+   1:.\Motor_Control.c **** /*******************************************************************************
+   2:.\Motor_Control.c **** * File Name: Motor_Control.c
+   3:.\Motor_Control.c **** *
+   4:.\Motor_Control.c **** * Description:
+   5:.\Motor_Control.c **** *  This is the source file for handling the Motor Control
+   6:.\Motor_Control.c **** *
+   7:.\Motor_Control.c **** ********************************************************************************
+   8:.\Motor_Control.c **** * Copyright 2015, Cypress Semiconductor Corporation. All rights reserved.
+   9:.\Motor_Control.c **** * This software is owned by Cypress Semiconductor Corporation and is protected
+  10:.\Motor_Control.c **** * by and subject to worldwide patent and copyright laws and treaties.
+  11:.\Motor_Control.c **** * Therefore, you may use this software only as provided in the license agreement
+  12:.\Motor_Control.c **** * accompanying the software package from which you obtained this software.
+  13:.\Motor_Control.c **** * CYPRESS AND ITS SUPPLIERS MAKE NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  14:.\Motor_Control.c **** * WITH REGARD TO THIS SOFTWARE, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT,
+  15:.\Motor_Control.c **** * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  16:.\Motor_Control.c **** *******************************************************************************/
+  17:.\Motor_Control.c **** 
+  18:.\Motor_Control.c **** #include "Motor_Control.h"
+  19:.\Motor_Control.c **** 
+  20:.\Motor_Control.c **** 
+  21:.\Motor_Control.c **** /*******************************************************************************
+  22:.\Motor_Control.c **** * Function Name:   UpdateMotor
+  23:.\Motor_Control.c **** ********************************************************************************
+  24:.\Motor_Control.c **** *
+  25:.\Motor_Control.c **** * Summary:
+  26:.\Motor_Control.c **** *  This function controls the Motor Direction based on the command received.
+  27:.\Motor_Control.c **** *
+  28:.\Motor_Control.c **** * Parameters:
+  29:.\Motor_Control.c **** *  Motor_Command: Command for controlling Motor Direction .
+  30:.\Motor_Control.c **** *
+  31:.\Motor_Control.c **** * Return:
+  32:.\Motor_Control.c **** *  None.
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 2
+
+
+  33:.\Motor_Control.c **** *
+  34:.\Motor_Control.c **** *******************************************************************************/
+  35:.\Motor_Control.c **** 
+  36:.\Motor_Control.c **** void UpdateMotor(uint8 Motor_Command)
+  37:.\Motor_Control.c **** {
+  26              		.loc 1 37 0
+  27              		.cfi_startproc
+  28 0000 80B5     		push	{r7, lr}
+  29              		.cfi_def_cfa_offset 8
+  30              		.cfi_offset 7, -8
+  31              		.cfi_offset 14, -4
+  32 0002 82B0     		sub	sp, sp, #8
+  33              		.cfi_def_cfa_offset 16
+  34 0004 00AF     		add	r7, sp, #0
+  35              		.cfi_def_cfa_register 7
+  36 0006 021C     		mov	r2, r0
+  37 0008 FB1D     		add	r3, r7, #7
+  38 000a 1A70     		strb	r2, [r3]
+  38:.\Motor_Control.c **** 	switch(Motor_Command)
+  39              		.loc 1 38 0
+  40 000c FB1D     		add	r3, r7, #7
+  41 000e 1B78     		ldrb	r3, [r3]
+  42 0010 4C3B     		sub	r3, r3, #76
+  43 0012 272B     		cmp	r3, #39
+  44 0014 45D8     		bhi	.L2
+  45 0016 9A00     		lsl	r2, r3, #2
+  46 0018 264B     		ldr	r3, .L10
+  47 001a D318     		add	r3, r2, r3
+  48 001c 1B68     		ldr	r3, [r3]
+  49 001e 9F46     		mov	pc, r3
+  50              		.section	.rodata
+  51              		.align	2
+  52              	.L4:
+  53 0000 58000000 		.word	.L3
+  54 0004 A2000000 		.word	.L2
+  55 0008 A2000000 		.word	.L2
+  56 000c A2000000 		.word	.L2
+  57 0010 A2000000 		.word	.L2
+  58 0014 A2000000 		.word	.L2
+  59 0018 76000000 		.word	.L5
+  60 001c A2000000 		.word	.L2
+  61 0020 A2000000 		.word	.L2
+  62 0024 A2000000 		.word	.L2
+  63 0028 A2000000 		.word	.L2
+  64 002c A2000000 		.word	.L2
+  65 0030 A2000000 		.word	.L2
+  66 0034 A2000000 		.word	.L2
+  67 0038 A2000000 		.word	.L2
+  68 003c A2000000 		.word	.L2
+  69 0040 A2000000 		.word	.L2
+  70 0044 A2000000 		.word	.L2
+  71 0048 A2000000 		.word	.L2
+  72 004c A2000000 		.word	.L2
+  73 0050 A2000000 		.word	.L2
+  74 0054 A2000000 		.word	.L2
+  75 0058 3A000000 		.word	.L6
+  76 005c A2000000 		.word	.L2
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 3
+
+
+  77 0060 A2000000 		.word	.L2
+  78 0064 A2000000 		.word	.L2
+  79 0068 A2000000 		.word	.L2
+  80 006c A2000000 		.word	.L2
+  81 0070 A2000000 		.word	.L2
+  82 0074 A2000000 		.word	.L2
+  83 0078 A2000000 		.word	.L2
+  84 007c A2000000 		.word	.L2
+  85 0080 A2000000 		.word	.L2
+  86 0084 A2000000 		.word	.L2
+  87 0088 A2000000 		.word	.L2
+  88 008c A2000000 		.word	.L2
+  89 0090 94000000 		.word	.L7
+  90 0094 A2000000 		.word	.L2
+  91 0098 A2000000 		.word	.L2
+  92 009c 20000000 		.word	.L8
+  93              		.section	.text.UpdateMotor
+  94              	.L8:
+  95              	.LBB2:
+  39:.\Motor_Control.c **** 	{
+  40:.\Motor_Control.c **** 		/* These commands are pre-defined. The accelerometer server
+  41:.\Motor_Control.c **** 		sends the same commands based on the direction of acceleration.
+  42:.\Motor_Control.c **** 		These commands are then used to control the motor */
+  43:.\Motor_Control.c **** 		
+  44:.\Motor_Control.c **** 		case FORWARD: 
+  45:.\Motor_Control.c **** 					Control_Reg_Motor_1_Write(FRONT);
+  96              		.loc 1 45 0
+  97 0020 0220     		mov	r0, #2
+  98 0022 FFF7FEFF 		bl	Control_Reg_Motor_1_Write
+  46:.\Motor_Control.c **** 					PWM_Motor_1_Start();
+  99              		.loc 1 46 0
+ 100 0026 FFF7FEFF 		bl	PWM_Motor_1_Start
+  47:.\Motor_Control.c **** 					Control_Reg_Motor_2_Write(FRONT);
+ 101              		.loc 1 47 0
+ 102 002a 0220     		mov	r0, #2
+ 103 002c FFF7FEFF 		bl	Control_Reg_Motor_2_Write
+  48:.\Motor_Control.c **** 					PWM_Motor_2_Start();
+ 104              		.loc 1 48 0
+ 105 0030 FFF7FEFF 		bl	PWM_Motor_2_Start
+  49:.\Motor_Control.c **** 					Clock_PWM_Start();
+ 106              		.loc 1 49 0
+ 107 0034 FFF7FEFF 		bl	Clock_PWM_Start
+  50:.\Motor_Control.c **** 					break;
+ 108              		.loc 1 50 0
+ 109 0038 39E0     		b	.L1
+ 110              	.L6:
+  51:.\Motor_Control.c **** 					
+  52:.\Motor_Control.c **** 		case REVERSE:
+  53:.\Motor_Control.c **** 					Clock_PWM_Stop();
+ 111              		.loc 1 53 0
+ 112 003a FFF7FEFF 		bl	Clock_PWM_Stop
+  54:.\Motor_Control.c **** 					Control_Reg_Motor_1_Write(REAR);
+ 113              		.loc 1 54 0
+ 114 003e 0120     		mov	r0, #1
+ 115 0040 FFF7FEFF 		bl	Control_Reg_Motor_1_Write
+  55:.\Motor_Control.c **** 					PWM_Motor_1_Start();
+ 116              		.loc 1 55 0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 4
+
+
+ 117 0044 FFF7FEFF 		bl	PWM_Motor_1_Start
+  56:.\Motor_Control.c **** 					Control_Reg_Motor_2_Write(REAR);
+ 118              		.loc 1 56 0
+ 119 0048 0120     		mov	r0, #1
+ 120 004a FFF7FEFF 		bl	Control_Reg_Motor_2_Write
+  57:.\Motor_Control.c **** 					PWM_Motor_2_Start();
+ 121              		.loc 1 57 0
+ 122 004e FFF7FEFF 		bl	PWM_Motor_2_Start
+  58:.\Motor_Control.c **** 					Clock_PWM_Start();
+ 123              		.loc 1 58 0
+ 124 0052 FFF7FEFF 		bl	Clock_PWM_Start
+  59:.\Motor_Control.c **** 					break;
+ 125              		.loc 1 59 0
+ 126 0056 2AE0     		b	.L1
+ 127              	.L3:
+  60:.\Motor_Control.c **** 		
+  61:.\Motor_Control.c **** 		case LEFT:
+  62:.\Motor_Control.c **** 					Clock_PWM_Stop();
+ 128              		.loc 1 62 0
+ 129 0058 FFF7FEFF 		bl	Clock_PWM_Stop
+  63:.\Motor_Control.c **** 					Control_Reg_Motor_1_Write(REAR);
+ 130              		.loc 1 63 0
+ 131 005c 0120     		mov	r0, #1
+ 132 005e FFF7FEFF 		bl	Control_Reg_Motor_1_Write
+  64:.\Motor_Control.c **** 					PWM_Motor_1_Start();
+ 133              		.loc 1 64 0
+ 134 0062 FFF7FEFF 		bl	PWM_Motor_1_Start
+  65:.\Motor_Control.c **** 					Control_Reg_Motor_2_Write(FRONT);
+ 135              		.loc 1 65 0
+ 136 0066 0220     		mov	r0, #2
+ 137 0068 FFF7FEFF 		bl	Control_Reg_Motor_2_Write
+  66:.\Motor_Control.c **** 					PWM_Motor_2_Start();
+ 138              		.loc 1 66 0
+ 139 006c FFF7FEFF 		bl	PWM_Motor_2_Start
+  67:.\Motor_Control.c **** 					Clock_PWM_Start();
+ 140              		.loc 1 67 0
+ 141 0070 FFF7FEFF 		bl	Clock_PWM_Start
+  68:.\Motor_Control.c **** 					break;
+ 142              		.loc 1 68 0
+ 143 0074 1BE0     		b	.L1
+ 144              	.L5:
+  69:.\Motor_Control.c **** 					
+  70:.\Motor_Control.c **** 		case RIGHT:
+  71:.\Motor_Control.c **** 					Clock_PWM_Stop();
+ 145              		.loc 1 71 0
+ 146 0076 FFF7FEFF 		bl	Clock_PWM_Stop
+  72:.\Motor_Control.c **** 					Control_Reg_Motor_1_Write(FRONT);
+ 147              		.loc 1 72 0
+ 148 007a 0220     		mov	r0, #2
+ 149 007c FFF7FEFF 		bl	Control_Reg_Motor_1_Write
+  73:.\Motor_Control.c **** 					PWM_Motor_1_Start();
+ 150              		.loc 1 73 0
+ 151 0080 FFF7FEFF 		bl	PWM_Motor_1_Start
+  74:.\Motor_Control.c **** 					Control_Reg_Motor_2_Write(REAR);
+ 152              		.loc 1 74 0
+ 153 0084 0120     		mov	r0, #1
+ 154 0086 FFF7FEFF 		bl	Control_Reg_Motor_2_Write
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 5
+
+
+  75:.\Motor_Control.c **** 					PWM_Motor_2_Start();
+ 155              		.loc 1 75 0
+ 156 008a FFF7FEFF 		bl	PWM_Motor_2_Start
+  76:.\Motor_Control.c **** 					Clock_PWM_Start();
+ 157              		.loc 1 76 0
+ 158 008e FFF7FEFF 		bl	Clock_PWM_Start
+  77:.\Motor_Control.c **** 					break;
+ 159              		.loc 1 77 0
+ 160 0092 0CE0     		b	.L1
+ 161              	.L7:
+  78:.\Motor_Control.c **** 					
+  79:.\Motor_Control.c **** 		case STOP:
+  80:.\Motor_Control.c **** 					PWM_Motor_1_Stop();
+ 162              		.loc 1 80 0
+ 163 0094 FFF7FEFF 		bl	PWM_Motor_1_Stop
+  81:.\Motor_Control.c **** 					PWM_Motor_2_Stop();
+ 164              		.loc 1 81 0
+ 165 0098 FFF7FEFF 		bl	PWM_Motor_2_Stop
+  82:.\Motor_Control.c **** 					Clock_PWM_Stop();
+ 166              		.loc 1 82 0
+ 167 009c FFF7FEFF 		bl	Clock_PWM_Stop
+  83:.\Motor_Control.c **** 					break;
+ 168              		.loc 1 83 0
+ 169 00a0 05E0     		b	.L1
+ 170              	.L2:
+  84:.\Motor_Control.c **** 					
+  85:.\Motor_Control.c **** 		
+  86:.\Motor_Control.c **** 		default:
+  87:.\Motor_Control.c **** 					PWM_Motor_1_Stop();
+ 171              		.loc 1 87 0
+ 172 00a2 FFF7FEFF 		bl	PWM_Motor_1_Stop
+  88:.\Motor_Control.c **** 					PWM_Motor_2_Stop();
+ 173              		.loc 1 88 0
+ 174 00a6 FFF7FEFF 		bl	PWM_Motor_2_Stop
+  89:.\Motor_Control.c **** 					Clock_PWM_Stop();
+ 175              		.loc 1 89 0
+ 176 00aa FFF7FEFF 		bl	Clock_PWM_Stop
+ 177              	.L1:
+ 178              	.LBE2:
+  90:.\Motor_Control.c **** 		
+  91:.\Motor_Control.c **** 	}
+  92:.\Motor_Control.c **** }
+ 179              		.loc 1 92 0
+ 180 00ae BD46     		mov	sp, r7
+ 181 00b0 02B0     		add	sp, sp, #8
+ 182              		@ sp needed
+ 183 00b2 80BD     		pop	{r7, pc}
+ 184              	.L11:
+ 185              		.align	2
+ 186              	.L10:
+ 187 00b4 00000000 		.word	.L4
+ 188              		.cfi_endproc
+ 189              	.LFE37:
+ 190              		.size	UpdateMotor, .-UpdateMotor
+ 191              		.text
+ 192              	.Letext0:
+ 193              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 6
+
+
+ 194              		.section	.debug_info,"",%progbits
+ 195              	.Ldebug_info0:
+ 196 0000 3E010000 		.4byte	0x13e
+ 197 0004 0400     		.2byte	0x4
+ 198 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 199 000a 04       		.byte	0x4
+ 200 000b 01       		.uleb128 0x1
+ 201 000c 0E000000 		.4byte	.LASF20
+ 202 0010 01       		.byte	0x1
+ 203 0011 58010000 		.4byte	.LASF21
+ 204 0015 DD010000 		.4byte	.LASF22
+ 205 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 206 001d 00000000 		.4byte	0
+ 207 0021 00000000 		.4byte	.Ldebug_line0
+ 208 0025 02       		.uleb128 0x2
+ 209 0026 01       		.byte	0x1
+ 210 0027 06       		.byte	0x6
+ 211 0028 A7010000 		.4byte	.LASF0
+ 212 002c 02       		.uleb128 0x2
+ 213 002d 01       		.byte	0x1
+ 214 002e 08       		.byte	0x8
+ 215 002f 22010000 		.4byte	.LASF1
+ 216 0033 02       		.uleb128 0x2
+ 217 0034 02       		.byte	0x2
+ 218 0035 05       		.byte	0x5
+ 219 0036 D3010000 		.4byte	.LASF2
+ 220 003a 02       		.uleb128 0x2
+ 221 003b 02       		.byte	0x2
+ 222 003c 07       		.byte	0x7
+ 223 003d 94010000 		.4byte	.LASF3
+ 224 0041 02       		.uleb128 0x2
+ 225 0042 04       		.byte	0x4
+ 226 0043 05       		.byte	0x5
+ 227 0044 4F010000 		.4byte	.LASF4
+ 228 0048 02       		.uleb128 0x2
+ 229 0049 04       		.byte	0x4
+ 230 004a 07       		.byte	0x7
+ 231 004b F9000000 		.4byte	.LASF5
+ 232 004f 02       		.uleb128 0x2
+ 233 0050 08       		.byte	0x8
+ 234 0051 05       		.byte	0x5
+ 235 0052 00000000 		.4byte	.LASF6
+ 236 0056 02       		.uleb128 0x2
+ 237 0057 08       		.byte	0x8
+ 238 0058 07       		.byte	0x7
+ 239 0059 0B010000 		.4byte	.LASF7
+ 240 005d 03       		.uleb128 0x3
+ 241 005e 04       		.byte	0x4
+ 242 005f 05       		.byte	0x5
+ 243 0060 696E7400 		.ascii	"int\000"
+ 244 0064 02       		.uleb128 0x2
+ 245 0065 04       		.byte	0x4
+ 246 0066 07       		.byte	0x7
+ 247 0067 9C000000 		.4byte	.LASF8
+ 248 006b 04       		.uleb128 0x4
+ 249 006c F3000000 		.4byte	.LASF23
+ 250 0070 02       		.byte	0x2
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 7
+
+
+ 251 0071 9801     		.2byte	0x198
+ 252 0073 2C000000 		.4byte	0x2c
+ 253 0077 02       		.uleb128 0x2
+ 254 0078 04       		.byte	0x4
+ 255 0079 04       		.byte	0x4
+ 256 007a CD010000 		.4byte	.LASF9
+ 257 007e 02       		.uleb128 0x2
+ 258 007f 08       		.byte	0x8
+ 259 0080 04       		.byte	0x4
+ 260 0081 7B010000 		.4byte	.LASF10
+ 261 0085 02       		.uleb128 0x2
+ 262 0086 01       		.byte	0x1
+ 263 0087 08       		.byte	0x8
+ 264 0088 30010000 		.4byte	.LASF11
+ 265 008c 02       		.uleb128 0x2
+ 266 008d 04       		.byte	0x4
+ 267 008e 07       		.byte	0x7
+ 268 008f 32020000 		.4byte	.LASF12
+ 269 0093 05       		.uleb128 0x5
+ 270 0094 D7000000 		.4byte	.LASF24
+ 271 0098 01       		.byte	0x1
+ 272 0099 24       		.byte	0x24
+ 273 009a 00000000 		.4byte	.LFB37
+ 274 009e B8000000 		.4byte	.LFE37-.LFB37
+ 275 00a2 01       		.uleb128 0x1
+ 276 00a3 9C       		.byte	0x9c
+ 277 00a4 06       		.uleb128 0x6
+ 278 00a5 C9000000 		.4byte	.LASF25
+ 279 00a9 01       		.byte	0x1
+ 280 00aa 24       		.byte	0x24
+ 281 00ab 6B000000 		.4byte	0x6b
+ 282 00af 02       		.uleb128 0x2
+ 283 00b0 91       		.byte	0x91
+ 284 00b1 77       		.sleb128 -9
+ 285 00b2 07       		.uleb128 0x7
+ 286 00b3 20000000 		.4byte	.LBB2
+ 287 00b7 8E000000 		.4byte	.LBE2-.LBB2
+ 288 00bb 08       		.uleb128 0x8
+ 289 00bc 35010000 		.4byte	.LASF13
+ 290 00c0 01       		.byte	0x1
+ 291 00c1 2D       		.byte	0x2d
+ 292 00c2 5D000000 		.4byte	0x5d
+ 293 00c6 CC000000 		.4byte	0xcc
+ 294 00ca 09       		.uleb128 0x9
+ 295 00cb 00       		.byte	0
+ 296 00cc 08       		.uleb128 0x8
+ 297 00cd 82010000 		.4byte	.LASF14
+ 298 00d1 01       		.byte	0x1
+ 299 00d2 2E       		.byte	0x2e
+ 300 00d3 5D000000 		.4byte	0x5d
+ 301 00d7 DD000000 		.4byte	0xdd
+ 302 00db 09       		.uleb128 0x9
+ 303 00dc 00       		.byte	0
+ 304 00dd 08       		.uleb128 0x8
+ 305 00de B3010000 		.4byte	.LASF15
+ 306 00e2 01       		.byte	0x1
+ 307 00e3 2F       		.byte	0x2f
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 8
+
+
+ 308 00e4 5D000000 		.4byte	0x5d
+ 309 00e8 EE000000 		.4byte	0xee
+ 310 00ec 09       		.uleb128 0x9
+ 311 00ed 00       		.byte	0
+ 312 00ee 08       		.uleb128 0x8
+ 313 00ef 20020000 		.4byte	.LASF16
+ 314 00f3 01       		.byte	0x1
+ 315 00f4 30       		.byte	0x30
+ 316 00f5 5D000000 		.4byte	0x5d
+ 317 00f9 FF000000 		.4byte	0xff
+ 318 00fd 09       		.uleb128 0x9
+ 319 00fe 00       		.byte	0
+ 320 00ff 08       		.uleb128 0x8
+ 321 0100 E3000000 		.4byte	.LASF17
+ 322 0104 01       		.byte	0x1
+ 323 0105 31       		.byte	0x31
+ 324 0106 5D000000 		.4byte	0x5d
+ 325 010a 10010000 		.4byte	0x110
+ 326 010e 09       		.uleb128 0x9
+ 327 010f 00       		.byte	0
+ 328 0110 08       		.uleb128 0x8
+ 329 0111 A9000000 		.4byte	.LASF18
+ 330 0115 01       		.byte	0x1
+ 331 0116 35       		.byte	0x35
+ 332 0117 5D000000 		.4byte	0x5d
+ 333 011b 21010000 		.4byte	0x121
+ 334 011f 09       		.uleb128 0x9
+ 335 0120 00       		.byte	0
+ 336 0121 08       		.uleb128 0x8
+ 337 0122 B8000000 		.4byte	.LASF19
+ 338 0126 01       		.byte	0x1
+ 339 0127 50       		.byte	0x50
+ 340 0128 5D000000 		.4byte	0x5d
+ 341 012c 32010000 		.4byte	0x132
+ 342 0130 09       		.uleb128 0x9
+ 343 0131 00       		.byte	0
+ 344 0132 0A       		.uleb128 0xa
+ 345 0133 6A010000 		.4byte	.LASF26
+ 346 0137 01       		.byte	0x1
+ 347 0138 51       		.byte	0x51
+ 348 0139 5D000000 		.4byte	0x5d
+ 349 013d 09       		.uleb128 0x9
+ 350 013e 00       		.byte	0
+ 351 013f 00       		.byte	0
+ 352 0140 00       		.byte	0
+ 353 0141 00       		.byte	0
+ 354              		.section	.debug_abbrev,"",%progbits
+ 355              	.Ldebug_abbrev0:
+ 356 0000 01       		.uleb128 0x1
+ 357 0001 11       		.uleb128 0x11
+ 358 0002 01       		.byte	0x1
+ 359 0003 25       		.uleb128 0x25
+ 360 0004 0E       		.uleb128 0xe
+ 361 0005 13       		.uleb128 0x13
+ 362 0006 0B       		.uleb128 0xb
+ 363 0007 03       		.uleb128 0x3
+ 364 0008 0E       		.uleb128 0xe
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 9
+
+
+ 365 0009 1B       		.uleb128 0x1b
+ 366 000a 0E       		.uleb128 0xe
+ 367 000b 55       		.uleb128 0x55
+ 368 000c 17       		.uleb128 0x17
+ 369 000d 11       		.uleb128 0x11
+ 370 000e 01       		.uleb128 0x1
+ 371 000f 10       		.uleb128 0x10
+ 372 0010 17       		.uleb128 0x17
+ 373 0011 00       		.byte	0
+ 374 0012 00       		.byte	0
+ 375 0013 02       		.uleb128 0x2
+ 376 0014 24       		.uleb128 0x24
+ 377 0015 00       		.byte	0
+ 378 0016 0B       		.uleb128 0xb
+ 379 0017 0B       		.uleb128 0xb
+ 380 0018 3E       		.uleb128 0x3e
+ 381 0019 0B       		.uleb128 0xb
+ 382 001a 03       		.uleb128 0x3
+ 383 001b 0E       		.uleb128 0xe
+ 384 001c 00       		.byte	0
+ 385 001d 00       		.byte	0
+ 386 001e 03       		.uleb128 0x3
+ 387 001f 24       		.uleb128 0x24
+ 388 0020 00       		.byte	0
+ 389 0021 0B       		.uleb128 0xb
+ 390 0022 0B       		.uleb128 0xb
+ 391 0023 3E       		.uleb128 0x3e
+ 392 0024 0B       		.uleb128 0xb
+ 393 0025 03       		.uleb128 0x3
+ 394 0026 08       		.uleb128 0x8
+ 395 0027 00       		.byte	0
+ 396 0028 00       		.byte	0
+ 397 0029 04       		.uleb128 0x4
+ 398 002a 16       		.uleb128 0x16
+ 399 002b 00       		.byte	0
+ 400 002c 03       		.uleb128 0x3
+ 401 002d 0E       		.uleb128 0xe
+ 402 002e 3A       		.uleb128 0x3a
+ 403 002f 0B       		.uleb128 0xb
+ 404 0030 3B       		.uleb128 0x3b
+ 405 0031 05       		.uleb128 0x5
+ 406 0032 49       		.uleb128 0x49
+ 407 0033 13       		.uleb128 0x13
+ 408 0034 00       		.byte	0
+ 409 0035 00       		.byte	0
+ 410 0036 05       		.uleb128 0x5
+ 411 0037 2E       		.uleb128 0x2e
+ 412 0038 01       		.byte	0x1
+ 413 0039 3F       		.uleb128 0x3f
+ 414 003a 19       		.uleb128 0x19
+ 415 003b 03       		.uleb128 0x3
+ 416 003c 0E       		.uleb128 0xe
+ 417 003d 3A       		.uleb128 0x3a
+ 418 003e 0B       		.uleb128 0xb
+ 419 003f 3B       		.uleb128 0x3b
+ 420 0040 0B       		.uleb128 0xb
+ 421 0041 27       		.uleb128 0x27
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 10
+
+
+ 422 0042 19       		.uleb128 0x19
+ 423 0043 11       		.uleb128 0x11
+ 424 0044 01       		.uleb128 0x1
+ 425 0045 12       		.uleb128 0x12
+ 426 0046 06       		.uleb128 0x6
+ 427 0047 40       		.uleb128 0x40
+ 428 0048 18       		.uleb128 0x18
+ 429 0049 9642     		.uleb128 0x2116
+ 430 004b 19       		.uleb128 0x19
+ 431 004c 00       		.byte	0
+ 432 004d 00       		.byte	0
+ 433 004e 06       		.uleb128 0x6
+ 434 004f 05       		.uleb128 0x5
+ 435 0050 00       		.byte	0
+ 436 0051 03       		.uleb128 0x3
+ 437 0052 0E       		.uleb128 0xe
+ 438 0053 3A       		.uleb128 0x3a
+ 439 0054 0B       		.uleb128 0xb
+ 440 0055 3B       		.uleb128 0x3b
+ 441 0056 0B       		.uleb128 0xb
+ 442 0057 49       		.uleb128 0x49
+ 443 0058 13       		.uleb128 0x13
+ 444 0059 02       		.uleb128 0x2
+ 445 005a 18       		.uleb128 0x18
+ 446 005b 00       		.byte	0
+ 447 005c 00       		.byte	0
+ 448 005d 07       		.uleb128 0x7
+ 449 005e 0B       		.uleb128 0xb
+ 450 005f 01       		.byte	0x1
+ 451 0060 11       		.uleb128 0x11
+ 452 0061 01       		.uleb128 0x1
+ 453 0062 12       		.uleb128 0x12
+ 454 0063 06       		.uleb128 0x6
+ 455 0064 00       		.byte	0
+ 456 0065 00       		.byte	0
+ 457 0066 08       		.uleb128 0x8
+ 458 0067 2E       		.uleb128 0x2e
+ 459 0068 01       		.byte	0x1
+ 460 0069 3F       		.uleb128 0x3f
+ 461 006a 19       		.uleb128 0x19
+ 462 006b 03       		.uleb128 0x3
+ 463 006c 0E       		.uleb128 0xe
+ 464 006d 3A       		.uleb128 0x3a
+ 465 006e 0B       		.uleb128 0xb
+ 466 006f 3B       		.uleb128 0x3b
+ 467 0070 0B       		.uleb128 0xb
+ 468 0071 49       		.uleb128 0x49
+ 469 0072 13       		.uleb128 0x13
+ 470 0073 3C       		.uleb128 0x3c
+ 471 0074 19       		.uleb128 0x19
+ 472 0075 01       		.uleb128 0x1
+ 473 0076 13       		.uleb128 0x13
+ 474 0077 00       		.byte	0
+ 475 0078 00       		.byte	0
+ 476 0079 09       		.uleb128 0x9
+ 477 007a 18       		.uleb128 0x18
+ 478 007b 00       		.byte	0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 11
+
+
+ 479 007c 00       		.byte	0
+ 480 007d 00       		.byte	0
+ 481 007e 0A       		.uleb128 0xa
+ 482 007f 2E       		.uleb128 0x2e
+ 483 0080 01       		.byte	0x1
+ 484 0081 3F       		.uleb128 0x3f
+ 485 0082 19       		.uleb128 0x19
+ 486 0083 03       		.uleb128 0x3
+ 487 0084 0E       		.uleb128 0xe
+ 488 0085 3A       		.uleb128 0x3a
+ 489 0086 0B       		.uleb128 0xb
+ 490 0087 3B       		.uleb128 0x3b
+ 491 0088 0B       		.uleb128 0xb
+ 492 0089 49       		.uleb128 0x49
+ 493 008a 13       		.uleb128 0x13
+ 494 008b 3C       		.uleb128 0x3c
+ 495 008c 19       		.uleb128 0x19
+ 496 008d 00       		.byte	0
+ 497 008e 00       		.byte	0
+ 498 008f 00       		.byte	0
+ 499              		.section	.debug_aranges,"",%progbits
+ 500 0000 1C000000 		.4byte	0x1c
+ 501 0004 0200     		.2byte	0x2
+ 502 0006 00000000 		.4byte	.Ldebug_info0
+ 503 000a 04       		.byte	0x4
+ 504 000b 00       		.byte	0
+ 505 000c 0000     		.2byte	0
+ 506 000e 0000     		.2byte	0
+ 507 0010 00000000 		.4byte	.LFB37
+ 508 0014 B8000000 		.4byte	.LFE37-.LFB37
+ 509 0018 00000000 		.4byte	0
+ 510 001c 00000000 		.4byte	0
+ 511              		.section	.debug_ranges,"",%progbits
+ 512              	.Ldebug_ranges0:
+ 513 0000 00000000 		.4byte	.LFB37
+ 514 0004 B8000000 		.4byte	.LFE37
+ 515 0008 00000000 		.4byte	0
+ 516 000c 00000000 		.4byte	0
+ 517              		.section	.debug_line,"",%progbits
+ 518              	.Ldebug_line0:
+ 519 0000 85000000 		.section	.debug_str,"MS",%progbits,1
+ 519      02004C00 
+ 519      00000201 
+ 519      FB0E0D00 
+ 519      01010101 
+ 520              	.LASF6:
+ 521 0000 6C6F6E67 		.ascii	"long long int\000"
+ 521      206C6F6E 
+ 521      6720696E 
+ 521      7400
+ 522              	.LASF20:
+ 523 000e 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 523      4320342E 
+ 523      392E3320 
+ 523      32303135 
+ 523      30333033 
+ 524 0041 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 12
+
+
+ 524      20726576 
+ 524      6973696F 
+ 524      6E203232 
+ 524      31323230 
+ 525 0074 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 525      66756E63 
+ 525      74696F6E 
+ 525      2D736563 
+ 525      74696F6E 
+ 526              	.LASF8:
+ 527 009c 756E7369 		.ascii	"unsigned int\000"
+ 527      676E6564 
+ 527      20696E74 
+ 527      00
+ 528              	.LASF18:
+ 529 00a9 436C6F63 		.ascii	"Clock_PWM_Stop\000"
+ 529      6B5F5057 
+ 529      4D5F5374 
+ 529      6F7000
+ 530              	.LASF19:
+ 531 00b8 50574D5F 		.ascii	"PWM_Motor_1_Stop\000"
+ 531      4D6F746F 
+ 531      725F315F 
+ 531      53746F70 
+ 531      00
+ 532              	.LASF25:
+ 533 00c9 4D6F746F 		.ascii	"Motor_Command\000"
+ 533      725F436F 
+ 533      6D6D616E 
+ 533      6400
+ 534              	.LASF24:
+ 535 00d7 55706461 		.ascii	"UpdateMotor\000"
+ 535      74654D6F 
+ 535      746F7200 
+ 536              	.LASF17:
+ 537 00e3 436C6F63 		.ascii	"Clock_PWM_Start\000"
+ 537      6B5F5057 
+ 537      4D5F5374 
+ 537      61727400 
+ 538              	.LASF23:
+ 539 00f3 75696E74 		.ascii	"uint8\000"
+ 539      3800
+ 540              	.LASF5:
+ 541 00f9 6C6F6E67 		.ascii	"long unsigned int\000"
+ 541      20756E73 
+ 541      69676E65 
+ 541      6420696E 
+ 541      7400
+ 542              	.LASF7:
+ 543 010b 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 543      206C6F6E 
+ 543      6720756E 
+ 543      7369676E 
+ 543      65642069 
+ 544              	.LASF1:
+ 545 0122 756E7369 		.ascii	"unsigned char\000"
+ 545      676E6564 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 13
+
+
+ 545      20636861 
+ 545      7200
+ 546              	.LASF11:
+ 547 0130 63686172 		.ascii	"char\000"
+ 547      00
+ 548              	.LASF13:
+ 549 0135 436F6E74 		.ascii	"Control_Reg_Motor_1_Write\000"
+ 549      726F6C5F 
+ 549      5265675F 
+ 549      4D6F746F 
+ 549      725F315F 
+ 550              	.LASF4:
+ 551 014f 6C6F6E67 		.ascii	"long int\000"
+ 551      20696E74 
+ 551      00
+ 552              	.LASF21:
+ 553 0158 2E5C4D6F 		.ascii	".\\Motor_Control.c\000"
+ 553      746F725F 
+ 553      436F6E74 
+ 553      726F6C2E 
+ 553      6300
+ 554              	.LASF26:
+ 555 016a 50574D5F 		.ascii	"PWM_Motor_2_Stop\000"
+ 555      4D6F746F 
+ 555      725F325F 
+ 555      53746F70 
+ 555      00
+ 556              	.LASF10:
+ 557 017b 646F7562 		.ascii	"double\000"
+ 557      6C6500
+ 558              	.LASF14:
+ 559 0182 50574D5F 		.ascii	"PWM_Motor_1_Start\000"
+ 559      4D6F746F 
+ 559      725F315F 
+ 559      53746172 
+ 559      7400
+ 560              	.LASF3:
+ 561 0194 73686F72 		.ascii	"short unsigned int\000"
+ 561      7420756E 
+ 561      7369676E 
+ 561      65642069 
+ 561      6E7400
+ 562              	.LASF0:
+ 563 01a7 7369676E 		.ascii	"signed char\000"
+ 563      65642063 
+ 563      68617200 
+ 564              	.LASF15:
+ 565 01b3 436F6E74 		.ascii	"Control_Reg_Motor_2_Write\000"
+ 565      726F6C5F 
+ 565      5265675F 
+ 565      4D6F746F 
+ 565      725F325F 
+ 566              	.LASF9:
+ 567 01cd 666C6F61 		.ascii	"float\000"
+ 567      7400
+ 568              	.LASF2:
+ 569 01d3 73686F72 		.ascii	"short int\000"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccYHmIyN.s 			page 14
+
+
+ 569      7420696E 
+ 569      7400
+ 570              	.LASF22:
+ 571 01dd 443A5C57 		.ascii	"D:\\Work\\Projects\\Accelerometer_Controlled_Car\\P"
+ 571      6F726B5C 
+ 571      50726F6A 
+ 571      65637473 
+ 571      5C416363 
+ 572 020c 536F435F 		.ascii	"SoC_4_BLE_CAR.cydsn\000"
+ 572      345F424C 
+ 572      455F4341 
+ 572      522E6379 
+ 572      64736E00 
+ 573              	.LASF16:
+ 574 0220 50574D5F 		.ascii	"PWM_Motor_2_Start\000"
+ 574      4D6F746F 
+ 574      725F325F 
+ 574      53746172 
+ 574      7400
+ 575              	.LASF12:
+ 576 0232 73697A65 		.ascii	"sizetype\000"
+ 576      74797065 
+ 576      00
+ 577              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

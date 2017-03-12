@@ -1,0 +1,82 @@
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/ARM_GCC_493/Debug/debug.o : D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_X.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_X_aliases.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_Y.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_Y_aliases.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_Z.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_Z_aliases.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_HAL_PVT.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_STACK_PVT.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_Stack.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGap.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGatt.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGattClient.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGattDb.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGattServer.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackHostMain.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackL2cap.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_bless_isr.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_custom.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_eventHandler.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_gatt.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/CyFlash.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/CyLFClk.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/CyLib.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cmsis_armcc.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cmsis_gcc.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/core_cm0.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/core_cm0_psoc4.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/core_cmFunc.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/core_cmInstr.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cyPm.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cydevice_trm.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cydisabledsheets.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cyfitter.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cyfitter_cfg.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cypins.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cytypes.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/project.h D:/Work/Projects/BleWifiProject/BLE_Wireless_Power_Transmitter01.cydsn/common.h D:/Work/Projects/BleWifiProject/BLE_Wireless_Power_Transmitter01.cydsn/debug.c 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_X.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_X_aliases.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_Y.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_Y_aliases.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_Z.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/Accelerometer_Z_aliases.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_HAL_PVT.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_STACK_PVT.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_Stack.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGap.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGatt.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGattClient.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGattDb.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackGattServer.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackHostMain.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_StackL2cap.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_bless_isr.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_custom.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_eventHandler.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/BLE_gatt.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/CyFlash.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/CyLFClk.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/CyLib.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cmsis_armcc.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cmsis_gcc.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/core_cm0.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/core_cm0_psoc4.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/core_cmFunc.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/core_cmInstr.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cyPm.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cydevice_trm.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cydisabledsheets.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cyfitter.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cyfitter_cfg.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cypins.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/cytypes.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_ACCELEROMETER.cydsn/Generated_Source/PSoC4/project.h : 
+
+D:/Work/Projects/BleWifiProject/BLE_Wireless_Power_Transmitter01.cydsn/common.h : 
+
+D:/Work/Projects/BleWifiProject/BLE_Wireless_Power_Transmitter01.cydsn/debug.c : 
+

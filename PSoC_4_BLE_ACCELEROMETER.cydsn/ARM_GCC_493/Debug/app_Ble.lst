@@ -1,0 +1,2080 @@
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"app_Ble.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.comm	scan_status,1,1
+  18              		.comm	x,1,1
+  19              		.comm	y,1,1
+  20              		.comm	z,1,1
+  21              		.comm	ADC_x_current,2,2
+  22              		.comm	ADC_y_current,2,2
+  23              		.comm	ADC_z_current,2,2
+  24              		.comm	ADC_x_previous,2,2
+  25              		.comm	ADC_y_previous,2,2
+  26              		.comm	ADC_z_previous,2,2
+  27              		.comm	BLE_Command,1,1
+  28              		.comm	state,1,1
+  29              		.comm	connStatus,1,1
+  30              		.comm	lpMode,1,1
+  31              		.comm	blessState,1,1
+  32              		.comm	interruptStatus,1,1
+  33              		.global	mtuSize
+  34              		.data
+  35              		.align	1
+  36              		.type	mtuSize, %object
+  37              		.size	mtuSize, 2
+  38              	mtuSize:
+  39 0000 1700     		.short	23
+  40              		.section	.text.HandleBleProcessing,"ax",%progbits
+  41              		.align	2
+  42              		.global	HandleBleProcessing
+  43              		.code	16
+  44              		.thumb_func
+  45              		.type	HandleBleProcessing, %function
+  46              	HandleBleProcessing:
+  47              	.LFB37:
+  48              		.file 1 ".\\app_Ble.c"
+   1:.\app_Ble.c   **** /*******************************************************************************
+   2:.\app_Ble.c   **** * File Name: app_Ble.c
+   3:.\app_Ble.c   **** *
+   4:.\app_Ble.c   **** * Description:
+   5:.\app_Ble.c   **** *  Common BLE application code for client devices.
+   6:.\app_Ble.c   **** *
+   7:.\app_Ble.c   **** *******************************************************************************
+   8:.\app_Ble.c   **** * Copyright 2015, Cypress Semiconductor Corporation.  All rights reserved.
+   9:.\app_Ble.c   **** * You may use this file only in accordance with the license, terms, conditions,
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 2
+
+
+  10:.\app_Ble.c   **** * disclaimers, and limitations in the end user license agreement accompanying
+  11:.\app_Ble.c   **** * the software package with which this file was provided.
+  12:.\app_Ble.c   **** *******************************************************************************/
+  13:.\app_Ble.c   **** 
+  14:.\app_Ble.c   **** #include "app_ble.h"
+  15:.\app_Ble.c   **** 
+  16:.\app_Ble.c   **** /* MTU size to be used by Client and Server after MTU exchange */
+  17:.\app_Ble.c   **** uint16 mtuSize      = CYBLE_GATT_MTU;   
+  18:.\app_Ble.c   **** 
+  19:.\app_Ble.c   **** extern uint8 applicationPower;
+  20:.\app_Ble.c   **** 
+  21:.\app_Ble.c   **** /*******************************************************************************
+  22:.\app_Ble.c   **** * Function Name: HandleBleProcessing
+  23:.\app_Ble.c   **** ********************************************************************************
+  24:.\app_Ble.c   **** *
+  25:.\app_Ble.c   **** * Summary:
+  26:.\app_Ble.c   **** *   Handles the BLE state machine for intiating different procedures
+  27:.\app_Ble.c   **** *   during different states of BLESS.
+  28:.\app_Ble.c   **** *
+  29:.\app_Ble.c   **** * Parameters:
+  30:.\app_Ble.c   **** *   None.
+  31:.\app_Ble.c   **** *
+  32:.\app_Ble.c   **** * Return:
+  33:.\app_Ble.c   **** *   None.
+  34:.\app_Ble.c   **** *
+  35:.\app_Ble.c   **** *******************************************************************************/
+  36:.\app_Ble.c   **** void HandleBleProcessing(void)
+  37:.\app_Ble.c   **** {    
+  49              		.loc 1 37 0
+  50              		.cfi_startproc
+  51 0000 80B5     		push	{r7, lr}
+  52              		.cfi_def_cfa_offset 8
+  53              		.cfi_offset 7, -8
+  54              		.cfi_offset 14, -4
+  55 0002 00AF     		add	r7, sp, #0
+  56              		.cfi_def_cfa_register 7
+  38:.\app_Ble.c   ****     switch (cyBle_state)
+  57              		.loc 1 38 0
+  58 0004 0F4B     		ldr	r3, .L9
+  59 0006 1B78     		ldrb	r3, [r3]
+  60 0008 032B     		cmp	r3, #3
+  61 000a 17D0     		beq	.L8
+  62 000c 042B     		cmp	r3, #4
+  63 000e 11D0     		beq	.L4
+  64 0010 022B     		cmp	r3, #2
+  65 0012 00D0     		beq	.L5
+  39:.\app_Ble.c   ****     {
+  40:.\app_Ble.c   ****         case CYBLE_STATE_ADVERTISING:
+  41:.\app_Ble.c   ****             break;
+  42:.\app_Ble.c   ****         
+  43:.\app_Ble.c   ****         case CYBLE_STATE_CONNECTED:
+  44:.\app_Ble.c   **** 		
+  45:.\app_Ble.c   **** 		    connStatus= CONNECTED;
+  46:.\app_Ble.c   **** 
+  47:.\app_Ble.c   ****             if(CyBle_GattGetBusStatus() != CYBLE_STACK_STATE_BUSY)
+  48:.\app_Ble.c   ****             {
+  49:.\app_Ble.c   ****                 SendCommand();/*This will send the command over BLE*/
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 3
+
+
+  50:.\app_Ble.c   **** 				applicationPower = DEEPSLEEP;/*Once command has been sent the state has been set to DEEPSLEEP*/
+  51:.\app_Ble.c   **** 			
+  52:.\app_Ble.c   ****             }
+  53:.\app_Ble.c   **** 			break;
+  54:.\app_Ble.c   ****                 
+  55:.\app_Ble.c   ****         case CYBLE_STATE_DISCONNECTED:
+  56:.\app_Ble.c   ****         	CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST);
+  57:.\app_Ble.c   ****         	break;
+  58:.\app_Ble.c   ****         default:
+  59:.\app_Ble.c   ****             break;       
+  66              		.loc 1 59 0
+  67 0014 13E0     		b	.L1
+  68              	.L5:
+  45:.\app_Ble.c   **** 
+  69              		.loc 1 45 0
+  70 0016 0C4B     		ldr	r3, .L9+4
+  71 0018 0122     		mov	r2, #1
+  72 001a 1A70     		strb	r2, [r3]
+  47:.\app_Ble.c   ****             {
+  73              		.loc 1 47 0
+  74 001c 0B4B     		ldr	r3, .L9+8
+  75 001e 1B78     		ldrb	r3, [r3]
+  76 0020 DBB2     		uxtb	r3, r3
+  77 0022 012B     		cmp	r3, #1
+  78 0024 05D0     		beq	.L7
+  49:.\app_Ble.c   **** 				applicationPower = DEEPSLEEP;/*Once command has been sent the state has been set to DEEPSLEEP*/
+  79              		.loc 1 49 0
+  80 0026 FFF7FEFF 		bl	SendCommand
+  50:.\app_Ble.c   **** 			
+  81              		.loc 1 50 0
+  82 002a 094B     		ldr	r3, .L9+12
+  83 002c 0522     		mov	r2, #5
+  84 002e 1A70     		strb	r2, [r3]
+  53:.\app_Ble.c   ****                 
+  85              		.loc 1 53 0
+  86 0030 05E0     		b	.L1
+  87              	.L7:
+  88 0032 04E0     		b	.L1
+  89              	.L4:
+  56:.\app_Ble.c   ****         	break;
+  90              		.loc 1 56 0
+  91 0034 0020     		mov	r0, #0
+  92 0036 FFF7FEFF 		bl	CyBle_GappStartAdvertisement
+  57:.\app_Ble.c   ****         default:
+  93              		.loc 1 57 0
+  94 003a 00E0     		b	.L1
+  95              	.L8:
+  41:.\app_Ble.c   ****         
+  96              		.loc 1 41 0
+  97 003c C046     		mov	r8, r8
+  98              	.L1:
+  60:.\app_Ble.c   ****     }
+  61:.\app_Ble.c   **** }
+  99              		.loc 1 61 0
+ 100 003e BD46     		mov	sp, r7
+ 101              		@ sp needed
+ 102 0040 80BD     		pop	{r7, pc}
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 4
+
+
+ 103              	.L10:
+ 104 0042 C046     		.align	2
+ 105              	.L9:
+ 106 0044 00000000 		.word	cyBle_state
+ 107 0048 00000000 		.word	connStatus
+ 108 004c 00000000 		.word	cyBle_busyStatus
+ 109 0050 00000000 		.word	applicationPower
+ 110              		.cfi_endproc
+ 111              	.LFE37:
+ 112              		.size	HandleBleProcessing, .-HandleBleProcessing
+ 113              		.section	.text.AppCallBack,"ax",%progbits
+ 114              		.align	2
+ 115              		.global	AppCallBack
+ 116              		.code	16
+ 117              		.thumb_func
+ 118              		.type	AppCallBack, %function
+ 119              	AppCallBack:
+ 120              	.LFB38:
+  62:.\app_Ble.c   **** 
+  63:.\app_Ble.c   **** /*******************************************************************************
+  64:.\app_Ble.c   **** * Function Name: AppCallBack
+  65:.\app_Ble.c   **** ********************************************************************************
+  66:.\app_Ble.c   **** *
+  67:.\app_Ble.c   **** * Summary:
+  68:.\app_Ble.c   **** *   Call back function for BLE stack to handle BLESS events
+  69:.\app_Ble.c   **** *
+  70:.\app_Ble.c   **** * Parameters:
+  71:.\app_Ble.c   **** *   event       - the event generated by stack
+  72:.\app_Ble.c   **** *   eventParam  - the parameters related to the corresponding event
+  73:.\app_Ble.c   **** *
+  74:.\app_Ble.c   **** * Return:
+  75:.\app_Ble.c   **** *   None.
+  76:.\app_Ble.c   **** *
+  77:.\app_Ble.c   **** *******************************************************************************/
+  78:.\app_Ble.c   **** void AppCallBack(uint32 event, void *eventParam)
+  79:.\app_Ble.c   **** {   
+ 121              		.loc 1 79 0
+ 122              		.cfi_startproc
+ 123 0000 80B5     		push	{r7, lr}
+ 124              		.cfi_def_cfa_offset 8
+ 125              		.cfi_offset 7, -8
+ 126              		.cfi_offset 14, -4
+ 127 0002 82B0     		sub	sp, sp, #8
+ 128              		.cfi_def_cfa_offset 16
+ 129 0004 00AF     		add	r7, sp, #0
+ 130              		.cfi_def_cfa_register 7
+ 131 0006 7860     		str	r0, [r7, #4]
+ 132 0008 3960     		str	r1, [r7]
+  80:.\app_Ble.c   ****     switch (event)
+ 133              		.loc 1 80 0
+ 134 000a 7B68     		ldr	r3, [r7, #4]
+ 135 000c 282B     		cmp	r3, #40
+ 136 000e 15D0     		beq	.L21
+ 137 0010 02D8     		bhi	.L14
+ 138 0012 012B     		cmp	r3, #1
+ 139 0014 14D0     		beq	.L22
+  81:.\app_Ble.c   ****     {
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 5
+
+
+  82:.\app_Ble.c   ****         case CYBLE_EVT_STACK_ON:
+  83:.\app_Ble.c   ****             break;
+  84:.\app_Ble.c   ****             
+  85:.\app_Ble.c   ****         case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
+  86:.\app_Ble.c   ****             break;
+  87:.\app_Ble.c   ****             
+  88:.\app_Ble.c   ****         case CYBLE_EVT_GATT_CONNECT_IND:
+  89:.\app_Ble.c   ****             break;
+  90:.\app_Ble.c   ****         
+  91:.\app_Ble.c   ****                
+  92:.\app_Ble.c   ****         case CYBLE_EVT_GATTS_XCNHG_MTU_REQ:
+  93:.\app_Ble.c   ****             
+  94:.\app_Ble.c   ****             if(CYBLE_GATT_MTU > ((CYBLE_GATT_XCHG_MTU_PARAM_T *)eventParam)->mtu)
+  95:.\app_Ble.c   ****             {
+  96:.\app_Ble.c   ****                 mtuSize = ((CYBLE_GATT_XCHG_MTU_PARAM_T *)eventParam)->mtu;
+  97:.\app_Ble.c   ****             }
+  98:.\app_Ble.c   ****             else
+  99:.\app_Ble.c   ****             {
+ 100:.\app_Ble.c   ****                 mtuSize = CYBLE_GATT_MTU;
+ 101:.\app_Ble.c   ****             }
+ 102:.\app_Ble.c   ****             
+ 103:.\app_Ble.c   ****             break;
+ 104:.\app_Ble.c   ****         default:
+ 105:.\app_Ble.c   ****             break;
+ 140              		.loc 1 105 0
+ 141 0016 16E0     		b	.L11
+ 142              	.L14:
+  80:.\app_Ble.c   ****     switch (event)
+ 143              		.loc 1 80 0
+ 144 0018 412B     		cmp	r3, #65
+ 145 001a 13D0     		beq	.L23
+ 146 001c 432B     		cmp	r3, #67
+ 147 001e 00D0     		beq	.L17
+ 148              		.loc 1 105 0
+ 149 0020 11E0     		b	.L11
+ 150              	.L17:
+  94:.\app_Ble.c   ****             {
+ 151              		.loc 1 94 0
+ 152 0022 3B68     		ldr	r3, [r7]
+ 153 0024 5B88     		ldrh	r3, [r3, #2]
+ 154 0026 162B     		cmp	r3, #22
+ 155 0028 04D8     		bhi	.L19
+  96:.\app_Ble.c   ****             }
+ 156              		.loc 1 96 0
+ 157 002a 3B68     		ldr	r3, [r7]
+ 158 002c 5A88     		ldrh	r2, [r3, #2]
+ 159 002e 074B     		ldr	r3, .L24
+ 160 0030 1A80     		strh	r2, [r3]
+ 103:.\app_Ble.c   ****         default:
+ 161              		.loc 1 103 0
+ 162 0032 08E0     		b	.L11
+ 163              	.L19:
+ 100:.\app_Ble.c   ****             }
+ 164              		.loc 1 100 0
+ 165 0034 054B     		ldr	r3, .L24
+ 166 0036 1722     		mov	r2, #23
+ 167 0038 1A80     		strh	r2, [r3]
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 6
+
+
+ 103:.\app_Ble.c   ****         default:
+ 168              		.loc 1 103 0
+ 169 003a 04E0     		b	.L11
+ 170              	.L21:
+  86:.\app_Ble.c   ****             
+ 171              		.loc 1 86 0
+ 172 003c C046     		mov	r8, r8
+ 173 003e 02E0     		b	.L11
+ 174              	.L22:
+  83:.\app_Ble.c   ****             
+ 175              		.loc 1 83 0
+ 176 0040 C046     		mov	r8, r8
+ 177 0042 00E0     		b	.L11
+ 178              	.L23:
+  89:.\app_Ble.c   ****         
+ 179              		.loc 1 89 0
+ 180 0044 C046     		mov	r8, r8
+ 181              	.L11:
+ 106:.\app_Ble.c   ****     }
+ 107:.\app_Ble.c   **** }
+ 182              		.loc 1 107 0
+ 183 0046 BD46     		mov	sp, r7
+ 184 0048 02B0     		add	sp, sp, #8
+ 185              		@ sp needed
+ 186 004a 80BD     		pop	{r7, pc}
+ 187              	.L25:
+ 188              		.align	2
+ 189              	.L24:
+ 190 004c 00000000 		.word	mtuSize
+ 191              		.cfi_endproc
+ 192              	.LFE38:
+ 193              		.size	AppCallBack, .-AppCallBack
+ 194              		.text
+ 195              	.Letext0:
+ 196              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 197              		.file 3 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 198              		.file 4 "Generated_Source\\PSoC4/BLE_StackGatt.h"
+ 199              		.file 5 "Generated_Source\\PSoC4/BLE_eventHandler.h"
+ 200              		.file 6 ".\\app_accel.h"
+ 201              		.file 7 ".\\main.h"
+ 202              		.section	.debug_info,"",%progbits
+ 203              	.Ldebug_info0:
+ 204 0000 09050000 		.4byte	0x509
+ 205 0004 0400     		.2byte	0x4
+ 206 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 207 000a 04       		.byte	0x4
+ 208 000b 01       		.uleb128 0x1
+ 209 000c 440B0000 		.4byte	.LASF128
+ 210 0010 01       		.byte	0x1
+ 211 0011 31080000 		.4byte	.LASF129
+ 212 0015 A7070000 		.4byte	.LASF130
+ 213 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 214 001d 00000000 		.4byte	0
+ 215 0021 00000000 		.4byte	.Ldebug_line0
+ 216 0025 02       		.uleb128 0x2
+ 217 0026 01       		.byte	0x1
+ 218 0027 06       		.byte	0x6
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 7
+
+
+ 219 0028 0A020000 		.4byte	.LASF0
+ 220 002c 02       		.uleb128 0x2
+ 221 002d 01       		.byte	0x1
+ 222 002e 08       		.byte	0x8
+ 223 002f A0080000 		.4byte	.LASF1
+ 224 0033 02       		.uleb128 0x2
+ 225 0034 02       		.byte	0x2
+ 226 0035 05       		.byte	0x5
+ 227 0036 D9080000 		.4byte	.LASF2
+ 228 003a 02       		.uleb128 0x2
+ 229 003b 02       		.byte	0x2
+ 230 003c 07       		.byte	0x7
+ 231 003d 1C050000 		.4byte	.LASF3
+ 232 0041 02       		.uleb128 0x2
+ 233 0042 04       		.byte	0x4
+ 234 0043 05       		.byte	0x5
+ 235 0044 31010000 		.4byte	.LASF4
+ 236 0048 02       		.uleb128 0x2
+ 237 0049 04       		.byte	0x4
+ 238 004a 07       		.byte	0x7
+ 239 004b 68040000 		.4byte	.LASF5
+ 240 004f 02       		.uleb128 0x2
+ 241 0050 08       		.byte	0x8
+ 242 0051 05       		.byte	0x5
+ 243 0052 FC010000 		.4byte	.LASF6
+ 244 0056 02       		.uleb128 0x2
+ 245 0057 08       		.byte	0x8
+ 246 0058 07       		.byte	0x7
+ 247 0059 3A010000 		.4byte	.LASF7
+ 248 005d 03       		.uleb128 0x3
+ 249 005e 04       		.byte	0x4
+ 250 005f 05       		.byte	0x5
+ 251 0060 696E7400 		.ascii	"int\000"
+ 252 0064 02       		.uleb128 0x2
+ 253 0065 04       		.byte	0x4
+ 254 0066 07       		.byte	0x7
+ 255 0067 15040000 		.4byte	.LASF8
+ 256 006b 04       		.uleb128 0x4
+ 257 006c 08030000 		.4byte	.LASF9
+ 258 0070 02       		.byte	0x2
+ 259 0071 9801     		.2byte	0x198
+ 260 0073 2C000000 		.4byte	0x2c
+ 261 0077 04       		.uleb128 0x4
+ 262 0078 AE080000 		.4byte	.LASF10
+ 263 007c 02       		.byte	0x2
+ 264 007d 9901     		.2byte	0x199
+ 265 007f 3A000000 		.4byte	0x3a
+ 266 0083 04       		.uleb128 0x4
+ 267 0084 63030000 		.4byte	.LASF11
+ 268 0088 02       		.byte	0x2
+ 269 0089 9A01     		.2byte	0x19a
+ 270 008b 48000000 		.4byte	0x48
+ 271 008f 04       		.uleb128 0x4
+ 272 0090 120B0000 		.4byte	.LASF12
+ 273 0094 02       		.byte	0x2
+ 274 0095 9C01     		.2byte	0x19c
+ 275 0097 33000000 		.4byte	0x33
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 8
+
+
+ 276 009b 02       		.uleb128 0x2
+ 277 009c 04       		.byte	0x4
+ 278 009d 04       		.byte	0x4
+ 279 009e 82080000 		.4byte	.LASF13
+ 280 00a2 02       		.uleb128 0x2
+ 281 00a3 08       		.byte	0x8
+ 282 00a4 04       		.byte	0x4
+ 283 00a5 2D030000 		.4byte	.LASF14
+ 284 00a9 02       		.uleb128 0x2
+ 285 00aa 01       		.byte	0x1
+ 286 00ab 08       		.byte	0x8
+ 287 00ac B4090000 		.4byte	.LASF15
+ 288 00b0 05       		.uleb128 0x5
+ 289 00b1 6B000000 		.4byte	0x6b
+ 290 00b5 02       		.uleb128 0x2
+ 291 00b6 04       		.byte	0x4
+ 292 00b7 07       		.byte	0x7
+ 293 00b8 D9060000 		.4byte	.LASF16
+ 294 00bc 06       		.uleb128 0x6
+ 295 00bd 04       		.byte	0x4
+ 296 00be 07       		.uleb128 0x7
+ 297 00bf 01       		.byte	0x1
+ 298 00c0 03       		.byte	0x3
+ 299 00c1 4201     		.2byte	0x142
+ 300 00c3 7B020000 		.4byte	0x27b
+ 301 00c7 08       		.uleb128 0x8
+ 302 00c8 2F050000 		.4byte	.LASF17
+ 303 00cc 00       		.sleb128 0
+ 304 00cd 08       		.uleb128 0x8
+ 305 00ce 16020000 		.4byte	.LASF18
+ 306 00d2 01       		.sleb128 1
+ 307 00d3 08       		.uleb128 0x8
+ 308 00d4 1F010000 		.4byte	.LASF19
+ 309 00d8 02       		.sleb128 2
+ 310 00d9 08       		.uleb128 0x8
+ 311 00da 410A0000 		.4byte	.LASF20
+ 312 00de 03       		.sleb128 3
+ 313 00df 08       		.uleb128 0x8
+ 314 00e0 51010000 		.4byte	.LASF21
+ 315 00e4 04       		.sleb128 4
+ 316 00e5 08       		.uleb128 0x8
+ 317 00e6 23000000 		.4byte	.LASF22
+ 318 00ea 05       		.sleb128 5
+ 319 00eb 08       		.uleb128 0x8
+ 320 00ec 64050000 		.4byte	.LASF23
+ 321 00f0 06       		.sleb128 6
+ 322 00f1 08       		.uleb128 0x8
+ 323 00f2 70060000 		.4byte	.LASF24
+ 324 00f6 20       		.sleb128 32
+ 325 00f7 08       		.uleb128 0x8
+ 326 00f8 48020000 		.4byte	.LASF25
+ 327 00fc 21       		.sleb128 33
+ 328 00fd 08       		.uleb128 0x8
+ 329 00fe AA050000 		.4byte	.LASF26
+ 330 0102 22       		.sleb128 34
+ 331 0103 08       		.uleb128 0x8
+ 332 0104 13060000 		.4byte	.LASF27
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 9
+
+
+ 333 0108 23       		.sleb128 35
+ 334 0109 08       		.uleb128 0x8
+ 335 010a F4070000 		.4byte	.LASF28
+ 336 010e 24       		.sleb128 36
+ 337 010f 08       		.uleb128 0x8
+ 338 0110 0F070000 		.4byte	.LASF29
+ 339 0114 25       		.sleb128 37
+ 340 0115 08       		.uleb128 0x8
+ 341 0116 E0020000 		.4byte	.LASF30
+ 342 011a 26       		.sleb128 38
+ 343 011b 08       		.uleb128 0x8
+ 344 011c CE050000 		.4byte	.LASF31
+ 345 0120 27       		.sleb128 39
+ 346 0121 08       		.uleb128 0x8
+ 347 0122 B9090000 		.4byte	.LASF32
+ 348 0126 28       		.sleb128 40
+ 349 0127 08       		.uleb128 0x8
+ 350 0128 9E010000 		.4byte	.LASF33
+ 351 012c 29       		.sleb128 41
+ 352 012d 08       		.uleb128 0x8
+ 353 012e 5E000000 		.4byte	.LASF34
+ 354 0132 2A       		.sleb128 42
+ 355 0133 08       		.uleb128 0x8
+ 356 0134 29020000 		.4byte	.LASF35
+ 357 0138 2B       		.sleb128 43
+ 358 0139 08       		.uleb128 0x8
+ 359 013a F90B0000 		.4byte	.LASF36
+ 360 013e 2C       		.sleb128 44
+ 361 013f 08       		.uleb128 0x8
+ 362 0140 BB010000 		.4byte	.LASF37
+ 363 0144 2D       		.sleb128 45
+ 364 0145 08       		.uleb128 0x8
+ 365 0146 B5080000 		.4byte	.LASF38
+ 366 014a 2E       		.sleb128 46
+ 367 014b 08       		.uleb128 0x8
+ 368 014c A8000000 		.4byte	.LASF39
+ 369 0150 2F       		.sleb128 47
+ 370 0151 08       		.uleb128 0x8
+ 371 0152 86070000 		.4byte	.LASF40
+ 372 0156 30       		.sleb128 48
+ 373 0157 08       		.uleb128 0x8
+ 374 0158 A20C0000 		.4byte	.LASF41
+ 375 015c 31       		.sleb128 49
+ 376 015d 08       		.uleb128 0x8
+ 377 015e 4F070000 		.4byte	.LASF42
+ 378 0162 32       		.sleb128 50
+ 379 0163 08       		.uleb128 0x8
+ 380 0164 58090000 		.4byte	.LASF43
+ 381 0168 33       		.sleb128 51
+ 382 0169 08       		.uleb128 0x8
+ 383 016a 8F030000 		.4byte	.LASF44
+ 384 016e C000     		.sleb128 64
+ 385 0170 08       		.uleb128 0x8
+ 386 0171 39060000 		.4byte	.LASF45
+ 387 0175 C100     		.sleb128 65
+ 388 0177 08       		.uleb128 0x8
+ 389 0178 C60C0000 		.4byte	.LASF46
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 10
+
+
+ 390 017c C200     		.sleb128 66
+ 391 017e 08       		.uleb128 0x8
+ 392 017f 870A0000 		.4byte	.LASF47
+ 393 0183 C300     		.sleb128 67
+ 394 0185 08       		.uleb128 0x8
+ 395 0186 8E040000 		.4byte	.LASF48
+ 396 018a C400     		.sleb128 68
+ 397 018c 08       		.uleb128 0x8
+ 398 018d 5B080000 		.4byte	.LASF49
+ 399 0191 C500     		.sleb128 69
+ 400 0193 08       		.uleb128 0x8
+ 401 0194 B8060000 		.4byte	.LASF50
+ 402 0198 C600     		.sleb128 70
+ 403 019a 08       		.uleb128 0x8
+ 404 019b 46050000 		.4byte	.LASF51
+ 405 019f C700     		.sleb128 71
+ 406 01a1 08       		.uleb128 0x8
+ 407 01a2 D20B0000 		.4byte	.LASF52
+ 408 01a6 C800     		.sleb128 72
+ 409 01a8 08       		.uleb128 0x8
+ 410 01a9 5F020000 		.4byte	.LASF53
+ 411 01ad C900     		.sleb128 73
+ 412 01af 08       		.uleb128 0x8
+ 413 01b0 D70A0000 		.4byte	.LASF54
+ 414 01b4 CA00     		.sleb128 74
+ 415 01b6 08       		.uleb128 0x8
+ 416 01b7 D1000000 		.4byte	.LASF55
+ 417 01bb CB00     		.sleb128 75
+ 418 01bd 08       		.uleb128 0x8
+ 419 01be ED050000 		.4byte	.LASF56
+ 420 01c2 CC00     		.sleb128 76
+ 421 01c4 08       		.uleb128 0x8
+ 422 01c5 29070000 		.4byte	.LASF57
+ 423 01c9 CD00     		.sleb128 77
+ 424 01cb 08       		.uleb128 0x8
+ 425 01cc 8D020000 		.4byte	.LASF58
+ 426 01d0 CE00     		.sleb128 78
+ 427 01d2 08       		.uleb128 0x8
+ 428 01d3 04090000 		.4byte	.LASF59
+ 429 01d7 CF00     		.sleb128 79
+ 430 01d9 08       		.uleb128 0x8
+ 431 01da F0000000 		.4byte	.LASF60
+ 432 01de D000     		.sleb128 80
+ 433 01e0 08       		.uleb128 0x8
+ 434 01e1 0E030000 		.4byte	.LASF61
+ 435 01e5 D100     		.sleb128 81
+ 436 01e7 08       		.uleb128 0x8
+ 437 01e8 10080000 		.4byte	.LASF62
+ 438 01ec D200     		.sleb128 82
+ 439 01ee 08       		.uleb128 0x8
+ 440 01ef E3080000 		.4byte	.LASF63
+ 441 01f3 D300     		.sleb128 83
+ 442 01f5 08       		.uleb128 0x8
+ 443 01f6 2F090000 		.4byte	.LASF64
+ 444 01fa D400     		.sleb128 84
+ 445 01fc 08       		.uleb128 0x8
+ 446 01fd AC040000 		.4byte	.LASF65
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 11
+
+
+ 447 0201 D500     		.sleb128 85
+ 448 0203 08       		.uleb128 0x8
+ 449 0204 F3030000 		.4byte	.LASF66
+ 450 0208 D600     		.sleb128 86
+ 451 020a 08       		.uleb128 0x8
+ 452 020b DB090000 		.4byte	.LASF67
+ 453 020f D700     		.sleb128 87
+ 454 0211 08       		.uleb128 0x8
+ 455 0212 D7040000 		.4byte	.LASF68
+ 456 0216 D800     		.sleb128 88
+ 457 0218 08       		.uleb128 0x8
+ 458 0219 A9030000 		.4byte	.LASF69
+ 459 021d F000     		.sleb128 112
+ 460 021f 08       		.uleb128 0x8
+ 461 0220 580C0000 		.4byte	.LASF70
+ 462 0224 F100     		.sleb128 113
+ 463 0226 08       		.uleb128 0x8
+ 464 0227 AB020000 		.4byte	.LASF71
+ 465 022b F200     		.sleb128 114
+ 466 022d 08       		.uleb128 0x8
+ 467 022e 9A060000 		.4byte	.LASF72
+ 468 0232 F300     		.sleb128 115
+ 469 0234 08       		.uleb128 0x8
+ 470 0235 3D080000 		.4byte	.LASF73
+ 471 0239 F400     		.sleb128 116
+ 472 023b 08       		.uleb128 0x8
+ 473 023c 34030000 		.4byte	.LASF74
+ 474 0240 F500     		.sleb128 117
+ 475 0242 08       		.uleb128 0x8
+ 476 0243 87000000 		.4byte	.LASF75
+ 477 0247 F600     		.sleb128 118
+ 478 0249 08       		.uleb128 0x8
+ 479 024a 8B050000 		.4byte	.LASF76
+ 480 024e F700     		.sleb128 119
+ 481 0250 08       		.uleb128 0x8
+ 482 0251 00000000 		.4byte	.LASF77
+ 483 0255 F800     		.sleb128 120
+ 484 0257 08       		.uleb128 0x8
+ 485 0258 1E0A0000 		.4byte	.LASF78
+ 486 025c F900     		.sleb128 121
+ 487 025e 08       		.uleb128 0x8
+ 488 025f CF030000 		.4byte	.LASF79
+ 489 0263 FA00     		.sleb128 122
+ 490 0265 08       		.uleb128 0x8
+ 491 0266 260C0000 		.4byte	.LASF80
+ 492 026a FA01     		.sleb128 250
+ 493 026c 08       		.uleb128 0x8
+ 494 026d 2D040000 		.4byte	.LASF81
+ 495 0271 FB01     		.sleb128 251
+ 496 0273 08       		.uleb128 0x8
+ 497 0274 81030000 		.4byte	.LASF82
+ 498 0278 FF01     		.sleb128 255
+ 499 027a 00       		.byte	0
+ 500 027b 07       		.uleb128 0x7
+ 501 027c 01       		.byte	0x1
+ 502 027d 03       		.byte	0x3
+ 503 027e 6F03     		.2byte	0x36f
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 12
+
+
+ 504 0280 A4020000 		.4byte	0x2a4
+ 505 0284 08       		.uleb128 0x8
+ 506 0285 8F0C0000 		.4byte	.LASF83
+ 507 0289 01       		.sleb128 1
+ 508 028a 08       		.uleb128 0x8
+ 509 028b A2090000 		.4byte	.LASF84
+ 510 028f 02       		.sleb128 2
+ 511 0290 08       		.uleb128 0x8
+ 512 0291 2E0B0000 		.4byte	.LASF85
+ 513 0295 03       		.sleb128 3
+ 514 0296 08       		.uleb128 0x8
+ 515 0297 70070000 		.4byte	.LASF86
+ 516 029b 04       		.sleb128 4
+ 517 029c 08       		.uleb128 0x8
+ 518 029d 7A040000 		.4byte	.LASF87
+ 519 02a1 FF01     		.sleb128 255
+ 520 02a3 00       		.byte	0
+ 521 02a4 04       		.uleb128 0x4
+ 522 02a5 0F010000 		.4byte	.LASF88
+ 523 02a9 03       		.byte	0x3
+ 524 02aa 8B03     		.2byte	0x38b
+ 525 02ac 7B020000 		.4byte	0x27b
+ 526 02b0 07       		.uleb128 0x7
+ 527 02b1 01       		.byte	0x1
+ 528 02b2 03       		.byte	0x3
+ 529 02b3 8F03     		.2byte	0x38f
+ 530 02b5 EB020000 		.4byte	0x2eb
+ 531 02b9 08       		.uleb128 0x8
+ 532 02ba 85010000 		.4byte	.LASF89
+ 533 02be 01       		.sleb128 1
+ 534 02bf 08       		.uleb128 0x8
+ 535 02c0 690A0000 		.4byte	.LASF90
+ 536 02c4 02       		.sleb128 2
+ 537 02c5 08       		.uleb128 0x8
+ 538 02c6 88080000 		.4byte	.LASF91
+ 539 02ca 03       		.sleb128 3
+ 540 02cb 08       		.uleb128 0x8
+ 541 02cc B00A0000 		.4byte	.LASF92
+ 542 02d0 04       		.sleb128 4
+ 543 02d1 08       		.uleb128 0x8
+ 544 02d2 F50A0000 		.4byte	.LASF93
+ 545 02d6 05       		.sleb128 5
+ 546 02d7 08       		.uleb128 0x8
+ 547 02d8 4C040000 		.4byte	.LASF94
+ 548 02dc 06       		.sleb128 6
+ 549 02dd 08       		.uleb128 0x8
+ 550 02de 54060000 		.4byte	.LASF95
+ 551 02e2 07       		.sleb128 7
+ 552 02e3 08       		.uleb128 0x8
+ 553 02e4 040A0000 		.4byte	.LASF96
+ 554 02e8 FF01     		.sleb128 255
+ 555 02ea 00       		.byte	0
+ 556 02eb 04       		.uleb128 0x4
+ 557 02ec 8E090000 		.4byte	.LASF97
+ 558 02f0 03       		.byte	0x3
+ 559 02f1 9803     		.2byte	0x398
+ 560 02f3 B0020000 		.4byte	0x2b0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 13
+
+
+ 561 02f7 09       		.uleb128 0x9
+ 562 02f8 02       		.byte	0x2
+ 563 02f9 04       		.byte	0x4
+ 564 02fa 9C01     		.2byte	0x19c
+ 565 02fc 1B030000 		.4byte	0x31b
+ 566 0300 0A       		.uleb128 0xa
+ 567 0301 1D0C0000 		.4byte	.LASF98
+ 568 0305 04       		.byte	0x4
+ 569 0306 A301     		.2byte	0x1a3
+ 570 0308 6B000000 		.4byte	0x6b
+ 571 030c 00       		.byte	0
+ 572 030d 0A       		.uleb128 0xa
+ 573 030e 94060000 		.4byte	.LASF99
+ 574 0312 04       		.byte	0x4
+ 575 0313 A901     		.2byte	0x1a9
+ 576 0315 6B000000 		.4byte	0x6b
+ 577 0319 01       		.byte	0x1
+ 578 031a 00       		.byte	0
+ 579 031b 04       		.uleb128 0x4
+ 580 031c E2060000 		.4byte	.LASF100
+ 581 0320 04       		.byte	0x4
+ 582 0321 AB01     		.2byte	0x1ab
+ 583 0323 F7020000 		.4byte	0x2f7
+ 584 0327 09       		.uleb128 0x9
+ 585 0328 04       		.byte	0x4
+ 586 0329 04       		.byte	0x4
+ 587 032a EF01     		.2byte	0x1ef
+ 588 032c 4B030000 		.4byte	0x34b
+ 589 0330 0A       		.uleb128 0xa
+ 590 0331 53000000 		.4byte	.LASF101
+ 591 0335 04       		.byte	0x4
+ 592 0336 F201     		.2byte	0x1f2
+ 593 0338 1B030000 		.4byte	0x31b
+ 594 033c 00       		.byte	0
+ 595 033d 0B       		.uleb128 0xb
+ 596 033e 6D747500 		.ascii	"mtu\000"
+ 597 0342 04       		.byte	0x4
+ 598 0343 F501     		.2byte	0x1f5
+ 599 0345 77000000 		.4byte	0x77
+ 600 0349 02       		.byte	0x2
+ 601 034a 00       		.byte	0
+ 602 034b 04       		.uleb128 0x4
+ 603 034c 00050000 		.4byte	.LASF102
+ 604 0350 04       		.byte	0x4
+ 605 0351 F701     		.2byte	0x1f7
+ 606 0353 27030000 		.4byte	0x327
+ 607 0357 07       		.uleb128 0x7
+ 608 0358 01       		.byte	0x1
+ 609 0359 05       		.byte	0x5
+ 610 035a BF07     		.2byte	0x7bf
+ 611 035c 7F030000 		.4byte	0x37f
+ 612 0360 08       		.uleb128 0x8
+ 613 0361 3F000000 		.4byte	.LASF103
+ 614 0365 00       		.sleb128 0
+ 615 0366 08       		.uleb128 0x8
+ 616 0367 F6060000 		.4byte	.LASF104
+ 617 036b 01       		.sleb128 1
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 14
+
+
+ 618 036c 08       		.uleb128 0x8
+ 619 036d 180B0000 		.4byte	.LASF105
+ 620 0371 02       		.sleb128 2
+ 621 0372 08       		.uleb128 0x8
+ 622 0373 E4010000 		.4byte	.LASF106
+ 623 0377 03       		.sleb128 3
+ 624 0378 08       		.uleb128 0x8
+ 625 0379 C7020000 		.4byte	.LASF107
+ 626 037d 04       		.sleb128 4
+ 627 037e 00       		.byte	0
+ 628 037f 04       		.uleb128 0x4
+ 629 0380 C90A0000 		.4byte	.LASF108
+ 630 0384 05       		.byte	0x5
+ 631 0385 CD07     		.2byte	0x7cd
+ 632 0387 57030000 		.4byte	0x357
+ 633 038b 0C       		.uleb128 0xc
+ 634 038c 440C0000 		.4byte	.LASF131
+ 635 0390 01       		.byte	0x1
+ 636 0391 24       		.byte	0x24
+ 637 0392 00000000 		.4byte	.LFB37
+ 638 0396 54000000 		.4byte	.LFE37-.LFB37
+ 639 039a 01       		.uleb128 0x1
+ 640 039b 9C       		.byte	0x9c
+ 641 039c 0D       		.uleb128 0xd
+ 642 039d 43070000 		.4byte	.LASF132
+ 643 03a1 01       		.byte	0x1
+ 644 03a2 4E       		.byte	0x4e
+ 645 03a3 00000000 		.4byte	.LFB38
+ 646 03a7 50000000 		.4byte	.LFE38-.LFB38
+ 647 03ab 01       		.uleb128 0x1
+ 648 03ac 9C       		.byte	0x9c
+ 649 03ad CE030000 		.4byte	0x3ce
+ 650 03b1 0E       		.uleb128 0xe
+ 651 03b2 FA040000 		.4byte	.LASF109
+ 652 03b6 01       		.byte	0x1
+ 653 03b7 4E       		.byte	0x4e
+ 654 03b8 83000000 		.4byte	0x83
+ 655 03bc 02       		.uleb128 0x2
+ 656 03bd 91       		.byte	0x91
+ 657 03be 74       		.sleb128 -12
+ 658 03bf 0E       		.uleb128 0xe
+ 659 03c0 A50A0000 		.4byte	.LASF110
+ 660 03c4 01       		.byte	0x1
+ 661 03c5 4E       		.byte	0x4e
+ 662 03c6 BC000000 		.4byte	0xbc
+ 663 03ca 02       		.uleb128 0x2
+ 664 03cb 91       		.byte	0x91
+ 665 03cc 70       		.sleb128 -16
+ 666 03cd 00       		.byte	0
+ 667 03ce 0F       		.uleb128 0xf
+ 668 03cf 07060000 		.4byte	.LASF111
+ 669 03d3 05       		.byte	0x5
+ 670 03d4 DA09     		.2byte	0x9da
+ 671 03d6 7F030000 		.4byte	0x37f
+ 672 03da 0F       		.uleb128 0xf
+ 673 03db 66010000 		.4byte	.LASF112
+ 674 03df 05       		.byte	0x5
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 15
+
+
+ 675 03e0 DC09     		.2byte	0x9dc
+ 676 03e2 B0000000 		.4byte	0xb0
+ 677 03e6 10       		.uleb128 0x10
+ 678 03e7 75030000 		.4byte	.LASF113
+ 679 03eb 06       		.byte	0x6
+ 680 03ec 2C       		.byte	0x2c
+ 681 03ed 6B000000 		.4byte	0x6b
+ 682 03f1 05       		.uleb128 0x5
+ 683 03f2 03       		.byte	0x3
+ 684 03f3 00000000 		.4byte	scan_status
+ 685 03f7 11       		.uleb128 0x11
+ 686 03f8 7800     		.ascii	"x\000"
+ 687 03fa 06       		.byte	0x6
+ 688 03fb 2D       		.byte	0x2d
+ 689 03fc 6B000000 		.4byte	0x6b
+ 690 0400 05       		.uleb128 0x5
+ 691 0401 03       		.byte	0x3
+ 692 0402 00000000 		.4byte	x
+ 693 0406 11       		.uleb128 0x11
+ 694 0407 7900     		.ascii	"y\000"
+ 695 0409 06       		.byte	0x6
+ 696 040a 2D       		.byte	0x2d
+ 697 040b 6B000000 		.4byte	0x6b
+ 698 040f 05       		.uleb128 0x5
+ 699 0410 03       		.byte	0x3
+ 700 0411 00000000 		.4byte	y
+ 701 0415 11       		.uleb128 0x11
+ 702 0416 7A00     		.ascii	"z\000"
+ 703 0418 06       		.byte	0x6
+ 704 0419 2D       		.byte	0x2d
+ 705 041a 6B000000 		.4byte	0x6b
+ 706 041e 05       		.uleb128 0x5
+ 707 041f 03       		.byte	0x3
+ 708 0420 00000000 		.4byte	z
+ 709 0424 10       		.uleb128 0x10
+ 710 0425 77010000 		.4byte	.LASF114
+ 711 0429 06       		.byte	0x6
+ 712 042a 2E       		.byte	0x2e
+ 713 042b 8F000000 		.4byte	0x8f
+ 714 042f 05       		.uleb128 0x5
+ 715 0430 03       		.byte	0x3
+ 716 0431 00000000 		.4byte	ADC_x_current
+ 717 0435 10       		.uleb128 0x10
+ 718 0436 55030000 		.4byte	.LASF115
+ 719 043a 06       		.byte	0x6
+ 720 043b 2E       		.byte	0x2e
+ 721 043c 8F000000 		.4byte	0x8f
+ 722 0440 05       		.uleb128 0x5
+ 723 0441 03       		.byte	0x3
+ 724 0442 00000000 		.4byte	ADC_y_current
+ 725 0446 10       		.uleb128 0x10
+ 726 0447 7D050000 		.4byte	.LASF116
+ 727 044b 06       		.byte	0x6
+ 728 044c 2E       		.byte	0x2e
+ 729 044d 8F000000 		.4byte	0x8f
+ 730 0451 05       		.uleb128 0x5
+ 731 0452 03       		.byte	0x3
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 16
+
+
+ 732 0453 00000000 		.4byte	ADC_z_current
+ 733 0457 10       		.uleb128 0x10
+ 734 0458 5A0A0000 		.4byte	.LASF117
+ 735 045c 06       		.byte	0x6
+ 736 045d 2E       		.byte	0x2e
+ 737 045e 8F000000 		.4byte	0x8f
+ 738 0462 05       		.uleb128 0x5
+ 739 0463 03       		.byte	0x3
+ 740 0464 00000000 		.4byte	ADC_x_previous
+ 741 0468 10       		.uleb128 0x10
+ 742 0469 7E020000 		.4byte	.LASF118
+ 743 046d 06       		.byte	0x6
+ 744 046e 2E       		.byte	0x2e
+ 745 046f 8F000000 		.4byte	0x8f
+ 746 0473 05       		.uleb128 0x5
+ 747 0474 03       		.byte	0x3
+ 748 0475 00000000 		.4byte	ADC_y_previous
+ 749 0479 10       		.uleb128 0x10
+ 750 047a 7F090000 		.4byte	.LASF119
+ 751 047e 06       		.byte	0x6
+ 752 047f 2E       		.byte	0x2e
+ 753 0480 8F000000 		.4byte	0x8f
+ 754 0484 05       		.uleb128 0x5
+ 755 0485 03       		.byte	0x3
+ 756 0486 00000000 		.4byte	ADC_z_previous
+ 757 048a 10       		.uleb128 0x10
+ 758 048b 23090000 		.4byte	.LASF120
+ 759 048f 06       		.byte	0x6
+ 760 0490 2F       		.byte	0x2f
+ 761 0491 6B000000 		.4byte	0x6b
+ 762 0495 05       		.uleb128 0x5
+ 763 0496 03       		.byte	0x3
+ 764 0497 00000000 		.4byte	BLE_Command
+ 765 049b 10       		.uleb128 0x10
+ 766 049c 78020000 		.4byte	.LASF121
+ 767 04a0 06       		.byte	0x6
+ 768 04a1 30       		.byte	0x30
+ 769 04a2 6B000000 		.4byte	0x6b
+ 770 04a6 05       		.uleb128 0x5
+ 771 04a7 03       		.byte	0x3
+ 772 04a8 00000000 		.4byte	state
+ 773 04ac 10       		.uleb128 0x10
+ 774 04ad 6A030000 		.4byte	.LASF122
+ 775 04b1 07       		.byte	0x7
+ 776 04b2 22       		.byte	0x22
+ 777 04b3 6B000000 		.4byte	0x6b
+ 778 04b7 05       		.uleb128 0x5
+ 779 04b8 03       		.byte	0x3
+ 780 04b9 00000000 		.4byte	connStatus
+ 781 04bd 10       		.uleb128 0x10
+ 782 04be D0040000 		.4byte	.LASF123
+ 783 04c2 07       		.byte	0x7
+ 784 04c3 23       		.byte	0x23
+ 785 04c4 A4020000 		.4byte	0x2a4
+ 786 04c8 05       		.uleb128 0x5
+ 787 04c9 03       		.byte	0x3
+ 788 04ca 00000000 		.4byte	lpMode
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 17
+
+
+ 789 04ce 10       		.uleb128 0x10
+ 790 04cf 22040000 		.4byte	.LASF124
+ 791 04d3 07       		.byte	0x7
+ 792 04d4 24       		.byte	0x24
+ 793 04d5 EB020000 		.4byte	0x2eb
+ 794 04d9 05       		.uleb128 0x5
+ 795 04da 03       		.byte	0x3
+ 796 04db 00000000 		.4byte	blessState
+ 797 04df 10       		.uleb128 0x10
+ 798 04e0 E40C0000 		.4byte	.LASF125
+ 799 04e4 07       		.byte	0x7
+ 800 04e5 25       		.byte	0x25
+ 801 04e6 6B000000 		.4byte	0x6b
+ 802 04ea 05       		.uleb128 0x5
+ 803 04eb 03       		.byte	0x3
+ 804 04ec 00000000 		.4byte	interruptStatus
+ 805 04f0 10       		.uleb128 0x10
+ 806 04f1 50090000 		.4byte	.LASF126
+ 807 04f5 01       		.byte	0x1
+ 808 04f6 11       		.byte	0x11
+ 809 04f7 77000000 		.4byte	0x77
+ 810 04fb 05       		.uleb128 0x5
+ 811 04fc 03       		.byte	0x3
+ 812 04fd 00000000 		.4byte	mtuSize
+ 813 0501 12       		.uleb128 0x12
+ 814 0502 7E0C0000 		.4byte	.LASF127
+ 815 0506 01       		.byte	0x1
+ 816 0507 13       		.byte	0x13
+ 817 0508 6B000000 		.4byte	0x6b
+ 818 050c 00       		.byte	0
+ 819              		.section	.debug_abbrev,"",%progbits
+ 820              	.Ldebug_abbrev0:
+ 821 0000 01       		.uleb128 0x1
+ 822 0001 11       		.uleb128 0x11
+ 823 0002 01       		.byte	0x1
+ 824 0003 25       		.uleb128 0x25
+ 825 0004 0E       		.uleb128 0xe
+ 826 0005 13       		.uleb128 0x13
+ 827 0006 0B       		.uleb128 0xb
+ 828 0007 03       		.uleb128 0x3
+ 829 0008 0E       		.uleb128 0xe
+ 830 0009 1B       		.uleb128 0x1b
+ 831 000a 0E       		.uleb128 0xe
+ 832 000b 55       		.uleb128 0x55
+ 833 000c 17       		.uleb128 0x17
+ 834 000d 11       		.uleb128 0x11
+ 835 000e 01       		.uleb128 0x1
+ 836 000f 10       		.uleb128 0x10
+ 837 0010 17       		.uleb128 0x17
+ 838 0011 00       		.byte	0
+ 839 0012 00       		.byte	0
+ 840 0013 02       		.uleb128 0x2
+ 841 0014 24       		.uleb128 0x24
+ 842 0015 00       		.byte	0
+ 843 0016 0B       		.uleb128 0xb
+ 844 0017 0B       		.uleb128 0xb
+ 845 0018 3E       		.uleb128 0x3e
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 18
+
+
+ 846 0019 0B       		.uleb128 0xb
+ 847 001a 03       		.uleb128 0x3
+ 848 001b 0E       		.uleb128 0xe
+ 849 001c 00       		.byte	0
+ 850 001d 00       		.byte	0
+ 851 001e 03       		.uleb128 0x3
+ 852 001f 24       		.uleb128 0x24
+ 853 0020 00       		.byte	0
+ 854 0021 0B       		.uleb128 0xb
+ 855 0022 0B       		.uleb128 0xb
+ 856 0023 3E       		.uleb128 0x3e
+ 857 0024 0B       		.uleb128 0xb
+ 858 0025 03       		.uleb128 0x3
+ 859 0026 08       		.uleb128 0x8
+ 860 0027 00       		.byte	0
+ 861 0028 00       		.byte	0
+ 862 0029 04       		.uleb128 0x4
+ 863 002a 16       		.uleb128 0x16
+ 864 002b 00       		.byte	0
+ 865 002c 03       		.uleb128 0x3
+ 866 002d 0E       		.uleb128 0xe
+ 867 002e 3A       		.uleb128 0x3a
+ 868 002f 0B       		.uleb128 0xb
+ 869 0030 3B       		.uleb128 0x3b
+ 870 0031 05       		.uleb128 0x5
+ 871 0032 49       		.uleb128 0x49
+ 872 0033 13       		.uleb128 0x13
+ 873 0034 00       		.byte	0
+ 874 0035 00       		.byte	0
+ 875 0036 05       		.uleb128 0x5
+ 876 0037 35       		.uleb128 0x35
+ 877 0038 00       		.byte	0
+ 878 0039 49       		.uleb128 0x49
+ 879 003a 13       		.uleb128 0x13
+ 880 003b 00       		.byte	0
+ 881 003c 00       		.byte	0
+ 882 003d 06       		.uleb128 0x6
+ 883 003e 0F       		.uleb128 0xf
+ 884 003f 00       		.byte	0
+ 885 0040 0B       		.uleb128 0xb
+ 886 0041 0B       		.uleb128 0xb
+ 887 0042 00       		.byte	0
+ 888 0043 00       		.byte	0
+ 889 0044 07       		.uleb128 0x7
+ 890 0045 04       		.uleb128 0x4
+ 891 0046 01       		.byte	0x1
+ 892 0047 0B       		.uleb128 0xb
+ 893 0048 0B       		.uleb128 0xb
+ 894 0049 3A       		.uleb128 0x3a
+ 895 004a 0B       		.uleb128 0xb
+ 896 004b 3B       		.uleb128 0x3b
+ 897 004c 05       		.uleb128 0x5
+ 898 004d 01       		.uleb128 0x1
+ 899 004e 13       		.uleb128 0x13
+ 900 004f 00       		.byte	0
+ 901 0050 00       		.byte	0
+ 902 0051 08       		.uleb128 0x8
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 19
+
+
+ 903 0052 28       		.uleb128 0x28
+ 904 0053 00       		.byte	0
+ 905 0054 03       		.uleb128 0x3
+ 906 0055 0E       		.uleb128 0xe
+ 907 0056 1C       		.uleb128 0x1c
+ 908 0057 0D       		.uleb128 0xd
+ 909 0058 00       		.byte	0
+ 910 0059 00       		.byte	0
+ 911 005a 09       		.uleb128 0x9
+ 912 005b 13       		.uleb128 0x13
+ 913 005c 01       		.byte	0x1
+ 914 005d 0B       		.uleb128 0xb
+ 915 005e 0B       		.uleb128 0xb
+ 916 005f 3A       		.uleb128 0x3a
+ 917 0060 0B       		.uleb128 0xb
+ 918 0061 3B       		.uleb128 0x3b
+ 919 0062 05       		.uleb128 0x5
+ 920 0063 01       		.uleb128 0x1
+ 921 0064 13       		.uleb128 0x13
+ 922 0065 00       		.byte	0
+ 923 0066 00       		.byte	0
+ 924 0067 0A       		.uleb128 0xa
+ 925 0068 0D       		.uleb128 0xd
+ 926 0069 00       		.byte	0
+ 927 006a 03       		.uleb128 0x3
+ 928 006b 0E       		.uleb128 0xe
+ 929 006c 3A       		.uleb128 0x3a
+ 930 006d 0B       		.uleb128 0xb
+ 931 006e 3B       		.uleb128 0x3b
+ 932 006f 05       		.uleb128 0x5
+ 933 0070 49       		.uleb128 0x49
+ 934 0071 13       		.uleb128 0x13
+ 935 0072 38       		.uleb128 0x38
+ 936 0073 0B       		.uleb128 0xb
+ 937 0074 00       		.byte	0
+ 938 0075 00       		.byte	0
+ 939 0076 0B       		.uleb128 0xb
+ 940 0077 0D       		.uleb128 0xd
+ 941 0078 00       		.byte	0
+ 942 0079 03       		.uleb128 0x3
+ 943 007a 08       		.uleb128 0x8
+ 944 007b 3A       		.uleb128 0x3a
+ 945 007c 0B       		.uleb128 0xb
+ 946 007d 3B       		.uleb128 0x3b
+ 947 007e 05       		.uleb128 0x5
+ 948 007f 49       		.uleb128 0x49
+ 949 0080 13       		.uleb128 0x13
+ 950 0081 38       		.uleb128 0x38
+ 951 0082 0B       		.uleb128 0xb
+ 952 0083 00       		.byte	0
+ 953 0084 00       		.byte	0
+ 954 0085 0C       		.uleb128 0xc
+ 955 0086 2E       		.uleb128 0x2e
+ 956 0087 00       		.byte	0
+ 957 0088 3F       		.uleb128 0x3f
+ 958 0089 19       		.uleb128 0x19
+ 959 008a 03       		.uleb128 0x3
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 20
+
+
+ 960 008b 0E       		.uleb128 0xe
+ 961 008c 3A       		.uleb128 0x3a
+ 962 008d 0B       		.uleb128 0xb
+ 963 008e 3B       		.uleb128 0x3b
+ 964 008f 0B       		.uleb128 0xb
+ 965 0090 27       		.uleb128 0x27
+ 966 0091 19       		.uleb128 0x19
+ 967 0092 11       		.uleb128 0x11
+ 968 0093 01       		.uleb128 0x1
+ 969 0094 12       		.uleb128 0x12
+ 970 0095 06       		.uleb128 0x6
+ 971 0096 40       		.uleb128 0x40
+ 972 0097 18       		.uleb128 0x18
+ 973 0098 9642     		.uleb128 0x2116
+ 974 009a 19       		.uleb128 0x19
+ 975 009b 00       		.byte	0
+ 976 009c 00       		.byte	0
+ 977 009d 0D       		.uleb128 0xd
+ 978 009e 2E       		.uleb128 0x2e
+ 979 009f 01       		.byte	0x1
+ 980 00a0 3F       		.uleb128 0x3f
+ 981 00a1 19       		.uleb128 0x19
+ 982 00a2 03       		.uleb128 0x3
+ 983 00a3 0E       		.uleb128 0xe
+ 984 00a4 3A       		.uleb128 0x3a
+ 985 00a5 0B       		.uleb128 0xb
+ 986 00a6 3B       		.uleb128 0x3b
+ 987 00a7 0B       		.uleb128 0xb
+ 988 00a8 27       		.uleb128 0x27
+ 989 00a9 19       		.uleb128 0x19
+ 990 00aa 11       		.uleb128 0x11
+ 991 00ab 01       		.uleb128 0x1
+ 992 00ac 12       		.uleb128 0x12
+ 993 00ad 06       		.uleb128 0x6
+ 994 00ae 40       		.uleb128 0x40
+ 995 00af 18       		.uleb128 0x18
+ 996 00b0 9742     		.uleb128 0x2117
+ 997 00b2 19       		.uleb128 0x19
+ 998 00b3 01       		.uleb128 0x1
+ 999 00b4 13       		.uleb128 0x13
+ 1000 00b5 00       		.byte	0
+ 1001 00b6 00       		.byte	0
+ 1002 00b7 0E       		.uleb128 0xe
+ 1003 00b8 05       		.uleb128 0x5
+ 1004 00b9 00       		.byte	0
+ 1005 00ba 03       		.uleb128 0x3
+ 1006 00bb 0E       		.uleb128 0xe
+ 1007 00bc 3A       		.uleb128 0x3a
+ 1008 00bd 0B       		.uleb128 0xb
+ 1009 00be 3B       		.uleb128 0x3b
+ 1010 00bf 0B       		.uleb128 0xb
+ 1011 00c0 49       		.uleb128 0x49
+ 1012 00c1 13       		.uleb128 0x13
+ 1013 00c2 02       		.uleb128 0x2
+ 1014 00c3 18       		.uleb128 0x18
+ 1015 00c4 00       		.byte	0
+ 1016 00c5 00       		.byte	0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 21
+
+
+ 1017 00c6 0F       		.uleb128 0xf
+ 1018 00c7 34       		.uleb128 0x34
+ 1019 00c8 00       		.byte	0
+ 1020 00c9 03       		.uleb128 0x3
+ 1021 00ca 0E       		.uleb128 0xe
+ 1022 00cb 3A       		.uleb128 0x3a
+ 1023 00cc 0B       		.uleb128 0xb
+ 1024 00cd 3B       		.uleb128 0x3b
+ 1025 00ce 05       		.uleb128 0x5
+ 1026 00cf 49       		.uleb128 0x49
+ 1027 00d0 13       		.uleb128 0x13
+ 1028 00d1 3F       		.uleb128 0x3f
+ 1029 00d2 19       		.uleb128 0x19
+ 1030 00d3 3C       		.uleb128 0x3c
+ 1031 00d4 19       		.uleb128 0x19
+ 1032 00d5 00       		.byte	0
+ 1033 00d6 00       		.byte	0
+ 1034 00d7 10       		.uleb128 0x10
+ 1035 00d8 34       		.uleb128 0x34
+ 1036 00d9 00       		.byte	0
+ 1037 00da 03       		.uleb128 0x3
+ 1038 00db 0E       		.uleb128 0xe
+ 1039 00dc 3A       		.uleb128 0x3a
+ 1040 00dd 0B       		.uleb128 0xb
+ 1041 00de 3B       		.uleb128 0x3b
+ 1042 00df 0B       		.uleb128 0xb
+ 1043 00e0 49       		.uleb128 0x49
+ 1044 00e1 13       		.uleb128 0x13
+ 1045 00e2 3F       		.uleb128 0x3f
+ 1046 00e3 19       		.uleb128 0x19
+ 1047 00e4 02       		.uleb128 0x2
+ 1048 00e5 18       		.uleb128 0x18
+ 1049 00e6 00       		.byte	0
+ 1050 00e7 00       		.byte	0
+ 1051 00e8 11       		.uleb128 0x11
+ 1052 00e9 34       		.uleb128 0x34
+ 1053 00ea 00       		.byte	0
+ 1054 00eb 03       		.uleb128 0x3
+ 1055 00ec 08       		.uleb128 0x8
+ 1056 00ed 3A       		.uleb128 0x3a
+ 1057 00ee 0B       		.uleb128 0xb
+ 1058 00ef 3B       		.uleb128 0x3b
+ 1059 00f0 0B       		.uleb128 0xb
+ 1060 00f1 49       		.uleb128 0x49
+ 1061 00f2 13       		.uleb128 0x13
+ 1062 00f3 3F       		.uleb128 0x3f
+ 1063 00f4 19       		.uleb128 0x19
+ 1064 00f5 02       		.uleb128 0x2
+ 1065 00f6 18       		.uleb128 0x18
+ 1066 00f7 00       		.byte	0
+ 1067 00f8 00       		.byte	0
+ 1068 00f9 12       		.uleb128 0x12
+ 1069 00fa 34       		.uleb128 0x34
+ 1070 00fb 00       		.byte	0
+ 1071 00fc 03       		.uleb128 0x3
+ 1072 00fd 0E       		.uleb128 0xe
+ 1073 00fe 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 22
+
+
+ 1074 00ff 0B       		.uleb128 0xb
+ 1075 0100 3B       		.uleb128 0x3b
+ 1076 0101 0B       		.uleb128 0xb
+ 1077 0102 49       		.uleb128 0x49
+ 1078 0103 13       		.uleb128 0x13
+ 1079 0104 3F       		.uleb128 0x3f
+ 1080 0105 19       		.uleb128 0x19
+ 1081 0106 3C       		.uleb128 0x3c
+ 1082 0107 19       		.uleb128 0x19
+ 1083 0108 00       		.byte	0
+ 1084 0109 00       		.byte	0
+ 1085 010a 00       		.byte	0
+ 1086              		.section	.debug_aranges,"",%progbits
+ 1087 0000 24000000 		.4byte	0x24
+ 1088 0004 0200     		.2byte	0x2
+ 1089 0006 00000000 		.4byte	.Ldebug_info0
+ 1090 000a 04       		.byte	0x4
+ 1091 000b 00       		.byte	0
+ 1092 000c 0000     		.2byte	0
+ 1093 000e 0000     		.2byte	0
+ 1094 0010 00000000 		.4byte	.LFB37
+ 1095 0014 54000000 		.4byte	.LFE37-.LFB37
+ 1096 0018 00000000 		.4byte	.LFB38
+ 1097 001c 50000000 		.4byte	.LFE38-.LFB38
+ 1098 0020 00000000 		.4byte	0
+ 1099 0024 00000000 		.4byte	0
+ 1100              		.section	.debug_ranges,"",%progbits
+ 1101              	.Ldebug_ranges0:
+ 1102 0000 00000000 		.4byte	.LFB37
+ 1103 0004 54000000 		.4byte	.LFE37
+ 1104 0008 00000000 		.4byte	.LFB38
+ 1105 000c 50000000 		.4byte	.LFE38
+ 1106 0010 00000000 		.4byte	0
+ 1107 0014 00000000 		.4byte	0
+ 1108              		.section	.debug_line,"",%progbits
+ 1109              	.Ldebug_line0:
+ 1110 0000 EC000000 		.section	.debug_str,"MS",%progbits,1
+ 1110      02009B00 
+ 1110      00000201 
+ 1110      FB0E0D00 
+ 1110      01010101 
+ 1111              	.LASF77:
+ 1112 0000 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 1112      455F4556 
+ 1112      545F4C32 
+ 1112      4341505F 
+ 1112      43424643 
+ 1113              	.LASF22:
+ 1114 0023 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 1114      455F4556 
+ 1114      545F5354 
+ 1114      41434B5F 
+ 1114      42555359 
+ 1115              	.LASF103:
+ 1116 003f 4359424C 		.ascii	"CYBLE_STATE_STOPPED\000"
+ 1116      455F5354 
+ 1116      4154455F 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 23
+
+
+ 1116      53544F50 
+ 1116      50454400 
+ 1117              	.LASF101:
+ 1118 0053 636F6E6E 		.ascii	"connHandle\000"
+ 1118      48616E64 
+ 1118      6C6500
+ 1119              	.LASF34:
+ 1120 005e 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 1120      455F4556 
+ 1120      545F4741 
+ 1120      505F434F 
+ 1120      4E4E4543 
+ 1121              	.LASF75:
+ 1122 0087 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 1122      455F4556 
+ 1122      545F4C32 
+ 1122      4341505F 
+ 1122      43424643 
+ 1123              	.LASF39:
+ 1124 00a8 4359424C 		.ascii	"CYBLE_EVT_GAP_OOB_GENERATED_NOTIFICATION\000"
+ 1124      455F4556 
+ 1124      545F4741 
+ 1124      505F4F4F 
+ 1124      425F4745 
+ 1125              	.LASF55:
+ 1126 00d1 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 1126      455F4556 
+ 1126      545F4741 
+ 1126      5454435F 
+ 1126      52454144 
+ 1127              	.LASF60:
+ 1128 00f0 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 1128      455F4556 
+ 1128      545F4741 
+ 1128      5454535F 
+ 1128      45584543 
+ 1129              	.LASF88:
+ 1130 010f 4359424C 		.ascii	"CYBLE_LP_MODE_T\000"
+ 1130      455F4C50 
+ 1130      5F4D4F44 
+ 1130      455F5400 
+ 1131              	.LASF19:
+ 1132 011f 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 1132      455F4556 
+ 1132      545F5449 
+ 1132      4D454F55 
+ 1132      5400
+ 1133              	.LASF4:
+ 1134 0131 6C6F6E67 		.ascii	"long int\000"
+ 1134      20696E74 
+ 1134      00
+ 1135              	.LASF7:
+ 1136 013a 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1136      206C6F6E 
+ 1136      6720756E 
+ 1136      7369676E 
+ 1136      65642069 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 24
+
+
+ 1137              	.LASF21:
+ 1138 0151 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 1138      455F4556 
+ 1138      545F4843 
+ 1138      495F5354 
+ 1138      41545553 
+ 1139              	.LASF112:
+ 1140 0166 6379426C 		.ascii	"cyBle_busyStatus\000"
+ 1140      655F6275 
+ 1140      73795374 
+ 1140      61747573 
+ 1140      00
+ 1141              	.LASF114:
+ 1142 0177 4144435F 		.ascii	"ADC_x_current\000"
+ 1142      785F6375 
+ 1142      7272656E 
+ 1142      7400
+ 1143              	.LASF89:
+ 1144 0185 4359424C 		.ascii	"CYBLE_BLESS_STATE_ACTIVE\000"
+ 1144      455F424C 
+ 1144      4553535F 
+ 1144      53544154 
+ 1144      455F4143 
+ 1145              	.LASF33:
+ 1146 019e 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 1146      455F4556 
+ 1146      545F4741 
+ 1146      505F454E 
+ 1146      43525950 
+ 1147              	.LASF37:
+ 1148 01bb 4359424C 		.ascii	"CYBLE_EVT_GAP_NUMERIC_COMPARISON_REQUEST\000"
+ 1148      455F4556 
+ 1148      545F4741 
+ 1148      505F4E55 
+ 1148      4D455249 
+ 1149              	.LASF106:
+ 1150 01e4 4359424C 		.ascii	"CYBLE_STATE_ADVERTISING\000"
+ 1150      455F5354 
+ 1150      4154455F 
+ 1150      41445645 
+ 1150      52544953 
+ 1151              	.LASF6:
+ 1152 01fc 6C6F6E67 		.ascii	"long long int\000"
+ 1152      206C6F6E 
+ 1152      6720696E 
+ 1152      7400
+ 1153              	.LASF0:
+ 1154 020a 7369676E 		.ascii	"signed char\000"
+ 1154      65642063 
+ 1154      68617200 
+ 1155              	.LASF18:
+ 1156 0216 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 1156      455F4556 
+ 1156      545F5354 
+ 1156      41434B5F 
+ 1156      4F4E00
+ 1157              	.LASF35:
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 25
+
+
+ 1158 0229 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 1158      455F4556 
+ 1158      545F4741 
+ 1158      50435F53 
+ 1158      43414E5F 
+ 1159              	.LASF25:
+ 1160 0248 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 1160      455F4556 
+ 1160      545F4741 
+ 1160      505F4155 
+ 1160      54485F52 
+ 1161              	.LASF53:
+ 1162 025f 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 1162      455F4556 
+ 1162      545F4741 
+ 1162      5454435F 
+ 1162      52454144 
+ 1163              	.LASF121:
+ 1164 0278 73746174 		.ascii	"state\000"
+ 1164      6500
+ 1165              	.LASF118:
+ 1166 027e 4144435F 		.ascii	"ADC_y_previous\000"
+ 1166      795F7072 
+ 1166      6576696F 
+ 1166      757300
+ 1167              	.LASF58:
+ 1168 028d 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 1168      455F4556 
+ 1168      545F4741 
+ 1168      5454535F 
+ 1168      57524954 
+ 1169              	.LASF71:
+ 1170 02ab 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 1170      455F4556 
+ 1170      545F4C32 
+ 1170      4341505F 
+ 1170      434F4D4D 
+ 1171              	.LASF107:
+ 1172 02c7 4359424C 		.ascii	"CYBLE_STATE_DISCONNECTED\000"
+ 1172      455F5354 
+ 1172      4154455F 
+ 1172      44495343 
+ 1172      4F4E4E45 
+ 1173              	.LASF30:
+ 1174 02e0 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 1174      455F4556 
+ 1174      545F4741 
+ 1174      50505F41 
+ 1174      44564552 
+ 1175              	.LASF9:
+ 1176 0308 75696E74 		.ascii	"uint8\000"
+ 1176      3800
+ 1177              	.LASF61:
+ 1178 030e 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 1178      455F4556 
+ 1178      545F4741 
+ 1178      5454435F 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 26
+
+
+ 1178      45584543 
+ 1179              	.LASF14:
+ 1180 032d 646F7562 		.ascii	"double\000"
+ 1180      6C6500
+ 1181              	.LASF74:
+ 1182 0334 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 1182      455F4556 
+ 1182      545F4C32 
+ 1182      4341505F 
+ 1182      43424643 
+ 1183              	.LASF115:
+ 1184 0355 4144435F 		.ascii	"ADC_y_current\000"
+ 1184      795F6375 
+ 1184      7272656E 
+ 1184      7400
+ 1185              	.LASF11:
+ 1186 0363 75696E74 		.ascii	"uint32\000"
+ 1186      333200
+ 1187              	.LASF122:
+ 1188 036a 636F6E6E 		.ascii	"connStatus\000"
+ 1188      53746174 
+ 1188      757300
+ 1189              	.LASF113:
+ 1190 0375 7363616E 		.ascii	"scan_status\000"
+ 1190      5F737461 
+ 1190      74757300 
+ 1191              	.LASF82:
+ 1192 0381 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 1192      455F4556 
+ 1192      545F4D41 
+ 1192      5800
+ 1193              	.LASF44:
+ 1194 038f 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 1194      455F4556 
+ 1194      545F4741 
+ 1194      5454435F 
+ 1194      4552524F 
+ 1195              	.LASF69:
+ 1196 03a9 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 1196      455F4556 
+ 1196      545F4C32 
+ 1196      4341505F 
+ 1196      434F4E4E 
+ 1197              	.LASF79:
+ 1198 03cf 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 1198      455F4556 
+ 1198      545F4C32 
+ 1198      4341505F 
+ 1198      43424643 
+ 1199              	.LASF66:
+ 1200 03f3 4359424C 		.ascii	"CYBLE_EVT_GATTC_STOP_CMD_COMPLETE\000"
+ 1200      455F4556 
+ 1200      545F4741 
+ 1200      5454435F 
+ 1200      53544F50 
+ 1201              	.LASF8:
+ 1202 0415 756E7369 		.ascii	"unsigned int\000"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 27
+
+
+ 1202      676E6564 
+ 1202      20696E74 
+ 1202      00
+ 1203              	.LASF124:
+ 1204 0422 626C6573 		.ascii	"blessState\000"
+ 1204      73537461 
+ 1204      746500
+ 1205              	.LASF81:
+ 1206 042d 4359424C 		.ascii	"CYBLE_EVT_LE_PING_AUTH_TIMEOUT\000"
+ 1206      455F4556 
+ 1206      545F4C45 
+ 1206      5F50494E 
+ 1206      475F4155 
+ 1207              	.LASF94:
+ 1208 044c 4359424C 		.ascii	"CYBLE_BLESS_STATE_DEEPSLEEP\000"
+ 1208      455F424C 
+ 1208      4553535F 
+ 1208      53544154 
+ 1208      455F4445 
+ 1209              	.LASF5:
+ 1210 0468 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1210      20756E73 
+ 1210      69676E65 
+ 1210      6420696E 
+ 1210      7400
+ 1211              	.LASF87:
+ 1212 047a 4359424C 		.ascii	"CYBLE_BLESS_INVALID\000"
+ 1212      455F424C 
+ 1212      4553535F 
+ 1212      494E5641 
+ 1212      4C494400 
+ 1213              	.LASF48:
+ 1214 048e 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 1214      455F4556 
+ 1214      545F4741 
+ 1214      5454435F 
+ 1214      5843484E 
+ 1215              	.LASF65:
+ 1216 04ac 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ 1216      455F4556 
+ 1216      545F4741 
+ 1216      5454535F 
+ 1216      44415441 
+ 1217              	.LASF123:
+ 1218 04d0 6C704D6F 		.ascii	"lpMode\000"
+ 1218      646500
+ 1219              	.LASF68:
+ 1220 04d7 4359424C 		.ascii	"CYBLE_EVT_GATTC_LONG_PROCEDURE_END\000"
+ 1220      455F4556 
+ 1220      545F4741 
+ 1220      5454435F 
+ 1220      4C4F4E47 
+ 1221              	.LASF109:
+ 1222 04fa 6576656E 		.ascii	"event\000"
+ 1222      7400
+ 1223              	.LASF102:
+ 1224 0500 4359424C 		.ascii	"CYBLE_GATT_XCHG_MTU_PARAM_T\000"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 28
+
+
+ 1224      455F4741 
+ 1224      54545F58 
+ 1224      4348475F 
+ 1224      4D54555F 
+ 1225              	.LASF3:
+ 1226 051c 73686F72 		.ascii	"short unsigned int\000"
+ 1226      7420756E 
+ 1226      7369676E 
+ 1226      65642069 
+ 1226      6E7400
+ 1227              	.LASF17:
+ 1228 052f 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 1228      455F4556 
+ 1228      545F484F 
+ 1228      53545F49 
+ 1228      4E56414C 
+ 1229              	.LASF51:
+ 1230 0546 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 1230      455F4556 
+ 1230      545F4741 
+ 1230      5454435F 
+ 1230      46494E44 
+ 1231              	.LASF23:
+ 1232 0564 4359424C 		.ascii	"CYBLE_EVT_MEMORY_REQUEST\000"
+ 1232      455F4556 
+ 1232      545F4D45 
+ 1232      4D4F5259 
+ 1232      5F524551 
+ 1233              	.LASF116:
+ 1234 057d 4144435F 		.ascii	"ADC_z_current\000"
+ 1234      7A5F6375 
+ 1234      7272656E 
+ 1234      7400
+ 1235              	.LASF76:
+ 1236 058b 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 1236      455F4556 
+ 1236      545F4C32 
+ 1236      4341505F 
+ 1236      43424643 
+ 1237              	.LASF26:
+ 1238 05aa 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 1238      455F4556 
+ 1238      545F4741 
+ 1238      505F5041 
+ 1238      53534B45 
+ 1239              	.LASF31:
+ 1240 05ce 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 1240      455F4556 
+ 1240      545F4741 
+ 1240      505F4445 
+ 1240      56494345 
+ 1241              	.LASF56:
+ 1242 05ed 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 1242      455F4556 
+ 1242      545F4741 
+ 1242      5454535F 
+ 1242      57524954 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 29
+
+
+ 1243              	.LASF111:
+ 1244 0607 6379426C 		.ascii	"cyBle_state\000"
+ 1244      655F7374 
+ 1244      61746500 
+ 1245              	.LASF27:
+ 1246 0613 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 1246      455F4556 
+ 1246      545F4741 
+ 1246      505F5041 
+ 1246      53534B45 
+ 1247              	.LASF45:
+ 1248 0639 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 1248      455F4556 
+ 1248      545F4741 
+ 1248      54545F43 
+ 1248      4F4E4E45 
+ 1249              	.LASF95:
+ 1250 0654 4359424C 		.ascii	"CYBLE_BLESS_STATE_HIBERNATE\000"
+ 1250      455F424C 
+ 1250      4553535F 
+ 1250      53544154 
+ 1250      455F4849 
+ 1251              	.LASF24:
+ 1252 0670 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 1252      455F4556 
+ 1252      545F4741 
+ 1252      50435F53 
+ 1252      43414E5F 
+ 1253              	.LASF99:
+ 1254 0694 61747449 		.ascii	"attId\000"
+ 1254      6400
+ 1255              	.LASF72:
+ 1256 069a 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 1256      455F4556 
+ 1256      545F4C32 
+ 1256      4341505F 
+ 1256      43424643 
+ 1257              	.LASF50:
+ 1258 06b8 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 1258      455F4556 
+ 1258      545F4741 
+ 1258      5454435F 
+ 1258      52454144 
+ 1259              	.LASF16:
+ 1260 06d9 73697A65 		.ascii	"sizetype\000"
+ 1260      74797065 
+ 1260      00
+ 1261              	.LASF100:
+ 1262 06e2 4359424C 		.ascii	"CYBLE_CONN_HANDLE_T\000"
+ 1262      455F434F 
+ 1262      4E4E5F48 
+ 1262      414E444C 
+ 1262      455F5400 
+ 1263              	.LASF104:
+ 1264 06f6 4359424C 		.ascii	"CYBLE_STATE_INITIALIZING\000"
+ 1264      455F5354 
+ 1264      4154455F 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 30
+
+
+ 1264      494E4954 
+ 1264      49414C49 
+ 1265              	.LASF29:
+ 1266 070f 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 1266      455F4556 
+ 1266      545F4741 
+ 1266      505F4155 
+ 1266      54485F46 
+ 1267              	.LASF57:
+ 1268 0729 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 1268      455F4556 
+ 1268      545F4741 
+ 1268      5454435F 
+ 1268      57524954 
+ 1269              	.LASF132:
+ 1270 0743 41707043 		.ascii	"AppCallBack\000"
+ 1270      616C6C42 
+ 1270      61636B00 
+ 1271              	.LASF42:
+ 1272 074f 4359424C 		.ascii	"CYBLE_EVT_GAPC_DIRECT_ADV_REPORT\000"
+ 1272      455F4556 
+ 1272      545F4741 
+ 1272      50435F44 
+ 1272      49524543 
+ 1273              	.LASF86:
+ 1274 0770 4359424C 		.ascii	"CYBLE_BLESS_HIBERNATE\000"
+ 1274      455F424C 
+ 1274      4553535F 
+ 1274      48494245 
+ 1274      524E4154 
+ 1275              	.LASF40:
+ 1276 0786 4359424C 		.ascii	"CYBLE_EVT_GAP_DATA_LENGTH_CHANGE\000"
+ 1276      455F4556 
+ 1276      545F4741 
+ 1276      505F4441 
+ 1276      54415F4C 
+ 1277              	.LASF130:
+ 1278 07a7 443A5C57 		.ascii	"D:\\Work\\Projects\\Accelerometer_Controlled_Car\\P"
+ 1278      6F726B5C 
+ 1278      50726F6A 
+ 1278      65637473 
+ 1278      5C416363 
+ 1279 07d6 536F435F 		.ascii	"SoC_4_BLE_ACCELEROMETER.cydsn\000"
+ 1279      345F424C 
+ 1279      455F4143 
+ 1279      43454C45 
+ 1279      524F4D45 
+ 1280              	.LASF28:
+ 1281 07f4 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 1281      455F4556 
+ 1281      545F4741 
+ 1281      505F4155 
+ 1281      54485F43 
+ 1282              	.LASF62:
+ 1283 0810 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 1283      455F4556 
+ 1283      545F4741 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 31
+
+
+ 1283      5454435F 
+ 1283      48414E44 
+ 1284              	.LASF129:
+ 1285 0831 2E5C6170 		.ascii	".\\app_Ble.c\000"
+ 1285      705F426C 
+ 1285      652E6300 
+ 1286              	.LASF73:
+ 1287 083d 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 1287      455F4556 
+ 1287      545F4C32 
+ 1287      4341505F 
+ 1287      43424643 
+ 1288              	.LASF49:
+ 1289 085b 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 1289      455F4556 
+ 1289      545F4741 
+ 1289      5454435F 
+ 1289      52454144 
+ 1290              	.LASF13:
+ 1291 0882 666C6F61 		.ascii	"float\000"
+ 1291      7400
+ 1292              	.LASF91:
+ 1293 0888 4359424C 		.ascii	"CYBLE_BLESS_STATE_SLEEP\000"
+ 1293      455F424C 
+ 1293      4553535F 
+ 1293      53544154 
+ 1293      455F534C 
+ 1294              	.LASF1:
+ 1295 08a0 756E7369 		.ascii	"unsigned char\000"
+ 1295      676E6564 
+ 1295      20636861 
+ 1295      7200
+ 1296              	.LASF10:
+ 1297 08ae 75696E74 		.ascii	"uint16\000"
+ 1297      313600
+ 1298              	.LASF38:
+ 1299 08b5 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYPRESS_NOTIFICATION\000"
+ 1299      455F4556 
+ 1299      545F4741 
+ 1299      505F4B45 
+ 1299      59505245 
+ 1300              	.LASF2:
+ 1301 08d9 73686F72 		.ascii	"short int\000"
+ 1301      7420696E 
+ 1301      7400
+ 1302              	.LASF63:
+ 1303 08e3 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 1303      455F4556 
+ 1303      545F4741 
+ 1303      5454435F 
+ 1303      48414E44 
+ 1304              	.LASF59:
+ 1305 0904 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 1305      455F4556 
+ 1305      545F4741 
+ 1305      5454535F 
+ 1305      50524550 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 32
+
+
+ 1306              	.LASF120:
+ 1307 0923 424C455F 		.ascii	"BLE_Command\000"
+ 1307      436F6D6D 
+ 1307      616E6400 
+ 1308              	.LASF64:
+ 1309 092f 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 1309      455F4556 
+ 1309      545F4741 
+ 1309      5454535F 
+ 1309      48414E44 
+ 1310              	.LASF126:
+ 1311 0950 6D747553 		.ascii	"mtuSize\000"
+ 1311      697A6500 
+ 1312              	.LASF43:
+ 1313 0958 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_NEGOTIATED_AUTH_INFO\000"
+ 1313      455F4556 
+ 1313      545F4741 
+ 1313      505F534D 
+ 1313      505F4E45 
+ 1314              	.LASF119:
+ 1315 097f 4144435F 		.ascii	"ADC_z_previous\000"
+ 1315      7A5F7072 
+ 1315      6576696F 
+ 1315      757300
+ 1316              	.LASF97:
+ 1317 098e 4359424C 		.ascii	"CYBLE_BLESS_STATE_T\000"
+ 1317      455F424C 
+ 1317      4553535F 
+ 1317      53544154 
+ 1317      455F5400 
+ 1318              	.LASF84:
+ 1319 09a2 4359424C 		.ascii	"CYBLE_BLESS_SLEEP\000"
+ 1319      455F424C 
+ 1319      4553535F 
+ 1319      534C4545 
+ 1319      5000
+ 1320              	.LASF15:
+ 1321 09b4 63686172 		.ascii	"char\000"
+ 1321      00
+ 1322              	.LASF32:
+ 1323 09b9 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 1323      455F4556 
+ 1323      545F4741 
+ 1323      505F4445 
+ 1323      56494345 
+ 1324              	.LASF67:
+ 1325 09db 4359424C 		.ascii	"CYBLE_EVT_GATTS_READ_CHAR_VAL_ACCESS_REQ\000"
+ 1325      455F4556 
+ 1325      545F4741 
+ 1325      5454535F 
+ 1325      52454144 
+ 1326              	.LASF96:
+ 1327 0a04 4359424C 		.ascii	"CYBLE_BLESS_STATE_INVALID\000"
+ 1327      455F424C 
+ 1327      4553535F 
+ 1327      53544154 
+ 1327      455F494E 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 33
+
+
+ 1328              	.LASF78:
+ 1329 0a1e 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 1329      455F4556 
+ 1329      545F4C32 
+ 1329      4341505F 
+ 1329      43424643 
+ 1330              	.LASF20:
+ 1331 0a41 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 1331      455F4556 
+ 1331      545F4841 
+ 1331      52445741 
+ 1331      52455F45 
+ 1332              	.LASF117:
+ 1333 0a5a 4144435F 		.ascii	"ADC_x_previous\000"
+ 1333      785F7072 
+ 1333      6576696F 
+ 1333      757300
+ 1334              	.LASF90:
+ 1335 0a69 4359424C 		.ascii	"CYBLE_BLESS_STATE_EVENT_CLOSE\000"
+ 1335      455F424C 
+ 1335      4553535F 
+ 1335      53544154 
+ 1335      455F4556 
+ 1336              	.LASF47:
+ 1337 0a87 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 1337      455F4556 
+ 1337      545F4741 
+ 1337      5454535F 
+ 1337      58434E48 
+ 1338              	.LASF110:
+ 1339 0aa5 6576656E 		.ascii	"eventParam\000"
+ 1339      74506172 
+ 1339      616D00
+ 1340              	.LASF92:
+ 1341 0ab0 4359424C 		.ascii	"CYBLE_BLESS_STATE_ECO_ON\000"
+ 1341      455F424C 
+ 1341      4553535F 
+ 1341      53544154 
+ 1341      455F4543 
+ 1342              	.LASF108:
+ 1343 0ac9 4359424C 		.ascii	"CYBLE_STATE_T\000"
+ 1343      455F5354 
+ 1343      4154455F 
+ 1343      5400
+ 1344              	.LASF54:
+ 1345 0ad7 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 1345      455F4556 
+ 1345      545F4741 
+ 1345      5454435F 
+ 1345      52454144 
+ 1346              	.LASF93:
+ 1347 0af5 4359424C 		.ascii	"CYBLE_BLESS_STATE_ECO_STABLE\000"
+ 1347      455F424C 
+ 1347      4553535F 
+ 1347      53544154 
+ 1347      455F4543 
+ 1348              	.LASF12:
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 34
+
+
+ 1349 0b12 696E7431 		.ascii	"int16\000"
+ 1349      3600
+ 1350              	.LASF105:
+ 1351 0b18 4359424C 		.ascii	"CYBLE_STATE_CONNECTED\000"
+ 1351      455F5354 
+ 1351      4154455F 
+ 1351      434F4E4E 
+ 1351      45435445 
+ 1352              	.LASF85:
+ 1353 0b2e 4359424C 		.ascii	"CYBLE_BLESS_DEEPSLEEP\000"
+ 1353      455F424C 
+ 1353      4553535F 
+ 1353      44454550 
+ 1353      534C4545 
+ 1354              	.LASF128:
+ 1355 0b44 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 1355      4320342E 
+ 1355      392E3320 
+ 1355      32303135 
+ 1355      30333033 
+ 1356 0b77 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 1356      20726576 
+ 1356      6973696F 
+ 1356      6E203232 
+ 1356      31323230 
+ 1357 0baa 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1357      66756E63 
+ 1357      74696F6E 
+ 1357      2D736563 
+ 1357      74696F6E 
+ 1358              	.LASF52:
+ 1359 0bd2 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 1359      455F4556 
+ 1359      545F4741 
+ 1359      5454435F 
+ 1359      46494E44 
+ 1360              	.LASF36:
+ 1361 0bf9 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 1361      455F4556 
+ 1361      545F4741 
+ 1361      505F4B45 
+ 1361      59494E46 
+ 1362              	.LASF98:
+ 1363 0c1d 62644861 		.ascii	"bdHandle\000"
+ 1363      6E646C65 
+ 1363      00
+ 1364              	.LASF80:
+ 1365 0c26 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 1365      455F4556 
+ 1365      545F5045 
+ 1365      4E44494E 
+ 1365      475F464C 
+ 1366              	.LASF131:
+ 1367 0c44 48616E64 		.ascii	"HandleBleProcessing\000"
+ 1367      6C65426C 
+ 1367      6550726F 
+ 1367      63657373 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccQxroFn.s 			page 35
+
+
+ 1367      696E6700 
+ 1368              	.LASF70:
+ 1369 0c58 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 1369      455F4556 
+ 1369      545F4C32 
+ 1369      4341505F 
+ 1369      434F4E4E 
+ 1370              	.LASF127:
+ 1371 0c7e 6170706C 		.ascii	"applicationPower\000"
+ 1371      69636174 
+ 1371      696F6E50 
+ 1371      6F776572 
+ 1371      00
+ 1372              	.LASF83:
+ 1373 0c8f 4359424C 		.ascii	"CYBLE_BLESS_ACTIVE\000"
+ 1373      455F424C 
+ 1373      4553535F 
+ 1373      41435449 
+ 1373      564500
+ 1374              	.LASF41:
+ 1375 0ca2 4359424C 		.ascii	"CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE\000"
+ 1375      455F4556 
+ 1375      545F4741 
+ 1375      505F454E 
+ 1375      48414E43 
+ 1376              	.LASF46:
+ 1377 0cc6 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 1377      455F4556 
+ 1377      545F4741 
+ 1377      54545F44 
+ 1377      4953434F 
+ 1378              	.LASF125:
+ 1379 0ce4 696E7465 		.ascii	"interruptStatus\000"
+ 1379      72727570 
+ 1379      74537461 
+ 1379      74757300 
+ 1380              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

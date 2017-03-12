@@ -1,0 +1,11 @@
+# PSoC_4_BLE_ACCELEROMETER
+# 2017-03-12 16:28:09Z
+
+# IO_0@[IOP=(6)][IoId=(0)] is reserved: KhzXtalEnabled
+dont_use_io iocell 6 0
+# IO_1@[IOP=(6)][IoId=(1)] is reserved: KhzXtalEnabled
+dont_use_io iocell 6 1
+set_location "ClockGenBlock" m0s8clockgenblockcell -1 -1 0
+set_io "Accelerometer_X(0)" iocell 3 0
+set_io "Accelerometer_Y(0)" iocell 3 1
+set_io "Accelerometer_Z(0)" iocell 3 2

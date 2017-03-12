@@ -1,0 +1,23 @@
+(DELAYFILE
+ (SDFVERSION "IEEE 1497 4.0")
+ (DATE "2017-03-12T16:28:11Z")
+ (DESIGN "PSoC_4_BLE_ACCELEROMETER")
+ (VENDOR "Cypress Semiconductor")
+ (PROGRAM "PSoC Creator")
+ (VERSION " 3.3 SP2")
+ (DIVIDER .)
+ (TIMESCALE 1 ns)
+ (CELL
+  (CELLTYPE "PSoC_4_BLE_ACCELEROMETER")
+  (INSTANCE *)
+  (DELAY
+   (ABSOLUTE
+    (INTERCONNECT ClockBlock.hfclk \\BLE\:bless_isr\\.clock (0.000:0.000:0.000))
+    (INTERCONNECT \\BLE\:cy_m0s8_ble\\.interrupt \\BLE\:bless_isr\\.interrupt (1.000:1.000:1.000))
+    (INTERCONNECT Accelerometer_X\(0\)_PAD Accelerometer_X\(0\).pad_in (0.000:0.000:0.000))
+    (INTERCONNECT Accelerometer_Y\(0\)_PAD Accelerometer_Y\(0\).pad_in (0.000:0.000:0.000))
+    (INTERCONNECT Accelerometer_Z\(0\)_PAD Accelerometer_Z\(0\).pad_in (0.000:0.000:0.000))
+   )
+  )
+ )
+)

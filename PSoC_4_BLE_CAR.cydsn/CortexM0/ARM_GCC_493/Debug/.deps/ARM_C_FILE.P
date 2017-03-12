@@ -1,0 +1,46 @@
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/CortexM0/ARM_GCC_493/Debug/UART_BOOT.o : D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyLFClk.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyLib.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_BOOT.c D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_BOOT.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_PINS.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_PVT.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_SCBCLK.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_SPI_UART.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_rx.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_rx_aliases.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_tx.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_tx_aliases.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cydevice_trm.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfitter.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cypins.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cytypes.h 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyLFClk.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyLib.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_BOOT.c : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_BOOT.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_PINS.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_PVT.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_SCBCLK.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_SPI_UART.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_rx.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_rx_aliases.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_tx.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_tx_aliases.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cydevice_trm.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfitter.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cypins.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cytypes.h : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/CortexM0/ARM_GCC_493/Debug/UART_UART_BOOT.o : D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyLFClk.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyLib.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_BOOT.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_PINS.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_PVT.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_SCBCLK.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_SPI_UART.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_UART_BOOT.c D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_rx.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_rx_aliases.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_tx.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_tx_aliases.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cydevice_trm.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfitter.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cypins.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cytypes.h 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/UART_UART_BOOT.c : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/CortexM0/ARM_GCC_493/Debug/cyfitter_cfg.o : D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyLFClk.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/CyLib.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cydevice_trm.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfitter.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfitter_cfg.c D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfitter_cfg.h D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cytypes.h 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfitter_cfg.c : 
+
+D:/Work/Projects/Accelerometer_Controlled_Car/PSoC_4_BLE_CAR.cydsn/Generated_Source/PSoC4/cyfitter_cfg.h : 
+

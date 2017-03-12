@@ -1,0 +1,1 @@
+'D:\Work\Projects\Accelerometer_Controlled_Car\PSoC_4_BLE_CAR.cydsn\BLE_CAR_Client.c' -o .o -T C_FILE -I 'D:\Work\Projects\Accelerometer_Controlled_Car\PSoC_4_BLE_CAR.cydsn' -I 'D:\Work\Projects\Accelerometer_Controlled_Car\PSoC_4_BLE_CAR.cydsn\Generated_Source\PSoC4' -f 'D:\Work\Projects\Accelerometer_Controlled_Car\PSoC_4_BLE_CAR.cydsn\CortexM0\ARM_GCC_493\Debug\.deps\C_FILE.d'

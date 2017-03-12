@@ -1,0 +1,3264 @@
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"BLE_CAR_Client.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.comm	ble_CAR_Server_found,1,1
+  18              		.comm	Motor_Command,1,1
+  19              		.comm	ble_CAR_Client_State,1,1
+  20              		.comm	connHandle,2,4
+  21              		.comm	apiResult,2,2
+  22              		.comm	connectPeriphDevice,7,4
+  23              		.section	.text.FilterScanResponsePackets,"ax",%progbits
+  24              		.align	2
+  25              		.global	FilterScanResponsePackets
+  26              		.code	16
+  27              		.thumb_func
+  28              		.type	FilterScanResponsePackets, %function
+  29              	FilterScanResponsePackets:
+  30              	.LFB37:
+  31              		.file 1 ".\\BLE_CAR_Client.c"
+   1:.\BLE_CAR_Client.c **** /*******************************************************************************
+   2:.\BLE_CAR_Client.c **** * File Name: BLE_CAR_Client.c
+   3:.\BLE_CAR_Client.c **** *
+   4:.\BLE_CAR_Client.c **** * Description:
+   5:.\BLE_CAR_Client.c **** *  This is the source file to handle the BLE CAR Client States and functions
+   6:.\BLE_CAR_Client.c **** *
+   7:.\BLE_CAR_Client.c **** ********************************************************************************
+   8:.\BLE_CAR_Client.c **** * Copyright 2015, Cypress Semiconductor Corporation. All rights reserved.
+   9:.\BLE_CAR_Client.c **** * This software is owned by Cypress Semiconductor Corporation and is protected
+  10:.\BLE_CAR_Client.c **** * by and subject to worldwide patent and copyright laws and treaties.
+  11:.\BLE_CAR_Client.c **** * Therefore, you may use this software only as provided in the license agreement
+  12:.\BLE_CAR_Client.c **** * accompanying the software package from which you obtained this software.
+  13:.\BLE_CAR_Client.c **** * CYPRESS AND ITS SUPPLIERS MAKE NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  14:.\BLE_CAR_Client.c **** * WITH REGARD TO THIS SOFTWARE, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT,
+  15:.\BLE_CAR_Client.c **** * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  16:.\BLE_CAR_Client.c **** *******************************************************************************/
+  17:.\BLE_CAR_Client.c **** 
+  18:.\BLE_CAR_Client.c **** #include "BLE_CAR_Client.h"
+  19:.\BLE_CAR_Client.c **** #include "LED.h"
+  20:.\BLE_CAR_Client.c **** #include "Motor_Control.h"
+  21:.\BLE_CAR_Client.c **** 
+  22:.\BLE_CAR_Client.c **** 
+  23:.\BLE_CAR_Client.c **** /* 'connHandle' is a varibale of type 'CYBLE_CONN_HANDLE_T' (defined in 
+  24:.\BLE_CAR_Client.c **** * BLE_StackGatt.h) and is used to store the connection handle parameters after
+  25:.\BLE_CAR_Client.c **** * connecting with the peripheral device. */
+  26:.\BLE_CAR_Client.c **** CYBLE_CONN_HANDLE_T			connHandle;
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 2
+
+
+  27:.\BLE_CAR_Client.c **** 
+  28:.\BLE_CAR_Client.c **** 	/* 'apiResult' is a varibale of type 'CYBLE_API_RESULT_T' (defined in 
+  29:.\BLE_CAR_Client.c **** * BLE_StackTypes.h) and is used to store the return value from BLE APIs. */
+  30:.\BLE_CAR_Client.c **** 	
+  31:.\BLE_CAR_Client.c **** CYBLE_API_RESULT_T 		apiResult;
+  32:.\BLE_CAR_Client.c **** 	
+  33:.\BLE_CAR_Client.c **** /* 'connectPeriphDevice' is a varibale of type 'CYBLE_GAP_BD_ADDR_T' (defined in 
+  34:.\BLE_CAR_Client.c **** * BLE_StackGap.h) and is used to store address of the connected device. */
+  35:.\BLE_CAR_Client.c **** CYBLE_GAP_BD_ADDR_T connectPeriphDevice;
+  36:.\BLE_CAR_Client.c **** 
+  37:.\BLE_CAR_Client.c **** /*******************************************************************************
+  38:.\BLE_CAR_Client.c **** * Function Name: FilterScanResponsePackets
+  39:.\BLE_CAR_Client.c **** ********************************************************************************
+  40:.\BLE_CAR_Client.c **** * Summary:
+  41:.\BLE_CAR_Client.c **** *        Function that meets the requirements of the Server (Accelerometer). This
+  42:.\BLE_CAR_Client.c **** *		function ensures that it connects only to the Server Project
+  43:.\BLE_CAR_Client.c **** *
+  44:.\BLE_CAR_Client.c **** * Parameters:
+  45:.\BLE_CAR_Client.c **** *  scanReport: Advertisement report received by GAP Central
+  46:.\BLE_CAR_Client.c **** *
+  47:.\BLE_CAR_Client.c **** * Return:
+  48:.\BLE_CAR_Client.c **** *  void
+  49:.\BLE_CAR_Client.c **** *
+  50:.\BLE_CAR_Client.c **** *******************************************************************************/
+  51:.\BLE_CAR_Client.c **** 
+  52:.\BLE_CAR_Client.c **** void FilterScanResponsePackets(CYBLE_GAPC_ADV_REPORT_T* scanReport)
+  53:.\BLE_CAR_Client.c **** {
+  32              		.loc 1 53 0
+  33              		.cfi_startproc
+  34 0000 80B5     		push	{r7, lr}
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 7, -8
+  37              		.cfi_offset 14, -4
+  38 0002 82B0     		sub	sp, sp, #8
+  39              		.cfi_def_cfa_offset 16
+  40 0004 00AF     		add	r7, sp, #0
+  41              		.cfi_def_cfa_register 7
+  42 0006 7860     		str	r0, [r7, #4]
+  54:.\BLE_CAR_Client.c **** 
+  55:.\BLE_CAR_Client.c **** 	if(scanReport->data[1] == MANUFACTURER_SPECIFIC_DATA && 
+  43              		.loc 1 55 0
+  44 0008 7B68     		ldr	r3, [r7, #4]
+  45 000a DB68     		ldr	r3, [r3, #12]
+  46 000c 0133     		add	r3, r3, #1
+  47 000e 1B78     		ldrb	r3, [r3]
+  48 0010 FF2B     		cmp	r3, #255
+  49 0012 27D1     		bne	.L1
+  56:.\BLE_CAR_Client.c **** 	scanReport->data[2] == COMPANY_LSB && 
+  50              		.loc 1 56 0 discriminator 1
+  51 0014 7B68     		ldr	r3, [r7, #4]
+  52 0016 DB68     		ldr	r3, [r3, #12]
+  53 0018 0233     		add	r3, r3, #2
+  54 001a 1B78     		ldrb	r3, [r3]
+  55:.\BLE_CAR_Client.c **** 	scanReport->data[2] == COMPANY_LSB && 
+  55              		.loc 1 55 0 discriminator 1
+  56 001c 312B     		cmp	r3, #49
+  57 001e 21D1     		bne	.L1
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 3
+
+
+  57:.\BLE_CAR_Client.c **** 	scanReport->data[3] == COMPANY_MSB && 
+  58              		.loc 1 57 0
+  59 0020 7B68     		ldr	r3, [r7, #4]
+  60 0022 DB68     		ldr	r3, [r3, #12]
+  61 0024 0333     		add	r3, r3, #3
+  62 0026 1B78     		ldrb	r3, [r3]
+  56:.\BLE_CAR_Client.c **** 	scanReport->data[2] == COMPANY_LSB && 
+  63              		.loc 1 56 0
+  64 0028 012B     		cmp	r3, #1
+  65 002a 1BD1     		bne	.L1
+  58:.\BLE_CAR_Client.c **** 	scanReport->data[4] == MAN_SPEC_DATA_LSB && scanReport->data[5] == MAN_SPEC_DATA_MSB)
+  66              		.loc 1 58 0
+  67 002c 7B68     		ldr	r3, [r7, #4]
+  68 002e DB68     		ldr	r3, [r3, #12]
+  69 0030 0433     		add	r3, r3, #4
+  70 0032 1B78     		ldrb	r3, [r3]
+  57:.\BLE_CAR_Client.c **** 	scanReport->data[3] == COMPANY_MSB && 
+  71              		.loc 1 57 0
+  72 0034 342B     		cmp	r3, #52
+  73 0036 15D1     		bne	.L1
+  74              		.loc 1 58 0
+  75 0038 7B68     		ldr	r3, [r7, #4]
+  76 003a DB68     		ldr	r3, [r3, #12]
+  77 003c 0533     		add	r3, r3, #5
+  78 003e 1B78     		ldrb	r3, [r3]
+  79 0040 122B     		cmp	r3, #18
+  80 0042 0FD1     		bne	.L1
+  59:.\BLE_CAR_Client.c **** 	{
+  60:.\BLE_CAR_Client.c **** 		CyBle_GapcStopScan();
+  81              		.loc 1 60 0
+  82 0044 FFF7FEFF 		bl	CyBle_GapcStopScan
+  61:.\BLE_CAR_Client.c **** 		
+  62:.\BLE_CAR_Client.c **** 		memcpy(connectPeriphDevice.bdAddr, scanReport->peerBdAddr,
+  83              		.loc 1 62 0
+  84 0048 7B68     		ldr	r3, [r7, #4]
+  85 004a 5B68     		ldr	r3, [r3, #4]
+  86 004c 074A     		ldr	r2, .L3
+  87 004e 111C     		mov	r1, r2
+  88 0050 1A1C     		mov	r2, r3
+  89 0052 0623     		mov	r3, #6
+  90 0054 081C     		mov	r0, r1
+  91 0056 111C     		mov	r1, r2
+  92 0058 1A1C     		mov	r2, r3
+  93 005a FFF7FEFF 		bl	memcpy
+  63:.\BLE_CAR_Client.c ****                sizeof(connectPeriphDevice.bdAddr));
+  64:.\BLE_CAR_Client.c **** 				
+  65:.\BLE_CAR_Client.c **** 		ble_CAR_Server_found = TRUE;
+  94              		.loc 1 65 0
+  95 005e 044B     		ldr	r3, .L3+4
+  96 0060 0122     		mov	r2, #1
+  97 0062 1A70     		strb	r2, [r3]
+  98              	.L1:
+  66:.\BLE_CAR_Client.c **** 						
+  67:.\BLE_CAR_Client.c **** 	}		
+  68:.\BLE_CAR_Client.c **** }
+  99              		.loc 1 68 0
+ 100 0064 BD46     		mov	sp, r7
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 4
+
+
+ 101 0066 02B0     		add	sp, sp, #8
+ 102              		@ sp needed
+ 103 0068 80BD     		pop	{r7, pc}
+ 104              	.L4:
+ 105 006a C046     		.align	2
+ 106              	.L3:
+ 107 006c 00000000 		.word	connectPeriphDevice
+ 108 0070 00000000 		.word	ble_CAR_Server_found
+ 109              		.cfi_endproc
+ 110              	.LFE37:
+ 111              		.size	FilterScanResponsePackets, .-FilterScanResponsePackets
+ 112              		.section	.text.ApplicationEventHandler,"ax",%progbits
+ 113              		.align	2
+ 114              		.global	ApplicationEventHandler
+ 115              		.code	16
+ 116              		.thumb_func
+ 117              		.type	ApplicationEventHandler, %function
+ 118              	ApplicationEventHandler:
+ 119              	.LFB38:
+  69:.\BLE_CAR_Client.c **** 
+  70:.\BLE_CAR_Client.c **** /*******************************************************************************
+  71:.\BLE_CAR_Client.c **** * Function Name: ApplicationEventHandler
+  72:.\BLE_CAR_Client.c **** ********************************************************************************
+  73:.\BLE_CAR_Client.c **** * Summary:
+  74:.\BLE_CAR_Client.c **** *        Call back event function to handle various events from BLE stack
+  75:.\BLE_CAR_Client.c **** *
+  76:.\BLE_CAR_Client.c **** * Parameters:
+  77:.\BLE_CAR_Client.c **** *  event:		event returned
+  78:.\BLE_CAR_Client.c **** *  eventParam:	link to value of the event parameter returned
+  79:.\BLE_CAR_Client.c **** *
+  80:.\BLE_CAR_Client.c **** * Return:
+  81:.\BLE_CAR_Client.c **** *  void
+  82:.\BLE_CAR_Client.c **** *
+  83:.\BLE_CAR_Client.c **** *******************************************************************************/
+  84:.\BLE_CAR_Client.c **** 
+  85:.\BLE_CAR_Client.c **** void ApplicationEventHandler(uint32 event, void *eventparam)
+  86:.\BLE_CAR_Client.c **** {
+ 120              		.loc 1 86 0
+ 121              		.cfi_startproc
+ 122 0000 80B5     		push	{r7, lr}
+ 123              		.cfi_def_cfa_offset 8
+ 124              		.cfi_offset 7, -8
+ 125              		.cfi_offset 14, -4
+ 126 0002 84B0     		sub	sp, sp, #16
+ 127              		.cfi_def_cfa_offset 24
+ 128 0004 00AF     		add	r7, sp, #0
+ 129              		.cfi_def_cfa_register 7
+ 130 0006 7860     		str	r0, [r7, #4]
+ 131 0008 3960     		str	r1, [r7]
+  87:.\BLE_CAR_Client.c **** 	
+  88:.\BLE_CAR_Client.c **** 	switch(event)
+ 132              		.loc 1 88 0
+ 133 000a 7B68     		ldr	r3, [r7, #4]
+ 134 000c 2B2B     		cmp	r3, #43
+ 135 000e 49D0     		beq	.L16
+ 136 0010 06D8     		bhi	.L8
+ 137 0012 202B     		cmp	r3, #32
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 5
+
+
+ 138 0014 0BD0     		beq	.L9
+ 139 0016 282B     		cmp	r3, #40
+ 140 0018 27D0     		beq	.L10
+ 141 001a 012B     		cmp	r3, #1
+ 142 001c 44D0     		beq	.L17
+  89:.\BLE_CAR_Client.c **** 	{
+  90:.\BLE_CAR_Client.c **** 		case CYBLE_EVT_STACK_ON:
+  91:.\BLE_CAR_Client.c **** 			break;
+  92:.\BLE_CAR_Client.c **** 		
+  93:.\BLE_CAR_Client.c **** 		case CYBLE_EVT_GAPC_SCAN_START_STOP:
+  94:.\BLE_CAR_Client.c **** 		break;
+  95:.\BLE_CAR_Client.c **** 			
+  96:.\BLE_CAR_Client.c **** 		case CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT:
+  97:.\BLE_CAR_Client.c ****                 /*Check if device meets the Server requirements*/
+  98:.\BLE_CAR_Client.c ****                 FilterScanResponsePackets((CYBLE_GAPC_ADV_REPORT_T *)eventparam);
+  99:.\BLE_CAR_Client.c **** 		break;
+ 100:.\BLE_CAR_Client.c **** 			
+ 101:.\BLE_CAR_Client.c ****  		case CYBLE_EVT_GATT_CONNECT_IND:
+ 102:.\BLE_CAR_Client.c **** 			/* When the peripheral device is connected, store the connection handle.*/
+ 103:.\BLE_CAR_Client.c **** 			connHandle = *(CYBLE_CONN_HANDLE_T *)eventparam;
+ 104:.\BLE_CAR_Client.c **** 			break;
+ 105:.\BLE_CAR_Client.c **** 			
+ 106:.\BLE_CAR_Client.c **** 		case CYBLE_EVT_GATT_DISCONNECT_IND:
+ 107:.\BLE_CAR_Client.c **** 			RED_LED_ON();
+ 108:.\BLE_CAR_Client.c **** 			CyDelay(3000);
+ 109:.\BLE_CAR_Client.c **** 			break;
+ 110:.\BLE_CAR_Client.c **** 			
+ 111:.\BLE_CAR_Client.c **** 		case CYBLE_EVT_GAP_DEVICE_DISCONNECTED:
+ 112:.\BLE_CAR_Client.c **** 			RED_LED_ON();
+ 113:.\BLE_CAR_Client.c **** 
+ 114:.\BLE_CAR_Client.c **** 			break;		
+ 115:.\BLE_CAR_Client.c **** 		
+ 116:.\BLE_CAR_Client.c **** 		case CYBLE_EVT_GATTC_HANDLE_VALUE_NTF:
+ 117:.\BLE_CAR_Client.c **** 			/*Got data from server */
+ 118:.\BLE_CAR_Client.c **** 			{
+ 119:.\BLE_CAR_Client.c **** 	            CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T *UART_RX_data = (CYBLE_GATTC_HANDLE_VALUE_NTF_PAR
+ 120:.\BLE_CAR_Client.c **** 				Motor_Command=*UART_RX_data->handleValPair.value.val;
+ 121:.\BLE_CAR_Client.c ****                 UART_UartPutChar(Motor_Command);
+ 122:.\BLE_CAR_Client.c ****                 UART_UartPutChar(0x0D);
+ 123:.\BLE_CAR_Client.c ****                 UART_UartPutChar('a');
+ 124:.\BLE_CAR_Client.c **** 				//UpdateMotor(Motor_Command);
+ 125:.\BLE_CAR_Client.c **** 				break;
+ 126:.\BLE_CAR_Client.c **** 			}
+ 127:.\BLE_CAR_Client.c **** 			
+ 128:.\BLE_CAR_Client.c **** 		default:
+ 129:.\BLE_CAR_Client.c **** 			break;
+ 143              		.loc 1 129 0
+ 144 001e 44E0     		b	.L5
+ 145              	.L8:
+  88:.\BLE_CAR_Client.c **** 	{
+ 146              		.loc 1 88 0
+ 147 0020 422B     		cmp	r3, #66
+ 148 0022 14D0     		beq	.L12
+ 149 0024 522B     		cmp	r3, #82
+ 150 0026 2AD0     		beq	.L13
+ 151 0028 412B     		cmp	r3, #65
+ 152 002a 05D0     		beq	.L14
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 6
+
+
+ 153              		.loc 1 129 0
+ 154 002c 3DE0     		b	.L5
+ 155              	.L9:
+  98:.\BLE_CAR_Client.c **** 		break;
+ 156              		.loc 1 98 0
+ 157 002e 3B68     		ldr	r3, [r7]
+ 158 0030 181C     		mov	r0, r3
+ 159 0032 FFF7FEFF 		bl	FilterScanResponsePackets
+  99:.\BLE_CAR_Client.c **** 			
+ 160              		.loc 1 99 0
+ 161 0036 38E0     		b	.L5
+ 162              	.L14:
+ 103:.\BLE_CAR_Client.c **** 			break;
+ 163              		.loc 1 103 0
+ 164 0038 1D4A     		ldr	r2, .L18
+ 165 003a 3B68     		ldr	r3, [r7]
+ 166 003c 111C     		mov	r1, r2
+ 167 003e 1A1C     		mov	r2, r3
+ 168 0040 0223     		mov	r3, #2
+ 169 0042 081C     		mov	r0, r1
+ 170 0044 111C     		mov	r1, r2
+ 171 0046 1A1C     		mov	r2, r3
+ 172 0048 FFF7FEFF 		bl	memcpy
+ 104:.\BLE_CAR_Client.c **** 			
+ 173              		.loc 1 104 0
+ 174 004c 2DE0     		b	.L5
+ 175              	.L12:
+ 107:.\BLE_CAR_Client.c **** 			CyDelay(3000);
+ 176              		.loc 1 107 0
+ 177 004e 0020     		mov	r0, #0
+ 178 0050 FFF7FEFF 		bl	RED_LED_Write
+ 179 0054 0120     		mov	r0, #1
+ 180 0056 FFF7FEFF 		bl	GREEN_LED_Write
+ 181 005a 0120     		mov	r0, #1
+ 182 005c FFF7FEFF 		bl	BLUE_LED_Write
+ 108:.\BLE_CAR_Client.c **** 			break;
+ 183              		.loc 1 108 0
+ 184 0060 144B     		ldr	r3, .L18+4
+ 185 0062 181C     		mov	r0, r3
+ 186 0064 FFF7FEFF 		bl	CyDelay
+ 109:.\BLE_CAR_Client.c **** 			
+ 187              		.loc 1 109 0
+ 188 0068 1FE0     		b	.L5
+ 189              	.L10:
+ 112:.\BLE_CAR_Client.c **** 
+ 190              		.loc 1 112 0
+ 191 006a 0020     		mov	r0, #0
+ 192 006c FFF7FEFF 		bl	RED_LED_Write
+ 193 0070 0120     		mov	r0, #1
+ 194 0072 FFF7FEFF 		bl	GREEN_LED_Write
+ 195 0076 0120     		mov	r0, #1
+ 196 0078 FFF7FEFF 		bl	BLUE_LED_Write
+ 114:.\BLE_CAR_Client.c **** 		
+ 197              		.loc 1 114 0
+ 198 007c 15E0     		b	.L5
+ 199              	.L13:
+ 200              	.LBB2:
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 7
+
+
+ 119:.\BLE_CAR_Client.c **** 				Motor_Command=*UART_RX_data->handleValPair.value.val;
+ 201              		.loc 1 119 0
+ 202 007e 3B68     		ldr	r3, [r7]
+ 203 0080 FB60     		str	r3, [r7, #12]
+ 120:.\BLE_CAR_Client.c ****                 UART_UartPutChar(Motor_Command);
+ 204              		.loc 1 120 0
+ 205 0082 FB68     		ldr	r3, [r7, #12]
+ 206 0084 5B68     		ldr	r3, [r3, #4]
+ 207 0086 1A78     		ldrb	r2, [r3]
+ 208 0088 0B4B     		ldr	r3, .L18+8
+ 209 008a 1A70     		strb	r2, [r3]
+ 121:.\BLE_CAR_Client.c ****                 UART_UartPutChar(0x0D);
+ 210              		.loc 1 121 0
+ 211 008c 0A4B     		ldr	r3, .L18+8
+ 212 008e 1B78     		ldrb	r3, [r3]
+ 213 0090 181C     		mov	r0, r3
+ 214 0092 FFF7FEFF 		bl	UART_SpiUartWriteTxData
+ 122:.\BLE_CAR_Client.c ****                 UART_UartPutChar('a');
+ 215              		.loc 1 122 0
+ 216 0096 0D20     		mov	r0, #13
+ 217 0098 FFF7FEFF 		bl	UART_SpiUartWriteTxData
+ 123:.\BLE_CAR_Client.c **** 				//UpdateMotor(Motor_Command);
+ 218              		.loc 1 123 0
+ 219 009c 6120     		mov	r0, #97
+ 220 009e FFF7FEFF 		bl	UART_SpiUartWriteTxData
+ 125:.\BLE_CAR_Client.c **** 			}
+ 221              		.loc 1 125 0
+ 222 00a2 02E0     		b	.L5
+ 223              	.L16:
+ 224              	.LBE2:
+  94:.\BLE_CAR_Client.c **** 			
+ 225              		.loc 1 94 0
+ 226 00a4 C046     		mov	r8, r8
+ 227 00a6 00E0     		b	.L5
+ 228              	.L17:
+  91:.\BLE_CAR_Client.c **** 		
+ 229              		.loc 1 91 0
+ 230 00a8 C046     		mov	r8, r8
+ 231              	.L5:
+ 130:.\BLE_CAR_Client.c **** 	}
+ 131:.\BLE_CAR_Client.c **** }
+ 232              		.loc 1 131 0
+ 233 00aa BD46     		mov	sp, r7
+ 234 00ac 04B0     		add	sp, sp, #16
+ 235              		@ sp needed
+ 236 00ae 80BD     		pop	{r7, pc}
+ 237              	.L19:
+ 238              		.align	2
+ 239              	.L18:
+ 240 00b0 00000000 		.word	connHandle
+ 241 00b4 B80B0000 		.word	3000
+ 242 00b8 00000000 		.word	Motor_Command
+ 243              		.cfi_endproc
+ 244              	.LFE38:
+ 245              		.size	ApplicationEventHandler, .-ApplicationEventHandler
+ 246              		.section	.text.handle_ble_CAR_Client_State,"ax",%progbits
+ 247              		.align	2
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 8
+
+
+ 248              		.global	handle_ble_CAR_Client_State
+ 249              		.code	16
+ 250              		.thumb_func
+ 251              		.type	handle_ble_CAR_Client_State, %function
+ 252              	handle_ble_CAR_Client_State:
+ 253              	.LFB39:
+ 132:.\BLE_CAR_Client.c **** 
+ 133:.\BLE_CAR_Client.c **** /*******************************************************************************
+ 134:.\BLE_CAR_Client.c **** * Function Name: handle_ble_CAR_Client_State
+ 135:.\BLE_CAR_Client.c **** ********************************************************************************
+ 136:.\BLE_CAR_Client.c **** * Summary:
+ 137:.\BLE_CAR_Client.c **** *        Handles the various States of the Client
+ 138:.\BLE_CAR_Client.c **** *
+ 139:.\BLE_CAR_Client.c **** * Parameters:
+ 140:.\BLE_CAR_Client.c **** *  None
+ 141:.\BLE_CAR_Client.c **** *
+ 142:.\BLE_CAR_Client.c **** * Return:
+ 143:.\BLE_CAR_Client.c **** *  void
+ 144:.\BLE_CAR_Client.c **** *
+ 145:.\BLE_CAR_Client.c **** *******************************************************************************/
+ 146:.\BLE_CAR_Client.c **** 
+ 147:.\BLE_CAR_Client.c **** void handle_ble_CAR_Client_State(void)
+ 148:.\BLE_CAR_Client.c **** {
+ 254              		.loc 1 148 0
+ 255              		.cfi_startproc
+ 256 0000 80B5     		push	{r7, lr}
+ 257              		.cfi_def_cfa_offset 8
+ 258              		.cfi_offset 7, -8
+ 259              		.cfi_offset 14, -4
+ 260 0002 84B0     		sub	sp, sp, #16
+ 261              		.cfi_def_cfa_offset 24
+ 262 0004 00AF     		add	r7, sp, #0
+ 263              		.cfi_def_cfa_register 7
+ 149:.\BLE_CAR_Client.c **** 	
+ 150:.\BLE_CAR_Client.c **** 	if (CYBLE_STACK_STATE_BUSY == CyBle_GattGetBusStatus())
+ 264              		.loc 1 150 0
+ 265 0006 4E4B     		ldr	r3, .L39
+ 266 0008 1B78     		ldrb	r3, [r3]
+ 267 000a DBB2     		uxtb	r3, r3
+ 268 000c 012B     		cmp	r3, #1
+ 269 000e 00D1     		bne	.L21
+ 151:.\BLE_CAR_Client.c ****     {
+ 152:.\BLE_CAR_Client.c ****         /*If stack is busy wait for ready signal*/
+ 153:.\BLE_CAR_Client.c ****         return;
+ 270              		.loc 1 153 0
+ 271 0010 92E0     		b	.L20
+ 272              	.L21:
+ 154:.\BLE_CAR_Client.c ****     }
+ 155:.\BLE_CAR_Client.c **** 	
+ 156:.\BLE_CAR_Client.c **** 	switch(ble_CAR_Client_State)
+ 273              		.loc 1 156 0
+ 274 0012 4C4B     		ldr	r3, .L39+4
+ 275 0014 1B78     		ldrb	r3, [r3]
+ 276 0016 012B     		cmp	r3, #1
+ 277 0018 00D1     		bne	.LCB227
+ 278 001a 81E0     		b	.L24	@long jump
+ 279              	.LCB227:
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 9
+
+
+ 280 001c 02DC     		bgt	.L25
+ 281 001e 002B     		cmp	r3, #0
+ 282 0020 06D0     		beq	.L26
+ 157:.\BLE_CAR_Client.c **** 	{
+ 158:.\BLE_CAR_Client.c **** 		case BLE_CAR_CLIENT_STATE_NOT_READY:
+ 159:.\BLE_CAR_Client.c **** 		
+ 160:.\BLE_CAR_Client.c **** 			if(CYBLE_STATE_DISCONNECTED == CyBle_GetState())
+ 161:.\BLE_CAR_Client.c **** 			{
+ 162:.\BLE_CAR_Client.c **** 				if(ble_CAR_Server_found)
+ 163:.\BLE_CAR_Client.c **** 				{
+ 164:.\BLE_CAR_Client.c **** 					ble_CAR_Server_found = FALSE;
+ 165:.\BLE_CAR_Client.c **** 					apiResult = CyBle_GapcConnectDevice(&connectPeriphDevice);
+ 166:.\BLE_CAR_Client.c **** 					if(CYBLE_ERROR_OK != apiResult )
+ 167:.\BLE_CAR_Client.c **** 					{
+ 168:.\BLE_CAR_Client.c **** 						
+ 169:.\BLE_CAR_Client.c **** 					}
+ 170:.\BLE_CAR_Client.c **** 				}
+ 171:.\BLE_CAR_Client.c **** 				else
+ 172:.\BLE_CAR_Client.c **** 				{
+ 173:.\BLE_CAR_Client.c **** 					/*Start scanning*/    
+ 174:.\BLE_CAR_Client.c **** 				    if(CYBLE_STATE_DISCONNECTED == CyBle_GetState()) 
+ 175:.\BLE_CAR_Client.c **** 				    {
+ 176:.\BLE_CAR_Client.c **** 						BLUE_LED_ON(); /*Indicates scanning*/
+ 177:.\BLE_CAR_Client.c **** 				        if(CYBLE_ERROR_OK != CyBle_GapcStartScan(CYBLE_SCANNING_FAST))
+ 178:.\BLE_CAR_Client.c **** 				        {
+ 179:.\BLE_CAR_Client.c **** 				        }
+ 180:.\BLE_CAR_Client.c **** 				    }
+ 181:.\BLE_CAR_Client.c **** 				}
+ 182:.\BLE_CAR_Client.c **** 			}
+ 183:.\BLE_CAR_Client.c **** 			else if(CYBLE_STATE_SCANNING == CyBle_GetState())
+ 184:.\BLE_CAR_Client.c **** 			{
+ 185:.\BLE_CAR_Client.c **** 				
+ 186:.\BLE_CAR_Client.c **** 			}
+ 187:.\BLE_CAR_Client.c **** 			if(CYBLE_CLIENT_STATE_CONNECTED == CyBle_GetClientState())
+ 188:.\BLE_CAR_Client.c ****             {
+ 189:.\BLE_CAR_Client.c ****                 /*Discover all server DB items*/
+ 190:.\BLE_CAR_Client.c ****                 if(CYBLE_ERROR_OK != CyBle_GattcStartDiscovery(cyBle_connHandle))
+ 191:.\BLE_CAR_Client.c ****                 {
+ 192:.\BLE_CAR_Client.c ****                 }
+ 193:.\BLE_CAR_Client.c **** 				
+ 194:.\BLE_CAR_Client.c **** 				/* Enable notifications on the server side */
+ 195:.\BLE_CAR_Client.c **** 				uint8 value = CYBLE_CCCD_NOTIFICATION;
+ 196:.\BLE_CAR_Client.c **** 				CYBLE_GATTC_WRITE_CMD_REQ_T write_server;
+ 197:.\BLE_CAR_Client.c **** 				
+ 198:.\BLE_CAR_Client.c **** 				write_server.attrHandle = BLE_CAR_CCCD_HANDLE;
+ 199:.\BLE_CAR_Client.c **** 				write_server.value.len = 1;
+ 200:.\BLE_CAR_Client.c **** 				write_server.value.val = &value;
+ 201:.\BLE_CAR_Client.c **** 				
+ 202:.\BLE_CAR_Client.c **** 				CyBle_GattcWriteWithoutResponse(connHandle,&write_server);
+ 203:.\BLE_CAR_Client.c **** 				
+ 204:.\BLE_CAR_Client.c ****             }
+ 205:.\BLE_CAR_Client.c **** 			
+ 206:.\BLE_CAR_Client.c **** 			else if(CYBLE_CLIENT_STATE_DISCOVERED == CyBle_GetClientState())
+ 207:.\BLE_CAR_Client.c ****             {
+ 208:.\BLE_CAR_Client.c ****                 /*Configure the device on each connection*/
+ 209:.\BLE_CAR_Client.c ****                 ble_CAR_Client_State = BLE_CAR_CLIENT_STATE_CONFIG;
+ 210:.\BLE_CAR_Client.c ****             }
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 10
+
+
+ 211:.\BLE_CAR_Client.c **** 			
+ 212:.\BLE_CAR_Client.c **** 			break;
+ 213:.\BLE_CAR_Client.c **** 			
+ 214:.\BLE_CAR_Client.c **** 		        /*BLE component is ready to process new commands*/
+ 215:.\BLE_CAR_Client.c **** 			
+ 216:.\BLE_CAR_Client.c ****         case BLE_CAR_CLIENT_STATE_ACTIVE:
+ 217:.\BLE_CAR_Client.c **** 			GREEN_LED_ON();
+ 218:.\BLE_CAR_Client.c ****             /*Reset the application state, if BLE is not in discovered state*/
+ 219:.\BLE_CAR_Client.c ****             if(CYBLE_CLIENT_STATE_DISCOVERED != CyBle_GetClientState())
+ 220:.\BLE_CAR_Client.c ****             {
+ 221:.\BLE_CAR_Client.c ****                 ble_CAR_Client_State = BLE_CAR_CLIENT_STATE_NOT_READY;
+ 222:.\BLE_CAR_Client.c ****             }
+ 223:.\BLE_CAR_Client.c ****             
+ 224:.\BLE_CAR_Client.c ****             break;	
+ 225:.\BLE_CAR_Client.c **** 		
+ 226:.\BLE_CAR_Client.c **** 		        /*BLE component is processing current command*/
+ 227:.\BLE_CAR_Client.c ****         case BLE_CAR_CLIENT_STATE_BUSY:
+ 228:.\BLE_CAR_Client.c ****             /*BLE component is processing current command*/
+ 229:.\BLE_CAR_Client.c **** 
+ 230:.\BLE_CAR_Client.c ****             /*Reset the application state, if BLE is not in discovered state*/
+ 231:.\BLE_CAR_Client.c ****             if(CYBLE_CLIENT_STATE_DISCOVERED != CyBle_GetClientState())
+ 232:.\BLE_CAR_Client.c ****             {
+ 233:.\BLE_CAR_Client.c ****                 ble_CAR_Client_State = BLE_CAR_CLIENT_STATE_NOT_READY;
+ 234:.\BLE_CAR_Client.c ****             }
+ 235:.\BLE_CAR_Client.c ****             break;	
+ 236:.\BLE_CAR_Client.c **** 		
+ 237:.\BLE_CAR_Client.c **** 		        /*Connected device being configured for operation*/
+ 238:.\BLE_CAR_Client.c ****         case BLE_CAR_CLIENT_STATE_CONFIG:
+ 239:.\BLE_CAR_Client.c ****             /*Reset the application state, if BLE is not in discovered state*/
+ 240:.\BLE_CAR_Client.c ****             if(CYBLE_CLIENT_STATE_DISCOVERED != CyBle_GetClientState())
+ 241:.\BLE_CAR_Client.c ****             {
+ 242:.\BLE_CAR_Client.c ****                 ble_CAR_Client_State = BLE_CAR_CLIENT_STATE_NOT_READY;
+ 243:.\BLE_CAR_Client.c ****             }
+ 244:.\BLE_CAR_Client.c ****             else
+ 245:.\BLE_CAR_Client.c ****             {	
+ 246:.\BLE_CAR_Client.c ****                 /*Exit the state if all the configurations are complete*/
+ 247:.\BLE_CAR_Client.c ****                 ble_CAR_Client_State = BLE_CAR_CLIENT_STATE_ACTIVE;
+ 248:.\BLE_CAR_Client.c ****             }
+ 249:.\BLE_CAR_Client.c ****            break;	
+ 250:.\BLE_CAR_Client.c **** 			
+ 251:.\BLE_CAR_Client.c **** 		default:
+ 252:.\BLE_CAR_Client.c **** 			break;
+ 283              		.loc 1 252 0
+ 284 0022 89E0     		b	.L20
+ 285              	.L25:
+ 156:.\BLE_CAR_Client.c **** 	{
+ 286              		.loc 1 156 0
+ 287 0024 022B     		cmp	r3, #2
+ 288 0026 60D0     		beq	.L27
+ 289 0028 032B     		cmp	r3, #3
+ 290 002a 00D1     		bne	.LCB239
+ 291 002c 6FE0     		b	.L28	@long jump
+ 292              	.LCB239:
+ 293              		.loc 1 252 0
+ 294 002e 83E0     		b	.L20
+ 295              	.L26:
+ 160:.\BLE_CAR_Client.c **** 			{
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 11
+
+
+ 296              		.loc 1 160 0
+ 297 0030 454B     		ldr	r3, .L39+8
+ 298 0032 1B78     		ldrb	r3, [r3]
+ 299 0034 052B     		cmp	r3, #5
+ 300 0036 1FD1     		bne	.L31
+ 162:.\BLE_CAR_Client.c **** 				{
+ 301              		.loc 1 162 0
+ 302 0038 444B     		ldr	r3, .L39+12
+ 303 003a 1B78     		ldrb	r3, [r3]
+ 304 003c 002B     		cmp	r3, #0
+ 305 003e 0BD0     		beq	.L30
+ 164:.\BLE_CAR_Client.c **** 					apiResult = CyBle_GapcConnectDevice(&connectPeriphDevice);
+ 306              		.loc 1 164 0
+ 307 0040 424B     		ldr	r3, .L39+12
+ 308 0042 0022     		mov	r2, #0
+ 309 0044 1A70     		strb	r2, [r3]
+ 165:.\BLE_CAR_Client.c **** 					if(CYBLE_ERROR_OK != apiResult )
+ 310              		.loc 1 165 0
+ 311 0046 424B     		ldr	r3, .L39+16
+ 312 0048 181C     		mov	r0, r3
+ 313 004a FFF7FEFF 		bl	CyBle_GapcConnectDevice
+ 314 004e 031C     		mov	r3, r0
+ 315 0050 1A1C     		mov	r2, r3
+ 316 0052 404B     		ldr	r3, .L39+20
+ 317 0054 1A80     		strh	r2, [r3]
+ 318 0056 0FE0     		b	.L31
+ 319              	.L30:
+ 174:.\BLE_CAR_Client.c **** 				    {
+ 320              		.loc 1 174 0
+ 321 0058 3B4B     		ldr	r3, .L39+8
+ 322 005a 1B78     		ldrb	r3, [r3]
+ 323 005c 052B     		cmp	r3, #5
+ 324 005e 0BD1     		bne	.L31
+ 176:.\BLE_CAR_Client.c **** 				        if(CYBLE_ERROR_OK != CyBle_GapcStartScan(CYBLE_SCANNING_FAST))
+ 325              		.loc 1 176 0
+ 326 0060 0120     		mov	r0, #1
+ 327 0062 FFF7FEFF 		bl	RED_LED_Write
+ 328 0066 0120     		mov	r0, #1
+ 329 0068 FFF7FEFF 		bl	GREEN_LED_Write
+ 330 006c 0020     		mov	r0, #0
+ 331 006e FFF7FEFF 		bl	BLUE_LED_Write
+ 177:.\BLE_CAR_Client.c **** 				        {
+ 332              		.loc 1 177 0
+ 333 0072 0020     		mov	r0, #0
+ 334 0074 FFF7FEFF 		bl	CyBle_GapcStartScan
+ 335              	.L31:
+ 187:.\BLE_CAR_Client.c ****             {
+ 336              		.loc 1 187 0
+ 337 0078 374B     		ldr	r3, .L39+24
+ 338 007a 1B78     		ldrb	r3, [r3]
+ 339 007c 002B     		cmp	r3, #0
+ 340 007e 2BD1     		bne	.L32
+ 341              	.LBB3:
+ 190:.\BLE_CAR_Client.c ****                 {
+ 342              		.loc 1 190 0
+ 343 0080 364B     		ldr	r3, .L39+28
+ 344 0082 1A78     		ldrb	r2, [r3]
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 12
+
+
+ 345 0084 5B78     		ldrb	r3, [r3, #1]
+ 346 0086 1B02     		lsl	r3, r3, #8
+ 347 0088 1A43     		orr	r2, r3
+ 348 008a 0023     		mov	r3, #0
+ 349 008c 1204     		lsl	r2, r2, #16
+ 350 008e 120C     		lsr	r2, r2, #16
+ 351 0090 1B0C     		lsr	r3, r3, #16
+ 352 0092 1B04     		lsl	r3, r3, #16
+ 353 0094 1343     		orr	r3, r2
+ 354 0096 181C     		mov	r0, r3
+ 355 0098 FFF7FEFF 		bl	CyBle_GattcStartDiscovery
+ 195:.\BLE_CAR_Client.c **** 				CYBLE_GATTC_WRITE_CMD_REQ_T write_server;
+ 356              		.loc 1 195 0
+ 357 009c 0F23     		mov	r3, #15
+ 358 009e FB18     		add	r3, r7, r3
+ 359 00a0 0122     		mov	r2, #1
+ 360 00a2 1A70     		strb	r2, [r3]
+ 198:.\BLE_CAR_Client.c **** 				write_server.value.len = 1;
+ 361              		.loc 1 198 0
+ 362 00a4 3B1C     		mov	r3, r7
+ 363 00a6 0F22     		mov	r2, #15
+ 364 00a8 1A81     		strh	r2, [r3, #8]
+ 199:.\BLE_CAR_Client.c **** 				write_server.value.val = &value;
+ 365              		.loc 1 199 0
+ 366 00aa 3B1C     		mov	r3, r7
+ 367 00ac 0122     		mov	r2, #1
+ 368 00ae 9A80     		strh	r2, [r3, #4]
+ 200:.\BLE_CAR_Client.c **** 				
+ 369              		.loc 1 200 0
+ 370 00b0 3B1C     		mov	r3, r7
+ 371 00b2 0F22     		mov	r2, #15
+ 372 00b4 BA18     		add	r2, r7, r2
+ 373 00b6 1A60     		str	r2, [r3]
+ 202:.\BLE_CAR_Client.c **** 				
+ 374              		.loc 1 202 0
+ 375 00b8 294B     		ldr	r3, .L39+32
+ 376 00ba 391C     		mov	r1, r7
+ 377 00bc 1A78     		ldrb	r2, [r3]
+ 378 00be 5B78     		ldrb	r3, [r3, #1]
+ 379 00c0 1B02     		lsl	r3, r3, #8
+ 380 00c2 1A43     		orr	r2, r3
+ 381 00c4 0023     		mov	r3, #0
+ 382 00c6 1204     		lsl	r2, r2, #16
+ 383 00c8 120C     		lsr	r2, r2, #16
+ 384 00ca 1B0C     		lsr	r3, r3, #16
+ 385 00cc 1B04     		lsl	r3, r3, #16
+ 386 00ce 1343     		orr	r3, r2
+ 387 00d0 181C     		mov	r0, r3
+ 388 00d2 FFF7FEFF 		bl	CyBle_GattcWriteWithoutResponse
+ 389              	.LBE3:
+ 390 00d6 07E0     		b	.L33
+ 391              	.L32:
+ 206:.\BLE_CAR_Client.c ****             {
+ 392              		.loc 1 206 0
+ 393 00d8 1F4B     		ldr	r3, .L39+24
+ 394 00da 1B78     		ldrb	r3, [r3]
+ 395 00dc 052B     		cmp	r3, #5
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 13
+
+
+ 396 00de 03D1     		bne	.L33
+ 209:.\BLE_CAR_Client.c ****             }
+ 397              		.loc 1 209 0
+ 398 00e0 184B     		ldr	r3, .L39+4
+ 399 00e2 0122     		mov	r2, #1
+ 400 00e4 1A70     		strb	r2, [r3]
+ 212:.\BLE_CAR_Client.c **** 			
+ 401              		.loc 1 212 0
+ 402 00e6 27E0     		b	.L20
+ 403              	.L33:
+ 212:.\BLE_CAR_Client.c **** 			
+ 404              		.loc 1 212 0 is_stmt 0 discriminator 2
+ 405 00e8 26E0     		b	.L20
+ 406              	.L27:
+ 217:.\BLE_CAR_Client.c ****             /*Reset the application state, if BLE is not in discovered state*/
+ 407              		.loc 1 217 0 is_stmt 1
+ 408 00ea 0120     		mov	r0, #1
+ 409 00ec FFF7FEFF 		bl	RED_LED_Write
+ 410 00f0 0020     		mov	r0, #0
+ 411 00f2 FFF7FEFF 		bl	GREEN_LED_Write
+ 412 00f6 0120     		mov	r0, #1
+ 413 00f8 FFF7FEFF 		bl	BLUE_LED_Write
+ 219:.\BLE_CAR_Client.c ****             {
+ 414              		.loc 1 219 0
+ 415 00fc 164B     		ldr	r3, .L39+24
+ 416 00fe 1B78     		ldrb	r3, [r3]
+ 417 0100 052B     		cmp	r3, #5
+ 418 0102 03D0     		beq	.L34
+ 221:.\BLE_CAR_Client.c ****             }
+ 419              		.loc 1 221 0
+ 420 0104 0F4B     		ldr	r3, .L39+4
+ 421 0106 0022     		mov	r2, #0
+ 422 0108 1A70     		strb	r2, [r3]
+ 224:.\BLE_CAR_Client.c **** 		
+ 423              		.loc 1 224 0
+ 424 010a 15E0     		b	.L20
+ 425              	.L34:
+ 426 010c 14E0     		b	.L20
+ 427              	.L28:
+ 231:.\BLE_CAR_Client.c ****             {
+ 428              		.loc 1 231 0
+ 429 010e 124B     		ldr	r3, .L39+24
+ 430 0110 1B78     		ldrb	r3, [r3]
+ 431 0112 052B     		cmp	r3, #5
+ 432 0114 03D0     		beq	.L35
+ 233:.\BLE_CAR_Client.c ****             }
+ 433              		.loc 1 233 0
+ 434 0116 0B4B     		ldr	r3, .L39+4
+ 435 0118 0022     		mov	r2, #0
+ 436 011a 1A70     		strb	r2, [r3]
+ 235:.\BLE_CAR_Client.c **** 		
+ 437              		.loc 1 235 0
+ 438 011c 0CE0     		b	.L20
+ 439              	.L35:
+ 440 011e 0BE0     		b	.L20
+ 441              	.L24:
+ 240:.\BLE_CAR_Client.c ****             {
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 14
+
+
+ 442              		.loc 1 240 0
+ 443 0120 0D4B     		ldr	r3, .L39+24
+ 444 0122 1B78     		ldrb	r3, [r3]
+ 445 0124 052B     		cmp	r3, #5
+ 446 0126 03D0     		beq	.L36
+ 242:.\BLE_CAR_Client.c ****             }
+ 447              		.loc 1 242 0
+ 448 0128 064B     		ldr	r3, .L39+4
+ 449 012a 0022     		mov	r2, #0
+ 450 012c 1A70     		strb	r2, [r3]
+ 249:.\BLE_CAR_Client.c **** 			
+ 451              		.loc 1 249 0
+ 452 012e 02E0     		b	.L38
+ 453              	.L36:
+ 247:.\BLE_CAR_Client.c ****             }
+ 454              		.loc 1 247 0
+ 455 0130 044B     		ldr	r3, .L39+4
+ 456 0132 0222     		mov	r2, #2
+ 457 0134 1A70     		strb	r2, [r3]
+ 458              	.L38:
+ 249:.\BLE_CAR_Client.c **** 			
+ 459              		.loc 1 249 0
+ 460 0136 C046     		mov	r8, r8
+ 461              	.L20:
+ 253:.\BLE_CAR_Client.c **** 	}
+ 254:.\BLE_CAR_Client.c **** 	
+ 255:.\BLE_CAR_Client.c **** }
+ 462              		.loc 1 255 0
+ 463 0138 BD46     		mov	sp, r7
+ 464 013a 04B0     		add	sp, sp, #16
+ 465              		@ sp needed
+ 466 013c 80BD     		pop	{r7, pc}
+ 467              	.L40:
+ 468 013e C046     		.align	2
+ 469              	.L39:
+ 470 0140 00000000 		.word	cyBle_busyStatus
+ 471 0144 00000000 		.word	ble_CAR_Client_State
+ 472 0148 00000000 		.word	cyBle_state
+ 473 014c 00000000 		.word	ble_CAR_Server_found
+ 474 0150 00000000 		.word	connectPeriphDevice
+ 475 0154 00000000 		.word	apiResult
+ 476 0158 00000000 		.word	cyBle_clientState
+ 477 015c 00000000 		.word	cyBle_connHandle
+ 478 0160 00000000 		.word	connHandle
+ 479              		.cfi_endproc
+ 480              	.LFE39:
+ 481              		.size	handle_ble_CAR_Client_State, .-handle_ble_CAR_Client_State
+ 482              		.text
+ 483              	.Letext0:
+ 484              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 485              		.file 3 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 486              		.file 4 "Generated_Source\\PSoC4/BLE_StackGap.h"
+ 487              		.file 5 "Generated_Source\\PSoC4/BLE_StackGatt.h"
+ 488              		.file 6 "Generated_Source\\PSoC4/BLE_StackGattClient.h"
+ 489              		.file 7 "Generated_Source\\PSoC4/BLE_eventHandler.h"
+ 490              		.file 8 ".\\BLE_CAR_Client.h"
+ 491              		.section	.debug_info,"",%progbits
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 15
+
+
+ 492              	.Ldebug_info0:
+ 493 0000 2A070000 		.4byte	0x72a
+ 494 0004 0400     		.2byte	0x4
+ 495 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 496 000a 04       		.byte	0x4
+ 497 000b 01       		.uleb128 0x1
+ 498 000c 67110000 		.4byte	.LASF187
+ 499 0010 01       		.byte	0x1
+ 500 0011 5D050000 		.4byte	.LASF188
+ 501 0015 BC020000 		.4byte	.LASF189
+ 502 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 503 001d 00000000 		.4byte	0
+ 504 0021 00000000 		.4byte	.Ldebug_line0
+ 505 0025 02       		.uleb128 0x2
+ 506 0026 01       		.byte	0x1
+ 507 0027 06       		.byte	0x6
+ 508 0028 78030000 		.4byte	.LASF0
+ 509 002c 02       		.uleb128 0x2
+ 510 002d 01       		.byte	0x1
+ 511 002e 08       		.byte	0x8
+ 512 002f 560C0000 		.4byte	.LASF1
+ 513 0033 02       		.uleb128 0x2
+ 514 0034 02       		.byte	0x2
+ 515 0035 05       		.byte	0x5
+ 516 0036 9E0C0000 		.4byte	.LASF2
+ 517 003a 02       		.uleb128 0x2
+ 518 003b 02       		.byte	0x2
+ 519 003c 07       		.byte	0x7
+ 520 003d F10F0000 		.4byte	.LASF3
+ 521 0041 02       		.uleb128 0x2
+ 522 0042 04       		.byte	0x4
+ 523 0043 05       		.byte	0x5
+ 524 0044 0A020000 		.4byte	.LASF4
+ 525 0048 02       		.uleb128 0x2
+ 526 0049 04       		.byte	0x4
+ 527 004a 07       		.byte	0x7
+ 528 004b 07070000 		.4byte	.LASF5
+ 529 004f 02       		.uleb128 0x2
+ 530 0050 08       		.byte	0x8
+ 531 0051 05       		.byte	0x5
+ 532 0052 6A030000 		.4byte	.LASF6
+ 533 0056 02       		.uleb128 0x2
+ 534 0057 08       		.byte	0x8
+ 535 0058 07       		.byte	0x7
+ 536 0059 0B060000 		.4byte	.LASF7
+ 537 005d 03       		.uleb128 0x3
+ 538 005e 04       		.byte	0x4
+ 539 005f 05       		.byte	0x5
+ 540 0060 696E7400 		.ascii	"int\000"
+ 541 0064 02       		.uleb128 0x2
+ 542 0065 04       		.byte	0x4
+ 543 0066 07       		.byte	0x7
+ 544 0067 A20E0000 		.4byte	.LASF8
+ 545 006b 04       		.uleb128 0x4
+ 546 006c D0040000 		.4byte	.LASF9
+ 547 0070 02       		.byte	0x2
+ 548 0071 9801     		.2byte	0x198
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 16
+
+
+ 549 0073 2C000000 		.4byte	0x2c
+ 550 0077 04       		.uleb128 0x4
+ 551 0078 640C0000 		.4byte	.LASF10
+ 552 007c 02       		.byte	0x2
+ 553 007d 9901     		.2byte	0x199
+ 554 007f 3A000000 		.4byte	0x3a
+ 555 0083 04       		.uleb128 0x4
+ 556 0084 70050000 		.4byte	.LASF11
+ 557 0088 02       		.byte	0x2
+ 558 0089 9A01     		.2byte	0x19a
+ 559 008b 48000000 		.4byte	0x48
+ 560 008f 04       		.uleb128 0x4
+ 561 0090 57080000 		.4byte	.LASF12
+ 562 0094 02       		.byte	0x2
+ 563 0095 9B01     		.2byte	0x19b
+ 564 0097 25000000 		.4byte	0x25
+ 565 009b 02       		.uleb128 0x2
+ 566 009c 04       		.byte	0x4
+ 567 009d 04       		.byte	0x4
+ 568 009e F80B0000 		.4byte	.LASF13
+ 569 00a2 02       		.uleb128 0x2
+ 570 00a3 08       		.byte	0x8
+ 571 00a4 04       		.byte	0x4
+ 572 00a5 17050000 		.4byte	.LASF14
+ 573 00a9 02       		.uleb128 0x2
+ 574 00aa 01       		.byte	0x1
+ 575 00ab 08       		.byte	0x8
+ 576 00ac 430E0000 		.4byte	.LASF15
+ 577 00b0 05       		.uleb128 0x5
+ 578 00b1 6B000000 		.4byte	0x6b
+ 579 00b5 02       		.uleb128 0x2
+ 580 00b6 04       		.byte	0x4
+ 581 00b7 07       		.byte	0x7
+ 582 00b8 E5090000 		.4byte	.LASF16
+ 583 00bc 06       		.uleb128 0x6
+ 584 00bd 04       		.byte	0x4
+ 585 00be 07       		.uleb128 0x7
+ 586 00bf 01       		.byte	0x1
+ 587 00c0 03       		.byte	0x3
+ 588 00c1 4201     		.2byte	0x142
+ 589 00c3 7B020000 		.4byte	0x27b
+ 590 00c7 08       		.uleb128 0x8
+ 591 00c8 09080000 		.4byte	.LASF17
+ 592 00cc 00       		.sleb128 0
+ 593 00cd 08       		.uleb128 0x8
+ 594 00ce 84030000 		.4byte	.LASF18
+ 595 00d2 01       		.sleb128 1
+ 596 00d3 08       		.uleb128 0x8
+ 597 00d4 F8010000 		.4byte	.LASF19
+ 598 00d8 02       		.sleb128 2
+ 599 00d9 08       		.uleb128 0x8
+ 600 00da D80F0000 		.4byte	.LASF20
+ 601 00de 03       		.sleb128 3
+ 602 00df 08       		.uleb128 0x8
+ 603 00e0 68020000 		.4byte	.LASF21
+ 604 00e4 04       		.sleb128 4
+ 605 00e5 08       		.uleb128 0x8
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 17
+
+
+ 606 00e6 23000000 		.4byte	.LASF22
+ 607 00ea 05       		.sleb128 5
+ 608 00eb 08       		.uleb128 0x8
+ 609 00ec 3E080000 		.4byte	.LASF23
+ 610 00f0 06       		.sleb128 6
+ 611 00f1 08       		.uleb128 0x8
+ 612 00f2 47090000 		.4byte	.LASF24
+ 613 00f6 20       		.sleb128 32
+ 614 00f7 08       		.uleb128 0x8
+ 615 00f8 04040000 		.4byte	.LASF25
+ 616 00fc 21       		.sleb128 33
+ 617 00fd 08       		.uleb128 0x8
+ 618 00fe 63080000 		.4byte	.LASF26
+ 619 0102 22       		.sleb128 34
+ 620 0103 08       		.uleb128 0x8
+ 621 0104 CC080000 		.4byte	.LASF27
+ 622 0108 23       		.sleb128 35
+ 623 0109 08       		.uleb128 0x8
+ 624 010a C00A0000 		.4byte	.LASF28
+ 625 010e 24       		.sleb128 36
+ 626 010f 08       		.uleb128 0x8
+ 627 0110 070A0000 		.4byte	.LASF29
+ 628 0114 25       		.sleb128 37
+ 629 0115 08       		.uleb128 0x8
+ 630 0116 85040000 		.4byte	.LASF30
+ 631 011a 26       		.sleb128 38
+ 632 011b 08       		.uleb128 0x8
+ 633 011c 87080000 		.4byte	.LASF31
+ 634 0120 27       		.sleb128 39
+ 635 0121 08       		.uleb128 0x8
+ 636 0122 800E0000 		.4byte	.LASF32
+ 637 0126 28       		.sleb128 40
+ 638 0127 08       		.uleb128 0x8
+ 639 0128 FF020000 		.4byte	.LASF33
+ 640 012c 29       		.sleb128 41
+ 641 012d 08       		.uleb128 0x8
+ 642 012e 38070000 		.4byte	.LASF34
+ 643 0132 2A       		.sleb128 42
+ 644 0133 08       		.uleb128 0x8
+ 645 0134 4F010000 		.4byte	.LASF35
+ 646 0138 2B       		.sleb128 43
+ 647 0139 08       		.uleb128 0x8
+ 648 013a 31120000 		.4byte	.LASF36
+ 649 013e 2C       		.sleb128 44
+ 650 013f 08       		.uleb128 0x8
+ 651 0140 41030000 		.4byte	.LASF37
+ 652 0144 2D       		.sleb128 45
+ 653 0145 08       		.uleb128 0x8
+ 654 0146 130F0000 		.4byte	.LASF38
+ 655 014a 2E       		.sleb128 46
+ 656 014b 08       		.uleb128 0x8
+ 657 014c 6E010000 		.4byte	.LASF39
+ 658 0150 2F       		.sleb128 47
+ 659 0151 08       		.uleb128 0x8
+ 660 0152 220E0000 		.4byte	.LASF40
+ 661 0156 30       		.sleb128 48
+ 662 0157 08       		.uleb128 0x8
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 18
+
+
+ 663 0158 B1120000 		.4byte	.LASF41
+ 664 015c 31       		.sleb128 49
+ 665 015d 08       		.uleb128 0x8
+ 666 015e 690A0000 		.4byte	.LASF42
+ 667 0162 32       		.sleb128 50
+ 668 0163 08       		.uleb128 0x8
+ 669 0164 B00D0000 		.4byte	.LASF43
+ 670 0168 33       		.sleb128 51
+ 671 0169 08       		.uleb128 0x8
+ 672 016a 94050000 		.4byte	.LASF44
+ 673 016e C000     		.sleb128 64
+ 674 0170 08       		.uleb128 0x8
+ 675 0171 0A090000 		.4byte	.LASF45
+ 676 0175 C100     		.sleb128 65
+ 677 0177 08       		.uleb128 0x8
+ 678 0178 F1120000 		.4byte	.LASF46
+ 679 017c C200     		.sleb128 66
+ 680 017e 08       		.uleb128 0x8
+ 681 017f 43100000 		.4byte	.LASF47
+ 682 0183 C300     		.sleb128 67
+ 683 0185 08       		.uleb128 0x8
+ 684 0186 61070000 		.4byte	.LASF48
+ 685 018a C400     		.sleb128 68
+ 686 018c 08       		.uleb128 0x8
+ 687 018d C40B0000 		.4byte	.LASF49
+ 688 0191 C500     		.sleb128 69
+ 689 0193 08       		.uleb128 0x8
+ 690 0194 C4090000 		.4byte	.LASF50
+ 691 0198 C600     		.sleb128 70
+ 692 019a 08       		.uleb128 0x8
+ 693 019b 20080000 		.4byte	.LASF51
+ 694 019f C700     		.sleb128 71
+ 695 01a1 08       		.uleb128 0x8
+ 696 01a2 F5110000 		.4byte	.LASF52
+ 697 01a6 C800     		.sleb128 72
+ 698 01a8 08       		.uleb128 0x8
+ 699 01a9 1B040000 		.4byte	.LASF53
+ 700 01ad C900     		.sleb128 73
+ 701 01af 08       		.uleb128 0x8
+ 702 01b0 BE100000 		.4byte	.LASF54
+ 703 01b4 CA00     		.sleb128 74
+ 704 01b6 08       		.uleb128 0x8
+ 705 01b7 97010000 		.4byte	.LASF55
+ 706 01bb CB00     		.sleb128 75
+ 707 01bd 08       		.uleb128 0x8
+ 708 01be A6080000 		.4byte	.LASF56
+ 709 01c2 CC00     		.sleb128 76
+ 710 01c4 08       		.uleb128 0x8
+ 711 01c5 320A0000 		.4byte	.LASF57
+ 712 01c9 CD00     		.sleb128 77
+ 713 01cb 08       		.uleb128 0x8
+ 714 01cc 4E040000 		.4byte	.LASF58
+ 715 01d0 CE00     		.sleb128 78
+ 716 01d2 08       		.uleb128 0x8
+ 717 01d3 120D0000 		.4byte	.LASF59
+ 718 01d7 CF00     		.sleb128 79
+ 719 01d9 08       		.uleb128 0x8
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 19
+
+
+ 720 01da B6010000 		.4byte	.LASF60
+ 721 01de D000     		.sleb128 80
+ 722 01e0 08       		.uleb128 0x8
+ 723 01e1 F8040000 		.4byte	.LASF61
+ 724 01e5 D100     		.sleb128 81
+ 725 01e7 08       		.uleb128 0x8
+ 726 01e8 F90A0000 		.4byte	.LASF62
+ 727 01ec D200     		.sleb128 82
+ 728 01ee 08       		.uleb128 0x8
+ 729 01ef A80C0000 		.4byte	.LASF63
+ 730 01f3 D300     		.sleb128 83
+ 731 01f5 08       		.uleb128 0x8
+ 732 01f6 710D0000 		.4byte	.LASF64
+ 733 01fa D400     		.sleb128 84
+ 734 01fc 08       		.uleb128 0x8
+ 735 01fd 7F070000 		.4byte	.LASF65
+ 736 0201 D500     		.sleb128 85
+ 737 0203 08       		.uleb128 0x8
+ 738 0204 45060000 		.4byte	.LASF66
+ 739 0208 D600     		.sleb128 86
+ 740 020a 08       		.uleb128 0x8
+ 741 020b BF0E0000 		.4byte	.LASF67
+ 742 020f D700     		.sleb128 87
+ 743 0211 08       		.uleb128 0x8
+ 744 0212 A3070000 		.4byte	.LASF68
+ 745 0216 D800     		.sleb128 88
+ 746 0218 08       		.uleb128 0x8
+ 747 0219 AE050000 		.4byte	.LASF69
+ 748 021d F000     		.sleb128 112
+ 749 021f 08       		.uleb128 0x8
+ 750 0220 8B120000 		.4byte	.LASF70
+ 751 0224 F100     		.sleb128 113
+ 752 0226 08       		.uleb128 0x8
+ 753 0227 2B090000 		.4byte	.LASF71
+ 754 022b F200     		.sleb128 114
+ 755 022d 08       		.uleb128 0x8
+ 756 022e D5010000 		.4byte	.LASF72
+ 757 0232 F300     		.sleb128 115
+ 758 0234 08       		.uleb128 0x8
+ 759 0235 880B0000 		.4byte	.LASF73
+ 760 0239 F400     		.sleb128 116
+ 761 023b 08       		.uleb128 0x8
+ 762 023c 1E050000 		.4byte	.LASF74
+ 763 0240 F500     		.sleb128 117
+ 764 0242 08       		.uleb128 0x8
+ 765 0243 FB000000 		.4byte	.LASF75
+ 766 0247 F600     		.sleb128 118
+ 767 0249 08       		.uleb128 0x8
+ 768 024a 53000000 		.4byte	.LASF76
+ 769 024e F700     		.sleb128 119
+ 770 0250 08       		.uleb128 0x8
+ 771 0251 00000000 		.4byte	.LASF77
+ 772 0255 F800     		.sleb128 120
+ 773 0257 08       		.uleb128 0x8
+ 774 0258 530F0000 		.4byte	.LASF78
+ 775 025c F900     		.sleb128 121
+ 776 025e 08       		.uleb128 0x8
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 20
+
+
+ 777 025f DC050000 		.4byte	.LASF79
+ 778 0263 FA00     		.sleb128 122
+ 779 0265 08       		.uleb128 0x8
+ 780 0266 6D120000 		.4byte	.LASF80
+ 781 026a FA01     		.sleb128 250
+ 782 026c 08       		.uleb128 0x8
+ 783 026d 85060000 		.4byte	.LASF81
+ 784 0271 FB01     		.sleb128 251
+ 785 0273 08       		.uleb128 0x8
+ 786 0274 77050000 		.4byte	.LASF82
+ 787 0278 FF01     		.sleb128 255
+ 788 027a 00       		.byte	0
+ 789 027b 07       		.uleb128 0x7
+ 790 027c 02       		.byte	0x2
+ 791 027d 03       		.byte	0x3
+ 792 027e FF02     		.2byte	0x2ff
+ 793 0280 4B030000 		.4byte	0x34b
+ 794 0284 08       		.uleb128 0x8
+ 795 0285 85050000 		.4byte	.LASF83
+ 796 0289 00       		.sleb128 0
+ 797 028a 08       		.uleb128 0x8
+ 798 028b 3F050000 		.4byte	.LASF84
+ 799 028f 01       		.sleb128 1
+ 800 0290 08       		.uleb128 0x8
+ 801 0291 25100000 		.4byte	.LASF85
+ 802 0295 02       		.sleb128 2
+ 803 0296 08       		.uleb128 0x8
+ 804 0297 91000000 		.4byte	.LASF86
+ 805 029b 03       		.sleb128 3
+ 806 029c 08       		.uleb128 0x8
+ 807 029d 6E100000 		.4byte	.LASF87
+ 808 02a1 04       		.sleb128 4
+ 809 02a2 08       		.uleb128 0x8
+ 810 02a3 67060000 		.4byte	.LASF88
+ 811 02a7 05       		.sleb128 5
+ 812 02a8 08       		.uleb128 0x8
+ 813 02a9 DE0C0000 		.4byte	.LASF89
+ 814 02ad 06       		.sleb128 6
+ 815 02ae 08       		.uleb128 0x8
+ 816 02af DD030000 		.4byte	.LASF90
+ 817 02b3 07       		.sleb128 7
+ 818 02b4 08       		.uleb128 0x8
+ 819 02b5 920D0000 		.4byte	.LASF91
+ 820 02b9 08       		.sleb128 8
+ 821 02ba 08       		.uleb128 0x8
+ 822 02bb 1C120000 		.4byte	.LASF92
+ 823 02bf 09       		.sleb128 9
+ 824 02c0 08       		.uleb128 0x8
+ 825 02c1 190C0000 		.4byte	.LASF93
+ 826 02c5 0A       		.sleb128 10
+ 827 02c6 08       		.uleb128 0x8
+ 828 02c7 480E0000 		.4byte	.LASF94
+ 829 02cb 0B       		.sleb128 11
+ 830 02cc 08       		.uleb128 0x8
+ 831 02cd D6040000 		.4byte	.LASF95
+ 832 02d1 0C       		.sleb128 12
+ 833 02d2 08       		.uleb128 0x8
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 21
+
+
+ 834 02d3 30020000 		.4byte	.LASF96
+ 835 02d7 0D       		.sleb128 13
+ 836 02d8 08       		.uleb128 0x8
+ 837 02d9 DE060000 		.4byte	.LASF97
+ 838 02dd 0E       		.sleb128 14
+ 839 02de 08       		.uleb128 0x8
+ 840 02df 14110000 		.4byte	.LASF98
+ 841 02e3 0F       		.sleb128 15
+ 842 02e4 08       		.uleb128 0x8
+ 843 02e5 AA0F0000 		.4byte	.LASF99
+ 844 02e9 10       		.sleb128 16
+ 845 02ea 08       		.uleb128 0x8
+ 846 02eb C6070000 		.4byte	.LASF100
+ 847 02ef 11       		.sleb128 17
+ 848 02f0 08       		.uleb128 0x8
+ 849 02f1 AD040000 		.4byte	.LASF101
+ 850 02f5 12       		.sleb128 18
+ 851 02f6 08       		.uleb128 0x8
+ 852 02f7 0F130000 		.4byte	.LASF102
+ 853 02fb 13       		.sleb128 19
+ 854 02fc 08       		.uleb128 0x8
+ 855 02fd BB030000 		.4byte	.LASF103
+ 856 0301 27       		.sleb128 39
+ 857 0302 08       		.uleb128 0x8
+ 858 0303 850F0000 		.4byte	.LASF104
+ 859 0307 28       		.sleb128 40
+ 860 0308 08       		.uleb128 0x8
+ 861 0309 F8100000 		.4byte	.LASF105
+ 862 030d 29       		.sleb128 41
+ 863 030e 08       		.uleb128 0x8
+ 864 030f 13020000 		.4byte	.LASF106
+ 865 0313 2A       		.sleb128 42
+ 866 0314 08       		.uleb128 0x8
+ 867 0315 1C010000 		.4byte	.LASF107
+ 868 0319 2B       		.sleb128 43
+ 869 031a 08       		.uleb128 0x8
+ 870 031b AC090000 		.4byte	.LASF108
+ 871 031f 2C       		.sleb128 44
+ 872 0320 08       		.uleb128 0x8
+ 873 0321 DC100000 		.4byte	.LASF109
+ 874 0325 FE01     		.sleb128 254
+ 875 0327 08       		.uleb128 0x8
+ 876 0328 9C090000 		.4byte	.LASF110
+ 877 032c FF01     		.sleb128 255
+ 878 032e 08       		.uleb128 0x8
+ 879 032f F0070000 		.4byte	.LASF111
+ 880 0333 8002     		.sleb128 256
+ 881 0335 08       		.uleb128 0x8
+ 882 0336 1A0B0000 		.4byte	.LASF112
+ 883 033a 8102     		.sleb128 257
+ 884 033c 08       		.uleb128 0x8
+ 885 033d 330C0000 		.4byte	.LASF113
+ 886 0341 8202     		.sleb128 258
+ 887 0343 08       		.uleb128 0x8
+ 888 0344 34040000 		.4byte	.LASF114
+ 889 0348 8302     		.sleb128 259
+ 890 034a 00       		.byte	0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 22
+
+
+ 891 034b 04       		.uleb128 0x4
+ 892 034c E60A0000 		.4byte	.LASF115
+ 893 0350 03       		.byte	0x3
+ 894 0351 6B03     		.2byte	0x36b
+ 895 0353 7B020000 		.4byte	0x27b
+ 896 0357 09       		.uleb128 0x9
+ 897 0358 07       		.byte	0x7
+ 898 0359 03       		.byte	0x3
+ 899 035a 2804     		.2byte	0x428
+ 900 035c 7B030000 		.4byte	0x37b
+ 901 0360 0A       		.uleb128 0xa
+ 902 0361 5C080000 		.4byte	.LASF116
+ 903 0365 03       		.byte	0x3
+ 904 0366 2B04     		.2byte	0x42b
+ 905 0368 7B030000 		.4byte	0x37b
+ 906 036c 00       		.byte	0
+ 907 036d 0A       		.uleb128 0xa
+ 908 036e F3010000 		.4byte	.LASF117
+ 909 0372 03       		.byte	0x3
+ 910 0373 2D04     		.2byte	0x42d
+ 911 0375 6B000000 		.4byte	0x6b
+ 912 0379 06       		.byte	0x6
+ 913 037a 00       		.byte	0
+ 914 037b 0B       		.uleb128 0xb
+ 915 037c 6B000000 		.4byte	0x6b
+ 916 0380 8B030000 		.4byte	0x38b
+ 917 0384 0C       		.uleb128 0xc
+ 918 0385 B5000000 		.4byte	0xb5
+ 919 0389 05       		.byte	0x5
+ 920 038a 00       		.byte	0
+ 921 038b 04       		.uleb128 0x4
+ 922 038c 93020000 		.4byte	.LASF118
+ 923 0390 03       		.byte	0x3
+ 924 0391 2E04     		.2byte	0x42e
+ 925 0393 57030000 		.4byte	0x357
+ 926 0397 0D       		.uleb128 0xd
+ 927 0398 01       		.byte	0x1
+ 928 0399 04       		.byte	0x4
+ 929 039a E4       		.byte	0xe4
+ 930 039b BE030000 		.4byte	0x3be
+ 931 039f 08       		.uleb128 0x8
+ 932 03a0 42130000 		.4byte	.LASF119
+ 933 03a4 00       		.sleb128 0
+ 934 03a5 08       		.uleb128 0x8
+ 935 03a6 28060000 		.4byte	.LASF120
+ 936 03aa 01       		.sleb128 1
+ 937 03ab 08       		.uleb128 0x8
+ 938 03ac 91100000 		.4byte	.LASF121
+ 939 03b0 02       		.sleb128 2
+ 940 03b1 08       		.uleb128 0x8
+ 941 03b2 79090000 		.4byte	.LASF122
+ 942 03b6 03       		.sleb128 3
+ 943 03b7 08       		.uleb128 0x8
+ 944 03b8 B6000000 		.4byte	.LASF123
+ 945 03bc 04       		.sleb128 4
+ 946 03bd 00       		.byte	0
+ 947 03be 0E       		.uleb128 0xe
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 23
+
+
+ 948 03bf 710B0000 		.4byte	.LASF124
+ 949 03c3 04       		.byte	0x4
+ 950 03c4 F4       		.byte	0xf4
+ 951 03c5 97030000 		.4byte	0x397
+ 952 03c9 09       		.uleb128 0x9
+ 953 03ca 14       		.byte	0x14
+ 954 03cb 04       		.byte	0x4
+ 955 03cc 0C03     		.2byte	0x30c
+ 956 03ce 21040000 		.4byte	0x421
+ 957 03d2 0A       		.uleb128 0xa
+ 958 03d3 55120000 		.4byte	.LASF125
+ 959 03d7 04       		.byte	0x4
+ 960 03d8 1503     		.2byte	0x315
+ 961 03da BE030000 		.4byte	0x3be
+ 962 03de 00       		.byte	0
+ 963 03df 0A       		.uleb128 0xa
+ 964 03e0 EB0B0000 		.4byte	.LASF126
+ 965 03e4 04       		.byte	0x4
+ 966 03e5 1D03     		.2byte	0x31d
+ 967 03e7 6B000000 		.4byte	0x6b
+ 968 03eb 01       		.byte	0x1
+ 969 03ec 0A       		.uleb128 0xa
+ 970 03ed ED040000 		.4byte	.LASF127
+ 971 03f1 04       		.byte	0x4
+ 972 03f2 2103     		.2byte	0x321
+ 973 03f4 21040000 		.4byte	0x421
+ 974 03f8 04       		.byte	0x4
+ 975 03f9 0A       		.uleb128 0xa
+ 976 03fa D4050000 		.4byte	.LASF128
+ 977 03fe 04       		.byte	0x4
+ 978 03ff 2403     		.2byte	0x324
+ 979 0401 6B000000 		.4byte	0x6b
+ 980 0405 08       		.byte	0x8
+ 981 0406 0A       		.uleb128 0xa
+ 982 0407 7D020000 		.4byte	.LASF129
+ 983 040b 04       		.byte	0x4
+ 984 040c 2703     		.2byte	0x327
+ 985 040e 21040000 		.4byte	0x421
+ 986 0412 0C       		.byte	0xc
+ 987 0413 0A       		.uleb128 0xa
+ 988 0414 68120000 		.4byte	.LASF130
+ 989 0418 04       		.byte	0x4
+ 990 0419 2C03     		.2byte	0x32c
+ 991 041b 8F000000 		.4byte	0x8f
+ 992 041f 10       		.byte	0x10
+ 993 0420 00       		.byte	0
+ 994 0421 0F       		.uleb128 0xf
+ 995 0422 04       		.byte	0x4
+ 996 0423 6B000000 		.4byte	0x6b
+ 997 0427 04       		.uleb128 0x4
+ 998 0428 39110000 		.4byte	.LASF131
+ 999 042c 04       		.byte	0x4
+ 1000 042d 2E03     		.2byte	0x32e
+ 1001 042f C9030000 		.4byte	0x3c9
+ 1002 0433 04       		.uleb128 0x4
+ 1003 0434 D5120000 		.4byte	.LASF132
+ 1004 0438 05       		.byte	0x5
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 24
+
+
+ 1005 0439 9201     		.2byte	0x192
+ 1006 043b 77000000 		.4byte	0x77
+ 1007 043f 09       		.uleb128 0x9
+ 1008 0440 02       		.byte	0x2
+ 1009 0441 05       		.byte	0x5
+ 1010 0442 9C01     		.2byte	0x19c
+ 1011 0444 63040000 		.4byte	0x463
+ 1012 0448 0A       		.uleb128 0xa
+ 1013 0449 5F120000 		.4byte	.LASF133
+ 1014 044d 05       		.byte	0x5
+ 1015 044e A301     		.2byte	0x1a3
+ 1016 0450 6B000000 		.4byte	0x6b
+ 1017 0454 00       		.byte	0
+ 1018 0455 0A       		.uleb128 0xa
+ 1019 0456 25090000 		.4byte	.LASF134
+ 1020 045a 05       		.byte	0x5
+ 1021 045b A901     		.2byte	0x1a9
+ 1022 045d 6B000000 		.4byte	0x6b
+ 1023 0461 01       		.byte	0x1
+ 1024 0462 00       		.byte	0
+ 1025 0463 04       		.uleb128 0x4
+ 1026 0464 72000000 		.4byte	.LASF135
+ 1027 0468 05       		.byte	0x5
+ 1028 0469 AB01     		.2byte	0x1ab
+ 1029 046b 3F040000 		.4byte	0x43f
+ 1030 046f 09       		.uleb128 0x9
+ 1031 0470 08       		.byte	0x8
+ 1032 0471 05       		.byte	0x5
+ 1033 0472 C701     		.2byte	0x1c7
+ 1034 0474 A0040000 		.4byte	0x4a0
+ 1035 0478 10       		.uleb128 0x10
+ 1036 0479 76616C00 		.ascii	"val\000"
+ 1037 047d 05       		.byte	0x5
+ 1038 047e CA01     		.2byte	0x1ca
+ 1039 0480 21040000 		.4byte	0x421
+ 1040 0484 00       		.byte	0
+ 1041 0485 10       		.uleb128 0x10
+ 1042 0486 6C656E00 		.ascii	"len\000"
+ 1043 048a 05       		.byte	0x5
+ 1044 048b CD01     		.2byte	0x1cd
+ 1045 048d 77000000 		.4byte	0x77
+ 1046 0491 04       		.byte	0x4
+ 1047 0492 0A       		.uleb128 0xa
+ 1048 0493 FA030000 		.4byte	.LASF136
+ 1049 0497 05       		.byte	0x5
+ 1050 0498 D401     		.2byte	0x1d4
+ 1051 049a 77000000 		.4byte	0x77
+ 1052 049e 06       		.byte	0x6
+ 1053 049f 00       		.byte	0
+ 1054 04a0 04       		.uleb128 0x4
+ 1055 04a1 55020000 		.4byte	.LASF137
+ 1056 04a5 05       		.byte	0x5
+ 1057 04a6 D601     		.2byte	0x1d6
+ 1058 04a8 6F040000 		.4byte	0x46f
+ 1059 04ac 09       		.uleb128 0x9
+ 1060 04ad 0C       		.byte	0xc
+ 1061 04ae 05       		.byte	0x5
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 25
+
+
+ 1062 04af D901     		.2byte	0x1d9
+ 1063 04b1 D0040000 		.4byte	0x4d0
+ 1064 04b5 0A       		.uleb128 0xa
+ 1065 04b6 22060000 		.4byte	.LASF138
+ 1066 04ba 05       		.byte	0x5
+ 1067 04bb DC01     		.2byte	0x1dc
+ 1068 04bd A0040000 		.4byte	0x4a0
+ 1069 04c1 00       		.byte	0
+ 1070 04c2 0A       		.uleb128 0xa
+ 1071 04c3 00060000 		.4byte	.LASF139
+ 1072 04c7 05       		.byte	0x5
+ 1073 04c8 DF01     		.2byte	0x1df
+ 1074 04ca 33040000 		.4byte	0x433
+ 1075 04ce 08       		.byte	0x8
+ 1076 04cf 00       		.byte	0
+ 1077 04d0 04       		.uleb128 0x4
+ 1078 04d1 330B0000 		.4byte	.LASF140
+ 1079 04d5 05       		.byte	0x5
+ 1080 04d6 E101     		.2byte	0x1e1
+ 1081 04d8 AC040000 		.4byte	0x4ac
+ 1082 04dc 0E       		.uleb128 0xe
+ 1083 04dd 370F0000 		.4byte	.LASF141
+ 1084 04e1 06       		.byte	0x6
+ 1085 04e2 75       		.byte	0x75
+ 1086 04e3 D0040000 		.4byte	0x4d0
+ 1087 04e7 11       		.uleb128 0x11
+ 1088 04e8 10       		.byte	0x10
+ 1089 04e9 06       		.byte	0x6
+ 1090 04ea 89       		.byte	0x89
+ 1091 04eb 08050000 		.4byte	0x508
+ 1092 04ef 12       		.uleb128 0x12
+ 1093 04f0 86000000 		.4byte	.LASF142
+ 1094 04f4 06       		.byte	0x6
+ 1095 04f5 8C       		.byte	0x8c
+ 1096 04f6 63040000 		.4byte	0x463
+ 1097 04fa 00       		.byte	0
+ 1098 04fb 12       		.uleb128 0x12
+ 1099 04fc 6B090000 		.4byte	.LASF143
+ 1100 0500 06       		.byte	0x6
+ 1101 0501 8F       		.byte	0x8f
+ 1102 0502 D0040000 		.4byte	0x4d0
+ 1103 0506 04       		.byte	0x4
+ 1104 0507 00       		.byte	0
+ 1105 0508 0E       		.uleb128 0xe
+ 1106 0509 FD0D0000 		.4byte	.LASF144
+ 1107 050d 06       		.byte	0x6
+ 1108 050e 91       		.byte	0x91
+ 1109 050f E7040000 		.4byte	0x4e7
+ 1110 0513 07       		.uleb128 0x7
+ 1111 0514 01       		.byte	0x1
+ 1112 0515 07       		.byte	0x7
+ 1113 0516 BF07     		.2byte	0x7bf
+ 1114 0518 41050000 		.4byte	0x541
+ 1115 051c 08       		.uleb128 0x8
+ 1116 051d 3F000000 		.4byte	.LASF145
+ 1117 0521 00       		.sleb128 0
+ 1118 0522 08       		.uleb128 0x8
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 26
+
+
+ 1119 0523 EE090000 		.4byte	.LASF146
+ 1120 0527 01       		.sleb128 1
+ 1121 0528 08       		.uleb128 0x8
+ 1122 0529 51110000 		.4byte	.LASF147
+ 1123 052d 02       		.sleb128 2
+ 1124 052e 08       		.uleb128 0x8
+ 1125 052f E80D0000 		.4byte	.LASF148
+ 1126 0533 03       		.sleb128 3
+ 1127 0534 08       		.uleb128 0x8
+ 1128 0535 870C0000 		.4byte	.LASF149
+ 1129 0539 04       		.sleb128 4
+ 1130 053a 08       		.uleb128 0x8
+ 1131 053b 6C040000 		.4byte	.LASF150
+ 1132 053f 05       		.sleb128 5
+ 1133 0540 00       		.byte	0
+ 1134 0541 04       		.uleb128 0x4
+ 1135 0542 B0100000 		.4byte	.LASF151
+ 1136 0546 07       		.byte	0x7
+ 1137 0547 CD07     		.2byte	0x7cd
+ 1138 0549 13050000 		.4byte	0x513
+ 1139 054d 07       		.uleb128 0x7
+ 1140 054e 01       		.byte	0x1
+ 1141 054f 07       		.byte	0x7
+ 1142 0550 D807     		.2byte	0x7d8
+ 1143 0552 8D050000 		.4byte	0x58d
+ 1144 0556 08       		.uleb128 0x8
+ 1145 0557 4C0A0000 		.4byte	.LASF152
+ 1146 055b 00       		.sleb128 0
+ 1147 055c 08       		.uleb128 0x8
+ 1148 055d 310D0000 		.4byte	.LASF153
+ 1149 0561 01       		.sleb128 1
+ 1150 0562 08       		.uleb128 0x8
+ 1151 0563 97030000 		.4byte	.LASF154
+ 1152 0567 02       		.sleb128 2
+ 1153 0568 08       		.uleb128 0x8
+ 1154 0569 8A0A0000 		.4byte	.LASF155
+ 1155 056d 03       		.sleb128 3
+ 1156 056e 08       		.uleb128 0x8
+ 1157 056f 1C030000 		.4byte	.LASF156
+ 1158 0573 04       		.sleb128 4
+ 1159 0574 08       		.uleb128 0x8
+ 1160 0575 A60B0000 		.4byte	.LASF157
+ 1161 0579 05       		.sleb128 5
+ 1162 057a 08       		.uleb128 0x8
+ 1163 057b 04100000 		.4byte	.LASF158
+ 1164 057f 06       		.sleb128 6
+ 1165 0580 08       		.uleb128 0x8
+ 1166 0581 E80E0000 		.4byte	.LASF159
+ 1167 0585 07       		.sleb128 7
+ 1168 0586 08       		.uleb128 0x8
+ 1169 0587 A4060000 		.4byte	.LASF160
+ 1170 058b 08       		.sleb128 8
+ 1171 058c 00       		.byte	0
+ 1172 058d 04       		.uleb128 0x4
+ 1173 058e A7020000 		.4byte	.LASF161
+ 1174 0592 07       		.byte	0x7
+ 1175 0593 E207     		.2byte	0x7e2
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 27
+
+
+ 1176 0595 4D050000 		.4byte	0x54d
+ 1177 0599 07       		.uleb128 0x7
+ 1178 059a 01       		.byte	0x1
+ 1179 059b 07       		.byte	0x7
+ 1180 059c 0108     		.2byte	0x801
+ 1181 059e B5050000 		.4byte	0x5b5
+ 1182 05a2 08       		.uleb128 0x8
+ 1183 05a3 760F0000 		.4byte	.LASF162
+ 1184 05a7 00       		.sleb128 0
+ 1185 05a8 08       		.uleb128 0x8
+ 1186 05a9 AF0E0000 		.4byte	.LASF163
+ 1187 05ad 01       		.sleb128 1
+ 1188 05ae 08       		.uleb128 0x8
+ 1189 05af D70D0000 		.4byte	.LASF164
+ 1190 05b3 02       		.sleb128 2
+ 1191 05b4 00       		.byte	0
+ 1192 05b5 0D       		.uleb128 0xd
+ 1193 05b6 01       		.byte	0x1
+ 1194 05b7 08       		.byte	0x8
+ 1195 05b8 27       		.byte	0x27
+ 1196 05b9 D6050000 		.4byte	0x5d6
+ 1197 05bd 08       		.uleb128 0x8
+ 1198 05be 19070000 		.4byte	.LASF165
+ 1199 05c2 00       		.sleb128 0
+ 1200 05c3 08       		.uleb128 0x8
+ 1201 05c4 550D0000 		.4byte	.LASF166
+ 1202 05c8 01       		.sleb128 1
+ 1203 05c9 08       		.uleb128 0x8
+ 1204 05ca 6B0C0000 		.4byte	.LASF167
+ 1205 05ce 02       		.sleb128 2
+ 1206 05cf 08       		.uleb128 0x8
+ 1207 05d0 C4060000 		.4byte	.LASF168
+ 1208 05d4 03       		.sleb128 3
+ 1209 05d5 00       		.byte	0
+ 1210 05d6 0E       		.uleb128 0xe
+ 1211 05d7 F2080000 		.4byte	.LASF169
+ 1212 05db 08       		.byte	0x8
+ 1213 05dc 2C       		.byte	0x2c
+ 1214 05dd B5050000 		.4byte	0x5b5
+ 1215 05e1 13       		.uleb128 0x13
+ 1216 05e2 F80C0000 		.4byte	.LASF170
+ 1217 05e6 01       		.byte	0x1
+ 1218 05e7 34       		.byte	0x34
+ 1219 05e8 00000000 		.4byte	.LFB37
+ 1220 05ec 74000000 		.4byte	.LFE37-.LFB37
+ 1221 05f0 01       		.uleb128 0x1
+ 1222 05f1 9C       		.byte	0x9c
+ 1223 05f2 05060000 		.4byte	0x605
+ 1224 05f6 14       		.uleb128 0x14
+ 1225 05f7 520B0000 		.4byte	.LASF172
+ 1226 05fb 01       		.byte	0x1
+ 1227 05fc 34       		.byte	0x34
+ 1228 05fd 05060000 		.4byte	0x605
+ 1229 0601 02       		.uleb128 0x2
+ 1230 0602 91       		.byte	0x91
+ 1231 0603 74       		.sleb128 -12
+ 1232 0604 00       		.byte	0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 28
+
+
+ 1233 0605 0F       		.uleb128 0xf
+ 1234 0606 04       		.byte	0x4
+ 1235 0607 27040000 		.4byte	0x427
+ 1236 060b 13       		.uleb128 0x13
+ 1237 060c 680E0000 		.4byte	.LASF171
+ 1238 0610 01       		.byte	0x1
+ 1239 0611 55       		.byte	0x55
+ 1240 0612 00000000 		.4byte	.LFB38
+ 1241 0616 BC000000 		.4byte	.LFE38-.LFB38
+ 1242 061a 01       		.uleb128 0x1
+ 1243 061b 9C       		.byte	0x9c
+ 1244 061c 55060000 		.4byte	0x655
+ 1245 0620 14       		.uleb128 0x14
+ 1246 0621 EA070000 		.4byte	.LASF173
+ 1247 0625 01       		.byte	0x1
+ 1248 0626 55       		.byte	0x55
+ 1249 0627 83000000 		.4byte	0x83
+ 1250 062b 02       		.uleb128 0x2
+ 1251 062c 91       		.byte	0x91
+ 1252 062d 6C       		.sleb128 -20
+ 1253 062e 14       		.uleb128 0x14
+ 1254 062f 37130000 		.4byte	.LASF174
+ 1255 0633 01       		.byte	0x1
+ 1256 0634 55       		.byte	0x55
+ 1257 0635 BC000000 		.4byte	0xbc
+ 1258 0639 02       		.uleb128 0x2
+ 1259 063a 91       		.byte	0x91
+ 1260 063b 68       		.sleb128 -24
+ 1261 063c 15       		.uleb128 0x15
+ 1262 063d 7E000000 		.4byte	.LBB2
+ 1263 0641 26000000 		.4byte	.LBE2-.LBB2
+ 1264 0645 16       		.uleb128 0x16
+ 1265 0646 61100000 		.4byte	.LASF176
+ 1266 064a 01       		.byte	0x1
+ 1267 064b 77       		.byte	0x77
+ 1268 064c 55060000 		.4byte	0x655
+ 1269 0650 02       		.uleb128 0x2
+ 1270 0651 91       		.byte	0x91
+ 1271 0652 74       		.sleb128 -12
+ 1272 0653 00       		.byte	0
+ 1273 0654 00       		.byte	0
+ 1274 0655 0F       		.uleb128 0xf
+ 1275 0656 04       		.byte	0x4
+ 1276 0657 08050000 		.4byte	0x508
+ 1277 065b 13       		.uleb128 0x13
+ 1278 065c CA000000 		.4byte	.LASF175
+ 1279 0660 01       		.byte	0x1
+ 1280 0661 93       		.byte	0x93
+ 1281 0662 00000000 		.4byte	.LFB39
+ 1282 0666 64010000 		.4byte	.LFE39-.LFB39
+ 1283 066a 01       		.uleb128 0x1
+ 1284 066b 9C       		.byte	0x9c
+ 1285 066c 97060000 		.4byte	0x697
+ 1286 0670 15       		.uleb128 0x15
+ 1287 0671 80000000 		.4byte	.LBB3
+ 1288 0675 56000000 		.4byte	.LBE3-.LBB3
+ 1289 0679 16       		.uleb128 0x16
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 29
+
+
+ 1290 067a 22060000 		.4byte	.LASF138
+ 1291 067e 01       		.byte	0x1
+ 1292 067f C3       		.byte	0xc3
+ 1293 0680 6B000000 		.4byte	0x6b
+ 1294 0684 02       		.uleb128 0x2
+ 1295 0685 91       		.byte	0x91
+ 1296 0686 77       		.sleb128 -9
+ 1297 0687 16       		.uleb128 0x16
+ 1298 0688 0C0C0000 		.4byte	.LASF177
+ 1299 068c 01       		.byte	0x1
+ 1300 068d C4       		.byte	0xc4
+ 1301 068e DC040000 		.4byte	0x4dc
+ 1302 0692 02       		.uleb128 0x2
+ 1303 0693 91       		.byte	0x91
+ 1304 0694 68       		.sleb128 -24
+ 1305 0695 00       		.byte	0
+ 1306 0696 00       		.byte	0
+ 1307 0697 17       		.uleb128 0x17
+ 1308 0698 C0080000 		.4byte	.LASF178
+ 1309 069c 07       		.byte	0x7
+ 1310 069d DA09     		.2byte	0x9da
+ 1311 069f 41050000 		.4byte	0x541
+ 1312 06a3 17       		.uleb128 0x17
+ 1313 06a4 210A0000 		.4byte	.LASF179
+ 1314 06a8 07       		.byte	0x7
+ 1315 06a9 DB09     		.2byte	0x9db
+ 1316 06ab 63040000 		.4byte	0x463
+ 1317 06af 17       		.uleb128 0x17
+ 1318 06b0 82020000 		.4byte	.LASF180
+ 1319 06b4 07       		.byte	0x7
+ 1320 06b5 DC09     		.2byte	0x9dc
+ 1321 06b7 B0000000 		.4byte	0xb0
+ 1322 06bb 17       		.uleb128 0x17
+ 1323 06bc AE0A0000 		.4byte	.LASF181
+ 1324 06c0 07       		.byte	0x7
+ 1325 06c1 ED09     		.2byte	0x9ed
+ 1326 06c3 8D050000 		.4byte	0x58d
+ 1327 06c7 18       		.uleb128 0x18
+ 1328 06c8 C90C0000 		.4byte	.LASF182
+ 1329 06cc 08       		.byte	0x8
+ 1330 06cd 23       		.byte	0x23
+ 1331 06ce 6B000000 		.4byte	0x6b
+ 1332 06d2 05       		.uleb128 0x5
+ 1333 06d3 03       		.byte	0x3
+ 1334 06d4 00000000 		.4byte	ble_CAR_Server_found
+ 1335 06d8 18       		.uleb128 0x18
+ 1336 06d9 FE0B0000 		.4byte	.LASF183
+ 1337 06dd 08       		.byte	0x8
+ 1338 06de 24       		.byte	0x24
+ 1339 06df 6B000000 		.4byte	0x6b
+ 1340 06e3 05       		.uleb128 0x5
+ 1341 06e4 03       		.byte	0x3
+ 1342 06e5 00000000 		.4byte	Motor_Command
+ 1343 06e9 18       		.uleb128 0x18
+ 1344 06ea E6000000 		.4byte	.LASF184
+ 1345 06ee 08       		.byte	0x8
+ 1346 06ef 2E       		.byte	0x2e
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 30
+
+
+ 1347 06f0 D6050000 		.4byte	0x5d6
+ 1348 06f4 05       		.uleb128 0x5
+ 1349 06f5 03       		.byte	0x3
+ 1350 06f6 00000000 		.4byte	ble_CAR_Client_State
+ 1351 06fa 18       		.uleb128 0x18
+ 1352 06fb 86000000 		.4byte	.LASF142
+ 1353 06ff 01       		.byte	0x1
+ 1354 0700 1A       		.byte	0x1a
+ 1355 0701 63040000 		.4byte	0x463
+ 1356 0705 05       		.uleb128 0x5
+ 1357 0706 03       		.byte	0x3
+ 1358 0707 00000000 		.4byte	connHandle
+ 1359 070b 18       		.uleb128 0x18
+ 1360 070c DC0A0000 		.4byte	.LASF185
+ 1361 0710 01       		.byte	0x1
+ 1362 0711 1F       		.byte	0x1f
+ 1363 0712 4B030000 		.4byte	0x34b
+ 1364 0716 05       		.uleb128 0x5
+ 1365 0717 03       		.byte	0x3
+ 1366 0718 00000000 		.4byte	apiResult
+ 1367 071c 18       		.uleb128 0x18
+ 1368 071d 5D0B0000 		.4byte	.LASF186
+ 1369 0721 01       		.byte	0x1
+ 1370 0722 23       		.byte	0x23
+ 1371 0723 8B030000 		.4byte	0x38b
+ 1372 0727 05       		.uleb128 0x5
+ 1373 0728 03       		.byte	0x3
+ 1374 0729 00000000 		.4byte	connectPeriphDevice
+ 1375 072d 00       		.byte	0
+ 1376              		.section	.debug_abbrev,"",%progbits
+ 1377              	.Ldebug_abbrev0:
+ 1378 0000 01       		.uleb128 0x1
+ 1379 0001 11       		.uleb128 0x11
+ 1380 0002 01       		.byte	0x1
+ 1381 0003 25       		.uleb128 0x25
+ 1382 0004 0E       		.uleb128 0xe
+ 1383 0005 13       		.uleb128 0x13
+ 1384 0006 0B       		.uleb128 0xb
+ 1385 0007 03       		.uleb128 0x3
+ 1386 0008 0E       		.uleb128 0xe
+ 1387 0009 1B       		.uleb128 0x1b
+ 1388 000a 0E       		.uleb128 0xe
+ 1389 000b 55       		.uleb128 0x55
+ 1390 000c 17       		.uleb128 0x17
+ 1391 000d 11       		.uleb128 0x11
+ 1392 000e 01       		.uleb128 0x1
+ 1393 000f 10       		.uleb128 0x10
+ 1394 0010 17       		.uleb128 0x17
+ 1395 0011 00       		.byte	0
+ 1396 0012 00       		.byte	0
+ 1397 0013 02       		.uleb128 0x2
+ 1398 0014 24       		.uleb128 0x24
+ 1399 0015 00       		.byte	0
+ 1400 0016 0B       		.uleb128 0xb
+ 1401 0017 0B       		.uleb128 0xb
+ 1402 0018 3E       		.uleb128 0x3e
+ 1403 0019 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 31
+
+
+ 1404 001a 03       		.uleb128 0x3
+ 1405 001b 0E       		.uleb128 0xe
+ 1406 001c 00       		.byte	0
+ 1407 001d 00       		.byte	0
+ 1408 001e 03       		.uleb128 0x3
+ 1409 001f 24       		.uleb128 0x24
+ 1410 0020 00       		.byte	0
+ 1411 0021 0B       		.uleb128 0xb
+ 1412 0022 0B       		.uleb128 0xb
+ 1413 0023 3E       		.uleb128 0x3e
+ 1414 0024 0B       		.uleb128 0xb
+ 1415 0025 03       		.uleb128 0x3
+ 1416 0026 08       		.uleb128 0x8
+ 1417 0027 00       		.byte	0
+ 1418 0028 00       		.byte	0
+ 1419 0029 04       		.uleb128 0x4
+ 1420 002a 16       		.uleb128 0x16
+ 1421 002b 00       		.byte	0
+ 1422 002c 03       		.uleb128 0x3
+ 1423 002d 0E       		.uleb128 0xe
+ 1424 002e 3A       		.uleb128 0x3a
+ 1425 002f 0B       		.uleb128 0xb
+ 1426 0030 3B       		.uleb128 0x3b
+ 1427 0031 05       		.uleb128 0x5
+ 1428 0032 49       		.uleb128 0x49
+ 1429 0033 13       		.uleb128 0x13
+ 1430 0034 00       		.byte	0
+ 1431 0035 00       		.byte	0
+ 1432 0036 05       		.uleb128 0x5
+ 1433 0037 35       		.uleb128 0x35
+ 1434 0038 00       		.byte	0
+ 1435 0039 49       		.uleb128 0x49
+ 1436 003a 13       		.uleb128 0x13
+ 1437 003b 00       		.byte	0
+ 1438 003c 00       		.byte	0
+ 1439 003d 06       		.uleb128 0x6
+ 1440 003e 0F       		.uleb128 0xf
+ 1441 003f 00       		.byte	0
+ 1442 0040 0B       		.uleb128 0xb
+ 1443 0041 0B       		.uleb128 0xb
+ 1444 0042 00       		.byte	0
+ 1445 0043 00       		.byte	0
+ 1446 0044 07       		.uleb128 0x7
+ 1447 0045 04       		.uleb128 0x4
+ 1448 0046 01       		.byte	0x1
+ 1449 0047 0B       		.uleb128 0xb
+ 1450 0048 0B       		.uleb128 0xb
+ 1451 0049 3A       		.uleb128 0x3a
+ 1452 004a 0B       		.uleb128 0xb
+ 1453 004b 3B       		.uleb128 0x3b
+ 1454 004c 05       		.uleb128 0x5
+ 1455 004d 01       		.uleb128 0x1
+ 1456 004e 13       		.uleb128 0x13
+ 1457 004f 00       		.byte	0
+ 1458 0050 00       		.byte	0
+ 1459 0051 08       		.uleb128 0x8
+ 1460 0052 28       		.uleb128 0x28
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 32
+
+
+ 1461 0053 00       		.byte	0
+ 1462 0054 03       		.uleb128 0x3
+ 1463 0055 0E       		.uleb128 0xe
+ 1464 0056 1C       		.uleb128 0x1c
+ 1465 0057 0D       		.uleb128 0xd
+ 1466 0058 00       		.byte	0
+ 1467 0059 00       		.byte	0
+ 1468 005a 09       		.uleb128 0x9
+ 1469 005b 13       		.uleb128 0x13
+ 1470 005c 01       		.byte	0x1
+ 1471 005d 0B       		.uleb128 0xb
+ 1472 005e 0B       		.uleb128 0xb
+ 1473 005f 3A       		.uleb128 0x3a
+ 1474 0060 0B       		.uleb128 0xb
+ 1475 0061 3B       		.uleb128 0x3b
+ 1476 0062 05       		.uleb128 0x5
+ 1477 0063 01       		.uleb128 0x1
+ 1478 0064 13       		.uleb128 0x13
+ 1479 0065 00       		.byte	0
+ 1480 0066 00       		.byte	0
+ 1481 0067 0A       		.uleb128 0xa
+ 1482 0068 0D       		.uleb128 0xd
+ 1483 0069 00       		.byte	0
+ 1484 006a 03       		.uleb128 0x3
+ 1485 006b 0E       		.uleb128 0xe
+ 1486 006c 3A       		.uleb128 0x3a
+ 1487 006d 0B       		.uleb128 0xb
+ 1488 006e 3B       		.uleb128 0x3b
+ 1489 006f 05       		.uleb128 0x5
+ 1490 0070 49       		.uleb128 0x49
+ 1491 0071 13       		.uleb128 0x13
+ 1492 0072 38       		.uleb128 0x38
+ 1493 0073 0B       		.uleb128 0xb
+ 1494 0074 00       		.byte	0
+ 1495 0075 00       		.byte	0
+ 1496 0076 0B       		.uleb128 0xb
+ 1497 0077 01       		.uleb128 0x1
+ 1498 0078 01       		.byte	0x1
+ 1499 0079 49       		.uleb128 0x49
+ 1500 007a 13       		.uleb128 0x13
+ 1501 007b 01       		.uleb128 0x1
+ 1502 007c 13       		.uleb128 0x13
+ 1503 007d 00       		.byte	0
+ 1504 007e 00       		.byte	0
+ 1505 007f 0C       		.uleb128 0xc
+ 1506 0080 21       		.uleb128 0x21
+ 1507 0081 00       		.byte	0
+ 1508 0082 49       		.uleb128 0x49
+ 1509 0083 13       		.uleb128 0x13
+ 1510 0084 2F       		.uleb128 0x2f
+ 1511 0085 0B       		.uleb128 0xb
+ 1512 0086 00       		.byte	0
+ 1513 0087 00       		.byte	0
+ 1514 0088 0D       		.uleb128 0xd
+ 1515 0089 04       		.uleb128 0x4
+ 1516 008a 01       		.byte	0x1
+ 1517 008b 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 33
+
+
+ 1518 008c 0B       		.uleb128 0xb
+ 1519 008d 3A       		.uleb128 0x3a
+ 1520 008e 0B       		.uleb128 0xb
+ 1521 008f 3B       		.uleb128 0x3b
+ 1522 0090 0B       		.uleb128 0xb
+ 1523 0091 01       		.uleb128 0x1
+ 1524 0092 13       		.uleb128 0x13
+ 1525 0093 00       		.byte	0
+ 1526 0094 00       		.byte	0
+ 1527 0095 0E       		.uleb128 0xe
+ 1528 0096 16       		.uleb128 0x16
+ 1529 0097 00       		.byte	0
+ 1530 0098 03       		.uleb128 0x3
+ 1531 0099 0E       		.uleb128 0xe
+ 1532 009a 3A       		.uleb128 0x3a
+ 1533 009b 0B       		.uleb128 0xb
+ 1534 009c 3B       		.uleb128 0x3b
+ 1535 009d 0B       		.uleb128 0xb
+ 1536 009e 49       		.uleb128 0x49
+ 1537 009f 13       		.uleb128 0x13
+ 1538 00a0 00       		.byte	0
+ 1539 00a1 00       		.byte	0
+ 1540 00a2 0F       		.uleb128 0xf
+ 1541 00a3 0F       		.uleb128 0xf
+ 1542 00a4 00       		.byte	0
+ 1543 00a5 0B       		.uleb128 0xb
+ 1544 00a6 0B       		.uleb128 0xb
+ 1545 00a7 49       		.uleb128 0x49
+ 1546 00a8 13       		.uleb128 0x13
+ 1547 00a9 00       		.byte	0
+ 1548 00aa 00       		.byte	0
+ 1549 00ab 10       		.uleb128 0x10
+ 1550 00ac 0D       		.uleb128 0xd
+ 1551 00ad 00       		.byte	0
+ 1552 00ae 03       		.uleb128 0x3
+ 1553 00af 08       		.uleb128 0x8
+ 1554 00b0 3A       		.uleb128 0x3a
+ 1555 00b1 0B       		.uleb128 0xb
+ 1556 00b2 3B       		.uleb128 0x3b
+ 1557 00b3 05       		.uleb128 0x5
+ 1558 00b4 49       		.uleb128 0x49
+ 1559 00b5 13       		.uleb128 0x13
+ 1560 00b6 38       		.uleb128 0x38
+ 1561 00b7 0B       		.uleb128 0xb
+ 1562 00b8 00       		.byte	0
+ 1563 00b9 00       		.byte	0
+ 1564 00ba 11       		.uleb128 0x11
+ 1565 00bb 13       		.uleb128 0x13
+ 1566 00bc 01       		.byte	0x1
+ 1567 00bd 0B       		.uleb128 0xb
+ 1568 00be 0B       		.uleb128 0xb
+ 1569 00bf 3A       		.uleb128 0x3a
+ 1570 00c0 0B       		.uleb128 0xb
+ 1571 00c1 3B       		.uleb128 0x3b
+ 1572 00c2 0B       		.uleb128 0xb
+ 1573 00c3 01       		.uleb128 0x1
+ 1574 00c4 13       		.uleb128 0x13
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 34
+
+
+ 1575 00c5 00       		.byte	0
+ 1576 00c6 00       		.byte	0
+ 1577 00c7 12       		.uleb128 0x12
+ 1578 00c8 0D       		.uleb128 0xd
+ 1579 00c9 00       		.byte	0
+ 1580 00ca 03       		.uleb128 0x3
+ 1581 00cb 0E       		.uleb128 0xe
+ 1582 00cc 3A       		.uleb128 0x3a
+ 1583 00cd 0B       		.uleb128 0xb
+ 1584 00ce 3B       		.uleb128 0x3b
+ 1585 00cf 0B       		.uleb128 0xb
+ 1586 00d0 49       		.uleb128 0x49
+ 1587 00d1 13       		.uleb128 0x13
+ 1588 00d2 38       		.uleb128 0x38
+ 1589 00d3 0B       		.uleb128 0xb
+ 1590 00d4 00       		.byte	0
+ 1591 00d5 00       		.byte	0
+ 1592 00d6 13       		.uleb128 0x13
+ 1593 00d7 2E       		.uleb128 0x2e
+ 1594 00d8 01       		.byte	0x1
+ 1595 00d9 3F       		.uleb128 0x3f
+ 1596 00da 19       		.uleb128 0x19
+ 1597 00db 03       		.uleb128 0x3
+ 1598 00dc 0E       		.uleb128 0xe
+ 1599 00dd 3A       		.uleb128 0x3a
+ 1600 00de 0B       		.uleb128 0xb
+ 1601 00df 3B       		.uleb128 0x3b
+ 1602 00e0 0B       		.uleb128 0xb
+ 1603 00e1 27       		.uleb128 0x27
+ 1604 00e2 19       		.uleb128 0x19
+ 1605 00e3 11       		.uleb128 0x11
+ 1606 00e4 01       		.uleb128 0x1
+ 1607 00e5 12       		.uleb128 0x12
+ 1608 00e6 06       		.uleb128 0x6
+ 1609 00e7 40       		.uleb128 0x40
+ 1610 00e8 18       		.uleb128 0x18
+ 1611 00e9 9642     		.uleb128 0x2116
+ 1612 00eb 19       		.uleb128 0x19
+ 1613 00ec 01       		.uleb128 0x1
+ 1614 00ed 13       		.uleb128 0x13
+ 1615 00ee 00       		.byte	0
+ 1616 00ef 00       		.byte	0
+ 1617 00f0 14       		.uleb128 0x14
+ 1618 00f1 05       		.uleb128 0x5
+ 1619 00f2 00       		.byte	0
+ 1620 00f3 03       		.uleb128 0x3
+ 1621 00f4 0E       		.uleb128 0xe
+ 1622 00f5 3A       		.uleb128 0x3a
+ 1623 00f6 0B       		.uleb128 0xb
+ 1624 00f7 3B       		.uleb128 0x3b
+ 1625 00f8 0B       		.uleb128 0xb
+ 1626 00f9 49       		.uleb128 0x49
+ 1627 00fa 13       		.uleb128 0x13
+ 1628 00fb 02       		.uleb128 0x2
+ 1629 00fc 18       		.uleb128 0x18
+ 1630 00fd 00       		.byte	0
+ 1631 00fe 00       		.byte	0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 35
+
+
+ 1632 00ff 15       		.uleb128 0x15
+ 1633 0100 0B       		.uleb128 0xb
+ 1634 0101 01       		.byte	0x1
+ 1635 0102 11       		.uleb128 0x11
+ 1636 0103 01       		.uleb128 0x1
+ 1637 0104 12       		.uleb128 0x12
+ 1638 0105 06       		.uleb128 0x6
+ 1639 0106 00       		.byte	0
+ 1640 0107 00       		.byte	0
+ 1641 0108 16       		.uleb128 0x16
+ 1642 0109 34       		.uleb128 0x34
+ 1643 010a 00       		.byte	0
+ 1644 010b 03       		.uleb128 0x3
+ 1645 010c 0E       		.uleb128 0xe
+ 1646 010d 3A       		.uleb128 0x3a
+ 1647 010e 0B       		.uleb128 0xb
+ 1648 010f 3B       		.uleb128 0x3b
+ 1649 0110 0B       		.uleb128 0xb
+ 1650 0111 49       		.uleb128 0x49
+ 1651 0112 13       		.uleb128 0x13
+ 1652 0113 02       		.uleb128 0x2
+ 1653 0114 18       		.uleb128 0x18
+ 1654 0115 00       		.byte	0
+ 1655 0116 00       		.byte	0
+ 1656 0117 17       		.uleb128 0x17
+ 1657 0118 34       		.uleb128 0x34
+ 1658 0119 00       		.byte	0
+ 1659 011a 03       		.uleb128 0x3
+ 1660 011b 0E       		.uleb128 0xe
+ 1661 011c 3A       		.uleb128 0x3a
+ 1662 011d 0B       		.uleb128 0xb
+ 1663 011e 3B       		.uleb128 0x3b
+ 1664 011f 05       		.uleb128 0x5
+ 1665 0120 49       		.uleb128 0x49
+ 1666 0121 13       		.uleb128 0x13
+ 1667 0122 3F       		.uleb128 0x3f
+ 1668 0123 19       		.uleb128 0x19
+ 1669 0124 3C       		.uleb128 0x3c
+ 1670 0125 19       		.uleb128 0x19
+ 1671 0126 00       		.byte	0
+ 1672 0127 00       		.byte	0
+ 1673 0128 18       		.uleb128 0x18
+ 1674 0129 34       		.uleb128 0x34
+ 1675 012a 00       		.byte	0
+ 1676 012b 03       		.uleb128 0x3
+ 1677 012c 0E       		.uleb128 0xe
+ 1678 012d 3A       		.uleb128 0x3a
+ 1679 012e 0B       		.uleb128 0xb
+ 1680 012f 3B       		.uleb128 0x3b
+ 1681 0130 0B       		.uleb128 0xb
+ 1682 0131 49       		.uleb128 0x49
+ 1683 0132 13       		.uleb128 0x13
+ 1684 0133 3F       		.uleb128 0x3f
+ 1685 0134 19       		.uleb128 0x19
+ 1686 0135 02       		.uleb128 0x2
+ 1687 0136 18       		.uleb128 0x18
+ 1688 0137 00       		.byte	0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 36
+
+
+ 1689 0138 00       		.byte	0
+ 1690 0139 00       		.byte	0
+ 1691              		.section	.debug_aranges,"",%progbits
+ 1692 0000 2C000000 		.4byte	0x2c
+ 1693 0004 0200     		.2byte	0x2
+ 1694 0006 00000000 		.4byte	.Ldebug_info0
+ 1695 000a 04       		.byte	0x4
+ 1696 000b 00       		.byte	0
+ 1697 000c 0000     		.2byte	0
+ 1698 000e 0000     		.2byte	0
+ 1699 0010 00000000 		.4byte	.LFB37
+ 1700 0014 74000000 		.4byte	.LFE37-.LFB37
+ 1701 0018 00000000 		.4byte	.LFB38
+ 1702 001c BC000000 		.4byte	.LFE38-.LFB38
+ 1703 0020 00000000 		.4byte	.LFB39
+ 1704 0024 64010000 		.4byte	.LFE39-.LFB39
+ 1705 0028 00000000 		.4byte	0
+ 1706 002c 00000000 		.4byte	0
+ 1707              		.section	.debug_ranges,"",%progbits
+ 1708              	.Ldebug_ranges0:
+ 1709 0000 00000000 		.4byte	.LFB37
+ 1710 0004 74000000 		.4byte	.LFE37
+ 1711 0008 00000000 		.4byte	.LFB38
+ 1712 000c BC000000 		.4byte	.LFE38
+ 1713 0010 00000000 		.4byte	.LFB39
+ 1714 0014 64010000 		.4byte	.LFE39
+ 1715 0018 00000000 		.4byte	0
+ 1716 001c 00000000 		.4byte	0
+ 1717              		.section	.debug_line,"",%progbits
+ 1718              	.Ldebug_line0:
+ 1719 0000 6C010000 		.section	.debug_str,"MS",%progbits,1
+ 1719      0200C600 
+ 1719      00000201 
+ 1719      FB0E0D00 
+ 1719      01010101 
+ 1720              	.LASF77:
+ 1721 0000 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 1721      455F4556 
+ 1721      545F4C32 
+ 1721      4341505F 
+ 1721      43424643 
+ 1722              	.LASF22:
+ 1723 0023 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 1723      455F4556 
+ 1723      545F5354 
+ 1723      41434B5F 
+ 1723      42555359 
+ 1724              	.LASF145:
+ 1725 003f 4359424C 		.ascii	"CYBLE_STATE_STOPPED\000"
+ 1725      455F5354 
+ 1725      4154455F 
+ 1725      53544F50 
+ 1725      50454400 
+ 1726              	.LASF76:
+ 1727 0053 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 1727      455F4556 
+ 1727      545F4C32 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 37
+
+
+ 1727      4341505F 
+ 1727      43424643 
+ 1728              	.LASF135:
+ 1729 0072 4359424C 		.ascii	"CYBLE_CONN_HANDLE_T\000"
+ 1729      455F434F 
+ 1729      4E4E5F48 
+ 1729      414E444C 
+ 1729      455F5400 
+ 1730              	.LASF142:
+ 1731 0086 636F6E6E 		.ascii	"connHandle\000"
+ 1731      48616E64 
+ 1731      6C6500
+ 1732              	.LASF86:
+ 1733 0091 4359424C 		.ascii	"CYBLE_ERROR_MEMORY_ALLOCATION_FAILED\000"
+ 1733      455F4552 
+ 1733      524F525F 
+ 1733      4D454D4F 
+ 1733      52595F41 
+ 1734              	.LASF123:
+ 1735 00b6 4359424C 		.ascii	"CYBLE_GAPC_SCAN_RSP\000"
+ 1735      455F4741 
+ 1735      50435F53 
+ 1735      43414E5F 
+ 1735      52535000 
+ 1736              	.LASF175:
+ 1737 00ca 68616E64 		.ascii	"handle_ble_CAR_Client_State\000"
+ 1737      6C655F62 
+ 1737      6C655F43 
+ 1737      41525F43 
+ 1737      6C69656E 
+ 1738              	.LASF184:
+ 1739 00e6 626C655F 		.ascii	"ble_CAR_Client_State\000"
+ 1739      4341525F 
+ 1739      436C6965 
+ 1739      6E745F53 
+ 1739      74617465 
+ 1740              	.LASF75:
+ 1741 00fb 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 1741      455F4556 
+ 1741      545F4C32 
+ 1741      4341505F 
+ 1741      43424643 
+ 1742              	.LASF107:
+ 1743 011c 4359424C 		.ascii	"CYBLE_ERROR_UNSUPPORTED_FEATURE_OR_PARAMETER_VALUE\000"
+ 1743      455F4552 
+ 1743      524F525F 
+ 1743      554E5355 
+ 1743      50504F52 
+ 1744              	.LASF35:
+ 1745 014f 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 1745      455F4556 
+ 1745      545F4741 
+ 1745      50435F53 
+ 1745      43414E5F 
+ 1746              	.LASF39:
+ 1747 016e 4359424C 		.ascii	"CYBLE_EVT_GAP_OOB_GENERATED_NOTIFICATION\000"
+ 1747      455F4556 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 38
+
+
+ 1747      545F4741 
+ 1747      505F4F4F 
+ 1747      425F4745 
+ 1748              	.LASF55:
+ 1749 0197 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 1749      455F4556 
+ 1749      545F4741 
+ 1749      5454435F 
+ 1749      52454144 
+ 1750              	.LASF60:
+ 1751 01b6 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 1751      455F4556 
+ 1751      545F4741 
+ 1751      5454535F 
+ 1751      45584543 
+ 1752              	.LASF72:
+ 1753 01d5 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 1753      455F4556 
+ 1753      545F4C32 
+ 1753      4341505F 
+ 1753      43424643 
+ 1754              	.LASF117:
+ 1755 01f3 74797065 		.ascii	"type\000"
+ 1755      00
+ 1756              	.LASF19:
+ 1757 01f8 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 1757      455F4556 
+ 1757      545F5449 
+ 1757      4D454F55 
+ 1757      5400
+ 1758              	.LASF4:
+ 1759 020a 6C6F6E67 		.ascii	"long int\000"
+ 1759      20696E74 
+ 1759      00
+ 1760              	.LASF106:
+ 1761 0213 4359424C 		.ascii	"CYBLE_ERROR_HARDWARE_FAILURE\000"
+ 1761      455F4552 
+ 1761      524F525F 
+ 1761      48415244 
+ 1761      57415245 
+ 1762              	.LASF96:
+ 1763 0230 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_WRONG_ENCODING\000"
+ 1763      455F4552 
+ 1763      524F525F 
+ 1763      4C324341 
+ 1763      505F5053 
+ 1764              	.LASF137:
+ 1765 0255 4359424C 		.ascii	"CYBLE_GATT_VALUE_T\000"
+ 1765      455F4741 
+ 1765      54545F56 
+ 1765      414C5545 
+ 1765      5F5400
+ 1766              	.LASF21:
+ 1767 0268 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 1767      455F4556 
+ 1767      545F4843 
+ 1767      495F5354 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 39
+
+
+ 1767      41545553 
+ 1768              	.LASF129:
+ 1769 027d 64617461 		.ascii	"data\000"
+ 1769      00
+ 1770              	.LASF180:
+ 1771 0282 6379426C 		.ascii	"cyBle_busyStatus\000"
+ 1771      655F6275 
+ 1771      73795374 
+ 1771      61747573 
+ 1771      00
+ 1772              	.LASF118:
+ 1773 0293 4359424C 		.ascii	"CYBLE_GAP_BD_ADDR_T\000"
+ 1773      455F4741 
+ 1773      505F4244 
+ 1773      5F414444 
+ 1773      525F5400 
+ 1774              	.LASF161:
+ 1775 02a7 4359424C 		.ascii	"CYBLE_CLIENT_STATE_T\000"
+ 1775      455F434C 
+ 1775      49454E54 
+ 1775      5F535441 
+ 1775      54455F54 
+ 1776              	.LASF189:
+ 1777 02bc 443A5C57 		.ascii	"D:\\Work\\Projects\\Accelerometer_Controlled_Car\\P"
+ 1777      6F726B5C 
+ 1777      50726F6A 
+ 1777      65637473 
+ 1777      5C416363 
+ 1778 02eb 536F435F 		.ascii	"SoC_4_BLE_CAR.cydsn\000"
+ 1778      345F424C 
+ 1778      455F4341 
+ 1778      522E6379 
+ 1778      64736E00 
+ 1779              	.LASF33:
+ 1780 02ff 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 1780      455F4556 
+ 1780      545F4741 
+ 1780      505F454E 
+ 1780      43525950 
+ 1781              	.LASF156:
+ 1782 031c 4359424C 		.ascii	"CYBLE_CLIENT_STATE_DESCR_DISCOVERING\000"
+ 1782      455F434C 
+ 1782      49454E54 
+ 1782      5F535441 
+ 1782      54455F44 
+ 1783              	.LASF37:
+ 1784 0341 4359424C 		.ascii	"CYBLE_EVT_GAP_NUMERIC_COMPARISON_REQUEST\000"
+ 1784      455F4556 
+ 1784      545F4741 
+ 1784      505F4E55 
+ 1784      4D455249 
+ 1785              	.LASF6:
+ 1786 036a 6C6F6E67 		.ascii	"long long int\000"
+ 1786      206C6F6E 
+ 1786      6720696E 
+ 1786      7400
+ 1787              	.LASF0:
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 40
+
+
+ 1788 0378 7369676E 		.ascii	"signed char\000"
+ 1788      65642063 
+ 1788      68617200 
+ 1789              	.LASF18:
+ 1790 0384 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 1790      455F4556 
+ 1790      545F5354 
+ 1790      41434B5F 
+ 1790      4F4E00
+ 1791              	.LASF154:
+ 1792 0397 4359424C 		.ascii	"CYBLE_CLIENT_STATE_INCL_DISCOVERING\000"
+ 1792      455F434C 
+ 1792      49454E54 
+ 1792      5F535441 
+ 1792      54455F49 
+ 1793              	.LASF103:
+ 1794 03bb 4359424C 		.ascii	"CYBLE_ERROR_DEVICE_ALREADY_EXISTS\000"
+ 1794      455F4552 
+ 1794      524F525F 
+ 1794      44455649 
+ 1794      43455F41 
+ 1795              	.LASF90:
+ 1796 03dd 4359424C 		.ascii	"CYBLE_ERROR_NO_DEVICE_ENTITY\000"
+ 1796      455F4552 
+ 1796      524F525F 
+ 1796      4E4F5F44 
+ 1796      45564943 
+ 1797              	.LASF136:
+ 1798 03fa 61637475 		.ascii	"actualLen\000"
+ 1798      616C4C65 
+ 1798      6E00
+ 1799              	.LASF25:
+ 1800 0404 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 1800      455F4556 
+ 1800      545F4741 
+ 1800      505F4155 
+ 1800      54485F52 
+ 1801              	.LASF53:
+ 1802 041b 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 1802      455F4556 
+ 1802      545F4741 
+ 1802      5454435F 
+ 1802      52454144 
+ 1803              	.LASF114:
+ 1804 0434 4359424C 		.ascii	"CYBLE_ERROR_INVALID_STATE\000"
+ 1804      455F4552 
+ 1804      524F525F 
+ 1804      494E5641 
+ 1804      4C49445F 
+ 1805              	.LASF58:
+ 1806 044e 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 1806      455F4556 
+ 1806      545F4741 
+ 1806      5454535F 
+ 1806      57524954 
+ 1807              	.LASF150:
+ 1808 046c 4359424C 		.ascii	"CYBLE_STATE_DISCONNECTED\000"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 41
+
+
+ 1808      455F5354 
+ 1808      4154455F 
+ 1808      44495343 
+ 1808      4F4E4E45 
+ 1809              	.LASF30:
+ 1810 0485 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 1810      455F4556 
+ 1810      545F4741 
+ 1810      50505F41 
+ 1810      44564552 
+ 1811              	.LASF101:
+ 1812 04ad 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_IN_RANGE\000"
+ 1812      455F4552 
+ 1812      524F525F 
+ 1812      4C324341 
+ 1812      505F5053 
+ 1813              	.LASF9:
+ 1814 04d0 75696E74 		.ascii	"uint8\000"
+ 1814      3800
+ 1815              	.LASF95:
+ 1816 04d6 4359424C 		.ascii	"CYBLE_ERROR_SEC_FAILED\000"
+ 1816      455F4552 
+ 1816      524F525F 
+ 1816      5345435F 
+ 1816      4641494C 
+ 1817              	.LASF127:
+ 1818 04ed 70656572 		.ascii	"peerBdAddr\000"
+ 1818      42644164 
+ 1818      647200
+ 1819              	.LASF61:
+ 1820 04f8 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 1820      455F4556 
+ 1820      545F4741 
+ 1820      5454435F 
+ 1820      45584543 
+ 1821              	.LASF14:
+ 1822 0517 646F7562 		.ascii	"double\000"
+ 1822      6C6500
+ 1823              	.LASF74:
+ 1824 051e 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 1824      455F4556 
+ 1824      545F4C32 
+ 1824      4341505F 
+ 1824      43424643 
+ 1825              	.LASF84:
+ 1826 053f 4359424C 		.ascii	"CYBLE_ERROR_INVALID_PARAMETER\000"
+ 1826      455F4552 
+ 1826      524F525F 
+ 1826      494E5641 
+ 1826      4C49445F 
+ 1827              	.LASF188:
+ 1828 055d 2E5C424C 		.ascii	".\\BLE_CAR_Client.c\000"
+ 1828      455F4341 
+ 1828      525F436C 
+ 1828      69656E74 
+ 1828      2E6300
+ 1829              	.LASF11:
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 42
+
+
+ 1830 0570 75696E74 		.ascii	"uint32\000"
+ 1830      333200
+ 1831              	.LASF82:
+ 1832 0577 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 1832      455F4556 
+ 1832      545F4D41 
+ 1832      5800
+ 1833              	.LASF83:
+ 1834 0585 4359424C 		.ascii	"CYBLE_ERROR_OK\000"
+ 1834      455F4552 
+ 1834      524F525F 
+ 1834      4F4B00
+ 1835              	.LASF44:
+ 1836 0594 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 1836      455F4556 
+ 1836      545F4741 
+ 1836      5454435F 
+ 1836      4552524F 
+ 1837              	.LASF69:
+ 1838 05ae 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 1838      455F4556 
+ 1838      545F4C32 
+ 1838      4341505F 
+ 1838      434F4E4E 
+ 1839              	.LASF128:
+ 1840 05d4 64617461 		.ascii	"dataLen\000"
+ 1840      4C656E00 
+ 1841              	.LASF79:
+ 1842 05dc 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 1842      455F4556 
+ 1842      545F4C32 
+ 1842      4341505F 
+ 1842      43424643 
+ 1843              	.LASF139:
+ 1844 0600 61747472 		.ascii	"attrHandle\000"
+ 1844      48616E64 
+ 1844      6C6500
+ 1845              	.LASF7:
+ 1846 060b 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1846      206C6F6E 
+ 1846      6720756E 
+ 1846      7369676E 
+ 1846      65642069 
+ 1847              	.LASF138:
+ 1848 0622 76616C75 		.ascii	"value\000"
+ 1848      6500
+ 1849              	.LASF120:
+ 1850 0628 4359424C 		.ascii	"CYBLE_GAPC_CONN_DIRECTED_ADV\000"
+ 1850      455F4741 
+ 1850      50435F43 
+ 1850      4F4E4E5F 
+ 1850      44495245 
+ 1851              	.LASF66:
+ 1852 0645 4359424C 		.ascii	"CYBLE_EVT_GATTC_STOP_CMD_COMPLETE\000"
+ 1852      455F4556 
+ 1852      545F4741 
+ 1852      5454435F 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 43
+
+
+ 1852      53544F50 
+ 1853              	.LASF88:
+ 1854 0667 4359424C 		.ascii	"CYBLE_ERROR_OOB_NOT_AVAILABLE\000"
+ 1854      455F4552 
+ 1854      524F525F 
+ 1854      4F4F425F 
+ 1854      4E4F545F 
+ 1855              	.LASF81:
+ 1856 0685 4359424C 		.ascii	"CYBLE_EVT_LE_PING_AUTH_TIMEOUT\000"
+ 1856      455F4556 
+ 1856      545F4C45 
+ 1856      5F50494E 
+ 1856      475F4155 
+ 1857              	.LASF160:
+ 1858 06a4 4359424C 		.ascii	"CYBLE_CLIENT_STATE_DISCONNECTED\000"
+ 1858      455F434C 
+ 1858      49454E54 
+ 1858      5F535441 
+ 1858      54455F44 
+ 1859              	.LASF168:
+ 1860 06c4 424C455F 		.ascii	"BLE_CAR_CLIENT_STATE_BUSY\000"
+ 1860      4341525F 
+ 1860      434C4945 
+ 1860      4E545F53 
+ 1860      54415445 
+ 1861              	.LASF97:
+ 1862 06de 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_ALREADY_REGISTERED\000"
+ 1862      455F4552 
+ 1862      524F525F 
+ 1862      4C324341 
+ 1862      505F5053 
+ 1863              	.LASF5:
+ 1864 0707 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1864      20756E73 
+ 1864      69676E65 
+ 1864      6420696E 
+ 1864      7400
+ 1865              	.LASF165:
+ 1866 0719 424C455F 		.ascii	"BLE_CAR_CLIENT_STATE_NOT_READY\000"
+ 1866      4341525F 
+ 1866      434C4945 
+ 1866      4E545F53 
+ 1866      54415445 
+ 1867              	.LASF34:
+ 1868 0738 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 1868      455F4556 
+ 1868      545F4741 
+ 1868      505F434F 
+ 1868      4E4E4543 
+ 1869              	.LASF48:
+ 1870 0761 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 1870      455F4556 
+ 1870      545F4741 
+ 1870      5454435F 
+ 1870      5843484E 
+ 1871              	.LASF65:
+ 1872 077f 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 44
+
+
+ 1872      455F4556 
+ 1872      545F4741 
+ 1872      5454535F 
+ 1872      44415441 
+ 1873              	.LASF68:
+ 1874 07a3 4359424C 		.ascii	"CYBLE_EVT_GATTC_LONG_PROCEDURE_END\000"
+ 1874      455F4556 
+ 1874      545F4741 
+ 1874      5454435F 
+ 1874      4C4F4E47 
+ 1875              	.LASF100:
+ 1876 07c6 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CHANNEL_NOT_FOUND\000"
+ 1876      455F4552 
+ 1876      524F525F 
+ 1876      4C324341 
+ 1876      505F4348 
+ 1877              	.LASF173:
+ 1878 07ea 6576656E 		.ascii	"event\000"
+ 1878      7400
+ 1879              	.LASF111:
+ 1880 07f0 4359424C 		.ascii	"CYBLE_ERROR_NTF_DISABLED\000"
+ 1880      455F4552 
+ 1880      524F525F 
+ 1880      4E54465F 
+ 1880      44495341 
+ 1881              	.LASF17:
+ 1882 0809 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 1882      455F4556 
+ 1882      545F484F 
+ 1882      53545F49 
+ 1882      4E56414C 
+ 1883              	.LASF51:
+ 1884 0820 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 1884      455F4556 
+ 1884      545F4741 
+ 1884      5454435F 
+ 1884      46494E44 
+ 1885              	.LASF23:
+ 1886 083e 4359424C 		.ascii	"CYBLE_EVT_MEMORY_REQUEST\000"
+ 1886      455F4556 
+ 1886      545F4D45 
+ 1886      4D4F5259 
+ 1886      5F524551 
+ 1887              	.LASF12:
+ 1888 0857 696E7438 		.ascii	"int8\000"
+ 1888      00
+ 1889              	.LASF116:
+ 1890 085c 62644164 		.ascii	"bdAddr\000"
+ 1890      647200
+ 1891              	.LASF26:
+ 1892 0863 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 1892      455F4556 
+ 1892      545F4741 
+ 1892      505F5041 
+ 1892      53534B45 
+ 1893              	.LASF31:
+ 1894 0887 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 45
+
+
+ 1894      455F4556 
+ 1894      545F4741 
+ 1894      505F4445 
+ 1894      56494345 
+ 1895              	.LASF56:
+ 1896 08a6 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 1896      455F4556 
+ 1896      545F4741 
+ 1896      5454535F 
+ 1896      57524954 
+ 1897              	.LASF178:
+ 1898 08c0 6379426C 		.ascii	"cyBle_state\000"
+ 1898      655F7374 
+ 1898      61746500 
+ 1899              	.LASF27:
+ 1900 08cc 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 1900      455F4556 
+ 1900      545F4741 
+ 1900      505F5041 
+ 1900      53534B45 
+ 1901              	.LASF169:
+ 1902 08f2 424C455F 		.ascii	"BLE_CAR_CLIENT_STATES_T\000"
+ 1902      4341525F 
+ 1902      434C4945 
+ 1902      4E545F53 
+ 1902      54415445 
+ 1903              	.LASF45:
+ 1904 090a 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 1904      455F4556 
+ 1904      545F4741 
+ 1904      54545F43 
+ 1904      4F4E4E45 
+ 1905              	.LASF134:
+ 1906 0925 61747449 		.ascii	"attId\000"
+ 1906      6400
+ 1907              	.LASF71:
+ 1908 092b 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 1908      455F4556 
+ 1908      545F4C32 
+ 1908      4341505F 
+ 1908      434F4D4D 
+ 1909              	.LASF24:
+ 1910 0947 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 1910      455F4556 
+ 1910      545F4741 
+ 1910      50435F53 
+ 1910      43414E5F 
+ 1911              	.LASF143:
+ 1912 096b 68616E64 		.ascii	"handleValPair\000"
+ 1912      6C655661 
+ 1912      6C506169 
+ 1912      7200
+ 1913              	.LASF122:
+ 1914 0979 4359424C 		.ascii	"CYBLE_GAPC_NON_CONN_UNDIRECTED_ADV\000"
+ 1914      455F4741 
+ 1914      50435F4E 
+ 1914      4F4E5F43 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 46
+
+
+ 1914      4F4E4E5F 
+ 1915              	.LASF110:
+ 1916 099c 4359424C 		.ascii	"CYBLE_ERROR_MAX\000"
+ 1916      455F4552 
+ 1916      524F525F 
+ 1916      4D415800 
+ 1917              	.LASF108:
+ 1918 09ac 4359424C 		.ascii	"CYBLE_ERROR_FLASH_WRITE\000"
+ 1918      455F4552 
+ 1918      524F525F 
+ 1918      464C4153 
+ 1918      485F5752 
+ 1919              	.LASF50:
+ 1920 09c4 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 1920      455F4556 
+ 1920      545F4741 
+ 1920      5454435F 
+ 1920      52454144 
+ 1921              	.LASF16:
+ 1922 09e5 73697A65 		.ascii	"sizetype\000"
+ 1922      74797065 
+ 1922      00
+ 1923              	.LASF146:
+ 1924 09ee 4359424C 		.ascii	"CYBLE_STATE_INITIALIZING\000"
+ 1924      455F5354 
+ 1924      4154455F 
+ 1924      494E4954 
+ 1924      49414C49 
+ 1925              	.LASF29:
+ 1926 0a07 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 1926      455F4556 
+ 1926      545F4741 
+ 1926      505F4155 
+ 1926      54485F46 
+ 1927              	.LASF179:
+ 1928 0a21 6379426C 		.ascii	"cyBle_connHandle\000"
+ 1928      655F636F 
+ 1928      6E6E4861 
+ 1928      6E646C65 
+ 1928      00
+ 1929              	.LASF57:
+ 1930 0a32 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 1930      455F4556 
+ 1930      545F4741 
+ 1930      5454435F 
+ 1930      57524954 
+ 1931              	.LASF152:
+ 1932 0a4c 4359424C 		.ascii	"CYBLE_CLIENT_STATE_CONNECTED\000"
+ 1932      455F434C 
+ 1932      49454E54 
+ 1932      5F535441 
+ 1932      54455F43 
+ 1933              	.LASF42:
+ 1934 0a69 4359424C 		.ascii	"CYBLE_EVT_GAPC_DIRECT_ADV_REPORT\000"
+ 1934      455F4556 
+ 1934      545F4741 
+ 1934      50435F44 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 47
+
+
+ 1934      49524543 
+ 1935              	.LASF155:
+ 1936 0a8a 4359424C 		.ascii	"CYBLE_CLIENT_STATE_CHAR_DISCOVERING\000"
+ 1936      455F434C 
+ 1936      49454E54 
+ 1936      5F535441 
+ 1936      54455F43 
+ 1937              	.LASF181:
+ 1938 0aae 6379426C 		.ascii	"cyBle_clientState\000"
+ 1938      655F636C 
+ 1938      69656E74 
+ 1938      53746174 
+ 1938      6500
+ 1939              	.LASF28:
+ 1940 0ac0 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 1940      455F4556 
+ 1940      545F4741 
+ 1940      505F4155 
+ 1940      54485F43 
+ 1941              	.LASF185:
+ 1942 0adc 61706952 		.ascii	"apiResult\000"
+ 1942      6573756C 
+ 1942      7400
+ 1943              	.LASF115:
+ 1944 0ae6 4359424C 		.ascii	"CYBLE_API_RESULT_T\000"
+ 1944      455F4150 
+ 1944      495F5245 
+ 1944      53554C54 
+ 1944      5F5400
+ 1945              	.LASF62:
+ 1946 0af9 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 1946      455F4556 
+ 1946      545F4741 
+ 1946      5454435F 
+ 1946      48414E44 
+ 1947              	.LASF112:
+ 1948 0b1a 4359424C 		.ascii	"CYBLE_ERROR_IND_DISABLED\000"
+ 1948      455F4552 
+ 1948      524F525F 
+ 1948      494E445F 
+ 1948      44495341 
+ 1949              	.LASF140:
+ 1950 0b33 4359424C 		.ascii	"CYBLE_GATT_HANDLE_VALUE_PAIR_T\000"
+ 1950      455F4741 
+ 1950      54545F48 
+ 1950      414E444C 
+ 1950      455F5641 
+ 1951              	.LASF172:
+ 1952 0b52 7363616E 		.ascii	"scanReport\000"
+ 1952      5265706F 
+ 1952      727400
+ 1953              	.LASF186:
+ 1954 0b5d 636F6E6E 		.ascii	"connectPeriphDevice\000"
+ 1954      65637450 
+ 1954      65726970 
+ 1954      68446576 
+ 1954      69636500 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 48
+
+
+ 1955              	.LASF124:
+ 1956 0b71 4359424C 		.ascii	"CYBLE_GAPC_ADV_EVENT_T\000"
+ 1956      455F4741 
+ 1956      50435F41 
+ 1956      44565F45 
+ 1956      56454E54 
+ 1957              	.LASF73:
+ 1958 0b88 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 1958      455F4556 
+ 1958      545F4C32 
+ 1958      4341505F 
+ 1958      43424643 
+ 1959              	.LASF157:
+ 1960 0ba6 4359424C 		.ascii	"CYBLE_CLIENT_STATE_DISCOVERED\000"
+ 1960      455F434C 
+ 1960      49454E54 
+ 1960      5F535441 
+ 1960      54455F44 
+ 1961              	.LASF49:
+ 1962 0bc4 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 1962      455F4556 
+ 1962      545F4741 
+ 1962      5454435F 
+ 1962      52454144 
+ 1963              	.LASF126:
+ 1964 0beb 70656572 		.ascii	"peerAddrType\000"
+ 1964      41646472 
+ 1964      54797065 
+ 1964      00
+ 1965              	.LASF13:
+ 1966 0bf8 666C6F61 		.ascii	"float\000"
+ 1966      7400
+ 1967              	.LASF183:
+ 1968 0bfe 4D6F746F 		.ascii	"Motor_Command\000"
+ 1968      725F436F 
+ 1968      6D6D616E 
+ 1968      6400
+ 1969              	.LASF177:
+ 1970 0c0c 77726974 		.ascii	"write_server\000"
+ 1970      655F7365 
+ 1970      72766572 
+ 1970      00
+ 1971              	.LASF93:
+ 1972 0c19 4359424C 		.ascii	"CYBLE_ERROR_TX_POWER_READ\000"
+ 1972      455F4552 
+ 1972      524F525F 
+ 1972      54585F50 
+ 1972      4F574552 
+ 1973              	.LASF113:
+ 1974 0c33 4359424C 		.ascii	"CYBLE_ERROR_CHAR_IS_NOT_DISCOVERED\000"
+ 1974      455F4552 
+ 1974      524F525F 
+ 1974      43484152 
+ 1974      5F49535F 
+ 1975              	.LASF1:
+ 1976 0c56 756E7369 		.ascii	"unsigned char\000"
+ 1976      676E6564 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 49
+
+
+ 1976      20636861 
+ 1976      7200
+ 1977              	.LASF10:
+ 1978 0c64 75696E74 		.ascii	"uint16\000"
+ 1978      313600
+ 1979              	.LASF167:
+ 1980 0c6b 424C455F 		.ascii	"BLE_CAR_CLIENT_STATE_ACTIVE\000"
+ 1980      4341525F 
+ 1980      434C4945 
+ 1980      4E545F53 
+ 1980      54415445 
+ 1981              	.LASF149:
+ 1982 0c87 4359424C 		.ascii	"CYBLE_STATE_CONNECTING\000"
+ 1982      455F5354 
+ 1982      4154455F 
+ 1982      434F4E4E 
+ 1982      45435449 
+ 1983              	.LASF2:
+ 1984 0c9e 73686F72 		.ascii	"short int\000"
+ 1984      7420696E 
+ 1984      7400
+ 1985              	.LASF63:
+ 1986 0ca8 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 1986      455F4556 
+ 1986      545F4741 
+ 1986      5454435F 
+ 1986      48414E44 
+ 1987              	.LASF182:
+ 1988 0cc9 626C655F 		.ascii	"ble_CAR_Server_found\000"
+ 1988      4341525F 
+ 1988      53657276 
+ 1988      65725F66 
+ 1988      6F756E64 
+ 1989              	.LASF89:
+ 1990 0cde 4359424C 		.ascii	"CYBLE_ERROR_NO_CONNECTION\000"
+ 1990      455F4552 
+ 1990      524F525F 
+ 1990      4E4F5F43 
+ 1990      4F4E4E45 
+ 1991              	.LASF170:
+ 1992 0cf8 46696C74 		.ascii	"FilterScanResponsePackets\000"
+ 1992      65725363 
+ 1992      616E5265 
+ 1992      73706F6E 
+ 1992      73655061 
+ 1993              	.LASF59:
+ 1994 0d12 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 1994      455F4556 
+ 1994      545F4741 
+ 1994      5454535F 
+ 1994      50524550 
+ 1995              	.LASF153:
+ 1996 0d31 4359424C 		.ascii	"CYBLE_CLIENT_STATE_SRVC_DISCOVERING\000"
+ 1996      455F434C 
+ 1996      49454E54 
+ 1996      5F535441 
+ 1996      54455F53 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 50
+
+
+ 1997              	.LASF166:
+ 1998 0d55 424C455F 		.ascii	"BLE_CAR_CLIENT_STATE_CONFIG\000"
+ 1998      4341525F 
+ 1998      434C4945 
+ 1998      4E545F53 
+ 1998      54415445 
+ 1999              	.LASF64:
+ 2000 0d71 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 2000      455F4556 
+ 2000      545F4741 
+ 2000      5454535F 
+ 2000      48414E44 
+ 2001              	.LASF91:
+ 2002 0d92 4359424C 		.ascii	"CYBLE_ERROR_REPEATED_ATTEMPTS\000"
+ 2002      455F4552 
+ 2002      524F525F 
+ 2002      52455045 
+ 2002      41544544 
+ 2003              	.LASF43:
+ 2004 0db0 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_NEGOTIATED_AUTH_INFO\000"
+ 2004      455F4556 
+ 2004      545F4741 
+ 2004      505F534D 
+ 2004      505F4E45 
+ 2005              	.LASF164:
+ 2006 0dd7 4359424C 		.ascii	"CYBLE_SRVI_COUNT\000"
+ 2006      455F5352 
+ 2006      56495F43 
+ 2006      4F554E54 
+ 2006      00
+ 2007              	.LASF148:
+ 2008 0de8 4359424C 		.ascii	"CYBLE_STATE_SCANNING\000"
+ 2008      455F5354 
+ 2008      4154455F 
+ 2008      5343414E 
+ 2008      4E494E47 
+ 2009              	.LASF144:
+ 2010 0dfd 4359424C 		.ascii	"CYBLE_GATTC_HANDLE_VALUE_NTF_PARAM_T\000"
+ 2010      455F4741 
+ 2010      5454435F 
+ 2010      48414E44 
+ 2010      4C455F56 
+ 2011              	.LASF40:
+ 2012 0e22 4359424C 		.ascii	"CYBLE_EVT_GAP_DATA_LENGTH_CHANGE\000"
+ 2012      455F4556 
+ 2012      545F4741 
+ 2012      505F4441 
+ 2012      54415F4C 
+ 2013              	.LASF15:
+ 2014 0e43 63686172 		.ascii	"char\000"
+ 2014      00
+ 2015              	.LASF94:
+ 2016 0e48 4359424C 		.ascii	"CYBLE_ERROR_BT_ON_NOT_COMPLETED\000"
+ 2016      455F4552 
+ 2016      524F525F 
+ 2016      42545F4F 
+ 2016      4E5F4E4F 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 51
+
+
+ 2017              	.LASF171:
+ 2018 0e68 4170706C 		.ascii	"ApplicationEventHandler\000"
+ 2018      69636174 
+ 2018      696F6E45 
+ 2018      76656E74 
+ 2018      48616E64 
+ 2019              	.LASF32:
+ 2020 0e80 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 2020      455F4556 
+ 2020      545F4741 
+ 2020      505F4445 
+ 2020      56494345 
+ 2021              	.LASF8:
+ 2022 0ea2 756E7369 		.ascii	"unsigned int\000"
+ 2022      676E6564 
+ 2022      20696E74 
+ 2022      00
+ 2023              	.LASF163:
+ 2024 0eaf 4359424C 		.ascii	"CYBLE_SRVI_GATT\000"
+ 2024      455F5352 
+ 2024      56495F47 
+ 2024      41545400 
+ 2025              	.LASF67:
+ 2026 0ebf 4359424C 		.ascii	"CYBLE_EVT_GATTS_READ_CHAR_VAL_ACCESS_REQ\000"
+ 2026      455F4556 
+ 2026      545F4741 
+ 2026      5454535F 
+ 2026      52454144 
+ 2027              	.LASF159:
+ 2028 0ee8 4359424C 		.ascii	"CYBLE_CLIENT_STATE_DISCONNECTED_DISCOVERED\000"
+ 2028      455F434C 
+ 2028      49454E54 
+ 2028      5F535441 
+ 2028      54455F44 
+ 2029              	.LASF38:
+ 2030 0f13 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYPRESS_NOTIFICATION\000"
+ 2030      455F4556 
+ 2030      545F4741 
+ 2030      505F4B45 
+ 2030      59505245 
+ 2031              	.LASF141:
+ 2032 0f37 4359424C 		.ascii	"CYBLE_GATTC_WRITE_CMD_REQ_T\000"
+ 2032      455F4741 
+ 2032      5454435F 
+ 2032      57524954 
+ 2032      455F434D 
+ 2033              	.LASF78:
+ 2034 0f53 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 2034      455F4556 
+ 2034      545F4C32 
+ 2034      4341505F 
+ 2034      43424643 
+ 2035              	.LASF162:
+ 2036 0f76 4359424C 		.ascii	"CYBLE_SRVI_GAP\000"
+ 2036      455F5352 
+ 2036      56495F47 
+ 2036      415000
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 52
+
+
+ 2037              	.LASF104:
+ 2038 0f85 4359424C 		.ascii	"CYBLE_ERROR_FLASH_WRITE_NOT_PERMITED\000"
+ 2038      455F4552 
+ 2038      524F525F 
+ 2038      464C4153 
+ 2038      485F5752 
+ 2039              	.LASF99:
+ 2040 0faa 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_CONNECTION_ENTITY_NOT_FOUND\000"
+ 2040      455F4552 
+ 2040      524F525F 
+ 2040      4C324341 
+ 2040      505F434F 
+ 2041              	.LASF20:
+ 2042 0fd8 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 2042      455F4556 
+ 2042      545F4841 
+ 2042      52445741 
+ 2042      52455F45 
+ 2043              	.LASF3:
+ 2044 0ff1 73686F72 		.ascii	"short unsigned int\000"
+ 2044      7420756E 
+ 2044      7369676E 
+ 2044      65642069 
+ 2044      6E7400
+ 2045              	.LASF158:
+ 2046 1004 4359424C 		.ascii	"CYBLE_CLIENT_STATE_DISCONNECTING\000"
+ 2046      455F434C 
+ 2046      49454E54 
+ 2046      5F535441 
+ 2046      54455F44 
+ 2047              	.LASF85:
+ 2048 1025 4359424C 		.ascii	"CYBLE_ERROR_INVALID_OPERATION\000"
+ 2048      455F4552 
+ 2048      524F525F 
+ 2048      494E5641 
+ 2048      4C49445F 
+ 2049              	.LASF47:
+ 2050 1043 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 2050      455F4556 
+ 2050      545F4741 
+ 2050      5454535F 
+ 2050      58434E48 
+ 2051              	.LASF176:
+ 2052 1061 55415254 		.ascii	"UART_RX_data\000"
+ 2052      5F52585F 
+ 2052      64617461 
+ 2052      00
+ 2053              	.LASF87:
+ 2054 106e 4359424C 		.ascii	"CYBLE_ERROR_INSUFFICIENT_RESOURCES\000"
+ 2054      455F4552 
+ 2054      524F525F 
+ 2054      494E5355 
+ 2054      46464943 
+ 2055              	.LASF121:
+ 2056 1091 4359424C 		.ascii	"CYBLE_GAPC_SCAN_UNDIRECTED_ADV\000"
+ 2056      455F4741 
+ 2056      50435F53 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 53
+
+
+ 2056      43414E5F 
+ 2056      554E4449 
+ 2057              	.LASF151:
+ 2058 10b0 4359424C 		.ascii	"CYBLE_STATE_T\000"
+ 2058      455F5354 
+ 2058      4154455F 
+ 2058      5400
+ 2059              	.LASF54:
+ 2060 10be 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 2060      455F4556 
+ 2060      545F4741 
+ 2060      5454435F 
+ 2060      52454144 
+ 2061              	.LASF109:
+ 2062 10dc 4359424C 		.ascii	"CYBLE_ERROR_CONTROLLER_BUSY\000"
+ 2062      455F4552 
+ 2062      524F525F 
+ 2062      434F4E54 
+ 2062      524F4C4C 
+ 2063              	.LASF105:
+ 2064 10f8 4359424C 		.ascii	"CYBLE_ERROR_MIC_AUTH_FAILED\000"
+ 2064      455F4552 
+ 2064      524F525F 
+ 2064      4D49435F 
+ 2064      41555448 
+ 2065              	.LASF98:
+ 2066 1114 4359424C 		.ascii	"CYBLE_ERROR_L2CAP_PSM_NOT_REGISTERED\000"
+ 2066      455F4552 
+ 2066      524F525F 
+ 2066      4C324341 
+ 2066      505F5053 
+ 2067              	.LASF131:
+ 2068 1139 4359424C 		.ascii	"CYBLE_GAPC_ADV_REPORT_T\000"
+ 2068      455F4741 
+ 2068      50435F41 
+ 2068      44565F52 
+ 2068      45504F52 
+ 2069              	.LASF147:
+ 2070 1151 4359424C 		.ascii	"CYBLE_STATE_CONNECTED\000"
+ 2070      455F5354 
+ 2070      4154455F 
+ 2070      434F4E4E 
+ 2070      45435445 
+ 2071              	.LASF187:
+ 2072 1167 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 2072      4320342E 
+ 2072      392E3320 
+ 2072      32303135 
+ 2072      30333033 
+ 2073 119a 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 2073      20726576 
+ 2073      6973696F 
+ 2073      6E203232 
+ 2073      31323230 
+ 2074 11cd 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 2074      66756E63 
+ 2074      74696F6E 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 54
+
+
+ 2074      2D736563 
+ 2074      74696F6E 
+ 2075              	.LASF52:
+ 2076 11f5 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 2076      455F4556 
+ 2076      545F4741 
+ 2076      5454435F 
+ 2076      46494E44 
+ 2077              	.LASF92:
+ 2078 121c 4359424C 		.ascii	"CYBLE_ERROR_GAP_ROLE\000"
+ 2078      455F4552 
+ 2078      524F525F 
+ 2078      4741505F 
+ 2078      524F4C45 
+ 2079              	.LASF36:
+ 2080 1231 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 2080      455F4556 
+ 2080      545F4741 
+ 2080      505F4B45 
+ 2080      59494E46 
+ 2081              	.LASF125:
+ 2082 1255 6576656E 		.ascii	"eventType\000"
+ 2082      74547970 
+ 2082      6500
+ 2083              	.LASF133:
+ 2084 125f 62644861 		.ascii	"bdHandle\000"
+ 2084      6E646C65 
+ 2084      00
+ 2085              	.LASF130:
+ 2086 1268 72737369 		.ascii	"rssi\000"
+ 2086      00
+ 2087              	.LASF80:
+ 2088 126d 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 2088      455F4556 
+ 2088      545F5045 
+ 2088      4E44494E 
+ 2088      475F464C 
+ 2089              	.LASF70:
+ 2090 128b 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 2090      455F4556 
+ 2090      545F4C32 
+ 2090      4341505F 
+ 2090      434F4E4E 
+ 2091              	.LASF41:
+ 2092 12b1 4359424C 		.ascii	"CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE\000"
+ 2092      455F4556 
+ 2092      545F4741 
+ 2092      505F454E 
+ 2092      48414E43 
+ 2093              	.LASF132:
+ 2094 12d5 4359424C 		.ascii	"CYBLE_GATT_DB_ATTR_HANDLE_T\000"
+ 2094      455F4741 
+ 2094      54545F44 
+ 2094      425F4154 
+ 2094      54525F48 
+ 2095              	.LASF46:
+ 2096 12f1 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccEpyPgP.s 			page 55
+
+
+ 2096      455F4556 
+ 2096      545F4741 
+ 2096      54545F44 
+ 2096      4953434F 
+ 2097              	.LASF102:
+ 2098 130f 4359424C 		.ascii	"CYBLE_ERROR_GATT_DB_INVALID_ATTR_HANDLE\000"
+ 2098      455F4552 
+ 2098      524F525F 
+ 2098      47415454 
+ 2098      5F44425F 
+ 2099              	.LASF174:
+ 2100 1337 6576656E 		.ascii	"eventparam\000"
+ 2100      74706172 
+ 2100      616D00
+ 2101              	.LASF119:
+ 2102 1342 4359424C 		.ascii	"CYBLE_GAPC_CONN_UNDIRECTED_ADV\000"
+ 2102      455F4741 
+ 2102      50435F43 
+ 2102      4F4E4E5F 
+ 2102      554E4449 
+ 2103              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

@@ -1,0 +1,1323 @@
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"debug.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global _printf_float
+  18              		.code	16
+  19              		.section	.text._write,"ax",%progbits
+  20              		.align	2
+  21              		.global	_write
+  22              		.code	16
+  23              		.thumb_func
+  24              		.type	_write, %function
+  25              	_write:
+  26              	.LFB37:
+  27              		.file 1 "..\\..\\BleWifiProject\\BLE_Wireless_Power_Transmitter01.cydsn\\debug.c"
+   1:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** /*******************************************************************************
+   2:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * File Name: debug.c
+   3:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *
+   4:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * Version: 1.0
+   5:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *
+   6:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * Description:
+   7:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *  This file contains functions for printf functionality.
+   8:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *
+   9:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * Hardware Dependency:
+  10:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *  CY8CKIT-042 BLE
+  11:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * 
+  12:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** ********************************************************************************
+  13:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * Copyright 2014, Cypress Semiconductor Corporation.  All rights reserved.
+  14:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * You may use this file only in accordance with the license, terms, conditions,
+  15:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  16:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * the software package with which this file was provided.
+  17:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *******************************************************************************/
+  18:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  19:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** #include "common.h"
+  20:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  21:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** #if defined(__ARMCC_VERSION)
+  22:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     
+  23:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** /* For MDK/RVDS compiler revise fputc function for printf functionality */
+  24:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** struct __FILE 
+  25:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** {
+  26:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     int handle;  
+  27:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** };
+  28:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  29:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** enum 
+  30:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** {
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 2
+
+
+  31:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     STDIN_HANDLE,
+  32:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     STDOUT_HANDLE,
+  33:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     STDERR_HANDLE
+  34:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** };
+  35:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  36:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** FILE __stdin = {STDIN_HANDLE};
+  37:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** FILE __stdout = {STDOUT_HANDLE};
+  38:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** FILE __stderr = {STDERR_HANDLE};
+  39:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  40:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** int fputc(int ch, FILE *file) 
+  41:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** {
+  42:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     int ret = EOF;
+  43:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  44:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     switch( file->handle )
+  45:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     {
+  46:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         case STDOUT_HANDLE:
+  47:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****             UART_DEB_UartPutChar(ch);
+  48:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****             ret = ch ;
+  49:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****             break ;
+  50:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  51:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         case STDERR_HANDLE:
+  52:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****             ret = ch ;
+  53:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****             break ;
+  54:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  55:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         default:
+  56:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****             file = file;
+  57:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****             break ;
+  58:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     }
+  59:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     return ret ;
+  60:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** }
+  61:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  62:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** #elif defined (__ICCARM__)      /* IAR */
+  63:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  64:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** /* For IAR compiler revise __write() function for printf functionality */
+  65:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** size_t __write(int handle, const unsigned char * buffer, size_t size)
+  66:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** {
+  67:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     size_t nChars = 0;
+  68:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  69:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     if (buffer == 0)
+  70:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     {
+  71:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         /*
+  72:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****          * This means that we should flush internal buffers.  Since we
+  73:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****          * don't we just return.  (Remember, "handle" == -1 means that all
+  74:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****          * handles should be flushed.)
+  75:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****          */
+  76:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         return (0);
+  77:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     }
+  78:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  79:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     for (/* Empty */; size != 0; --size)
+  80:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     {
+  81:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         UART_DEB_UartPutChar(*buffer++);
+  82:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         ++nChars;
+  83:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     }
+  84:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  85:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     return (nChars);
+  86:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** }
+  87:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 3
+
+
+  88:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** #else  /* (__GNUC__)  GCC */
+  89:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+  90:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** /* For GCC compiler revise _write() function for printf functionality */
+  91:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** int _write(int file, char *ptr, int len)
+  92:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** {
+  28              		.loc 1 92 0
+  29              		.cfi_startproc
+  30 0000 80B5     		push	{r7, lr}
+  31              		.cfi_def_cfa_offset 8
+  32              		.cfi_offset 7, -8
+  33              		.cfi_offset 14, -4
+  34 0002 86B0     		sub	sp, sp, #24
+  35              		.cfi_def_cfa_offset 32
+  36 0004 00AF     		add	r7, sp, #0
+  37              		.cfi_def_cfa_register 7
+  38 0006 F860     		str	r0, [r7, #12]
+  39 0008 B960     		str	r1, [r7, #8]
+  40 000a 7A60     		str	r2, [r7, #4]
+  93:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     int i;
+  94:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     file = file;
+  95:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     for (i = 0; i < len; i++)
+  41              		.loc 1 95 0
+  42 000c 0023     		mov	r3, #0
+  43 000e 7B61     		str	r3, [r7, #20]
+  44 0010 09E0     		b	.L2
+  45              	.L3:
+  46              	.LBB2:
+  96:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     {
+  97:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         UART_DEB_UartPutChar(*ptr++);
+  47              		.loc 1 97 0 discriminator 3
+  48 0012 BB68     		ldr	r3, [r7, #8]
+  49 0014 5A1C     		add	r2, r3, #1
+  50 0016 BA60     		str	r2, [r7, #8]
+  51 0018 1B78     		ldrb	r3, [r3]
+  52 001a 181C     		mov	r0, r3
+  53 001c FFF7FEFF 		bl	UART_DEB_UartPutChar
+  54              	.LBE2:
+  95:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     {
+  55              		.loc 1 95 0 discriminator 3
+  56 0020 7B69     		ldr	r3, [r7, #20]
+  57 0022 0133     		add	r3, r3, #1
+  58 0024 7B61     		str	r3, [r7, #20]
+  59              	.L2:
+  95:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     {
+  60              		.loc 1 95 0 is_stmt 0 discriminator 1
+  61 0026 7A69     		ldr	r2, [r7, #20]
+  62 0028 7B68     		ldr	r3, [r7, #4]
+  63 002a 9A42     		cmp	r2, r3
+  64 002c F1DB     		blt	.L3
+  98:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     }
+  99:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     return len;
+  65              		.loc 1 99 0 is_stmt 1
+  66 002e 7B68     		ldr	r3, [r7, #4]
+ 100:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** }
+  67              		.loc 1 100 0
+  68 0030 181C     		mov	r0, r3
+  69 0032 BD46     		mov	sp, r7
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 4
+
+
+  70 0034 06B0     		add	sp, sp, #24
+  71              		@ sp needed
+  72 0036 80BD     		pop	{r7, pc}
+  73              		.cfi_endproc
+  74              	.LFE37:
+  75              		.size	_write, .-_write
+  76              		.section	.rodata
+  77              		.align	2
+  78              	.LC0:
+  79 0000 25322E32 		.ascii	"%2.2x \000"
+  79      782000
+  80 0007 00       		.align	2
+  81              	.LC2:
+  82 0008 0D00     		.ascii	"\015\000"
+  83 000a 0000     		.section	.text.ShowValue,"ax",%progbits
+  84              		.align	2
+  85              		.global	ShowValue
+  86              		.code	16
+  87              		.thumb_func
+  88              		.type	ShowValue, %function
+  89              	ShowValue:
+  90              	.LFB38:
+ 101:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+ 102:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+ 103:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** #endif  /* (__ARMCC_VERSION) */   
+ 104:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+ 105:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** void ShowValue(CYBLE_GATT_VALUE_T *value, uint8 valueType)
+ 106:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** {
+  91              		.loc 1 106 0
+  92              		.cfi_startproc
+  93 0000 80B5     		push	{r7, lr}
+  94              		.cfi_def_cfa_offset 8
+  95              		.cfi_offset 7, -8
+  96              		.cfi_offset 14, -4
+  97 0002 84B0     		sub	sp, sp, #16
+  98              		.cfi_def_cfa_offset 24
+  99 0004 00AF     		add	r7, sp, #0
+ 100              		.cfi_def_cfa_register 7
+ 101 0006 7860     		str	r0, [r7, #4]
+ 102 0008 0A1C     		mov	r2, r1
+ 103 000a FB1C     		add	r3, r7, #3
+ 104 000c 1A70     		strb	r2, [r3]
+ 107:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     int16 i;
+ 108:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     
+ 109:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     for(i = 0; i < value->len; i++)
+ 105              		.loc 1 109 0
+ 106 000e 0E23     		mov	r3, #14
+ 107 0010 FB18     		add	r3, r7, r3
+ 108 0012 0022     		mov	r2, #0
+ 109 0014 1A80     		strh	r2, [r3]
+ 110 0016 26E0     		b	.L6
+ 111              	.L9:
+ 110:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     {
+ 111:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         if(valueType == 0u)
+ 112              		.loc 1 111 0
+ 113 0018 FB1C     		add	r3, r7, #3
+ 114 001a 1B78     		ldrb	r3, [r3]
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 5
+
+
+ 115 001c 002B     		cmp	r3, #0
+ 116 001e 0ED1     		bne	.L7
+ 112:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         {
+ 113:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****             DBG_PRINTF("%2.2x ", value->val[i]);
+ 117              		.loc 1 113 0
+ 118 0020 7B68     		ldr	r3, [r7, #4]
+ 119 0022 1A68     		ldr	r2, [r3]
+ 120 0024 0E23     		mov	r3, #14
+ 121 0026 FB18     		add	r3, r7, r3
+ 122 0028 0021     		mov	r1, #0
+ 123 002a 5B5E     		ldrsh	r3, [r3, r1]
+ 124 002c D318     		add	r3, r2, r3
+ 125 002e 1B78     		ldrb	r3, [r3]
+ 126 0030 1A1C     		mov	r2, r3
+ 127 0032 144B     		ldr	r3, .L10
+ 128 0034 181C     		mov	r0, r3
+ 129 0036 111C     		mov	r1, r2
+ 130 0038 FFF7FEFF 		bl	printf
+ 131 003c 0AE0     		b	.L8
+ 132              	.L7:
+ 114:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         }
+ 115:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         else
+ 116:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         {
+ 117:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****             DBG_PRINTF("%c", (char8)value->val[i]);
+ 133              		.loc 1 117 0
+ 134 003e 7B68     		ldr	r3, [r7, #4]
+ 135 0040 1A68     		ldr	r2, [r3]
+ 136 0042 0E23     		mov	r3, #14
+ 137 0044 FB18     		add	r3, r7, r3
+ 138 0046 0021     		mov	r1, #0
+ 139 0048 5B5E     		ldrsh	r3, [r3, r1]
+ 140 004a D318     		add	r3, r2, r3
+ 141 004c 1B78     		ldrb	r3, [r3]
+ 142 004e 181C     		mov	r0, r3
+ 143 0050 FFF7FEFF 		bl	putchar
+ 144              	.L8:
+ 109:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     {
+ 145              		.loc 1 109 0 discriminator 2
+ 146 0054 0E23     		mov	r3, #14
+ 147 0056 FB18     		add	r3, r7, r3
+ 148 0058 1B88     		ldrh	r3, [r3]
+ 149 005a 9BB2     		uxth	r3, r3
+ 150 005c 0133     		add	r3, r3, #1
+ 151 005e 9AB2     		uxth	r2, r3
+ 152 0060 0E23     		mov	r3, #14
+ 153 0062 FB18     		add	r3, r7, r3
+ 154 0064 1A80     		strh	r2, [r3]
+ 155              	.L6:
+ 109:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     {
+ 156              		.loc 1 109 0 is_stmt 0 discriminator 1
+ 157 0066 0E23     		mov	r3, #14
+ 158 0068 FB18     		add	r3, r7, r3
+ 159 006a 0022     		mov	r2, #0
+ 160 006c 9B5E     		ldrsh	r3, [r3, r2]
+ 161 006e 7A68     		ldr	r2, [r7, #4]
+ 162 0070 9288     		ldrh	r2, [r2, #4]
+ 163 0072 9342     		cmp	r3, r2
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 6
+
+
+ 164 0074 D0DB     		blt	.L9
+ 118:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****         }
+ 119:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     }
+ 120:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     DBG_PRINTF("\r\n");
+ 165              		.loc 1 120 0 is_stmt 1
+ 166 0076 044B     		ldr	r3, .L10+4
+ 167 0078 181C     		mov	r0, r3
+ 168 007a FFF7FEFF 		bl	puts
+ 121:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** }
+ 169              		.loc 1 121 0
+ 170 007e BD46     		mov	sp, r7
+ 171 0080 04B0     		add	sp, sp, #16
+ 172              		@ sp needed
+ 173 0082 80BD     		pop	{r7, pc}
+ 174              	.L11:
+ 175              		.align	2
+ 176              	.L10:
+ 177 0084 00000000 		.word	.LC0
+ 178 0088 08000000 		.word	.LC2
+ 179              		.cfi_endproc
+ 180              	.LFE38:
+ 181              		.size	ShowValue, .-ShowValue
+ 182              		.section	.text.Set32ByPtr,"ax",%progbits
+ 183              		.align	2
+ 184              		.global	Set32ByPtr
+ 185              		.code	16
+ 186              		.thumb_func
+ 187              		.type	Set32ByPtr, %function
+ 188              	Set32ByPtr:
+ 189              	.LFB39:
+ 122:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+ 123:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+ 124:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** void Set32ByPtr(uint8 ptr[], uint32 value)
+ 125:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** {
+ 190              		.loc 1 125 0
+ 191              		.cfi_startproc
+ 192 0000 80B5     		push	{r7, lr}
+ 193              		.cfi_def_cfa_offset 8
+ 194              		.cfi_offset 7, -8
+ 195              		.cfi_offset 14, -4
+ 196 0002 82B0     		sub	sp, sp, #8
+ 197              		.cfi_def_cfa_offset 16
+ 198 0004 00AF     		add	r7, sp, #0
+ 199              		.cfi_def_cfa_register 7
+ 200 0006 7860     		str	r0, [r7, #4]
+ 201 0008 3960     		str	r1, [r7]
+ 126:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     ptr[0u] = (uint8) value;
+ 202              		.loc 1 126 0
+ 203 000a 3B68     		ldr	r3, [r7]
+ 204 000c DAB2     		uxtb	r2, r3
+ 205 000e 7B68     		ldr	r3, [r7, #4]
+ 206 0010 1A70     		strb	r2, [r3]
+ 127:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     ptr[1u] = (uint8) (value >> 8u);    
+ 207              		.loc 1 127 0
+ 208 0012 7B68     		ldr	r3, [r7, #4]
+ 209 0014 0133     		add	r3, r3, #1
+ 210 0016 3A68     		ldr	r2, [r7]
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 7
+
+
+ 211 0018 120A     		lsr	r2, r2, #8
+ 212 001a D2B2     		uxtb	r2, r2
+ 213 001c 1A70     		strb	r2, [r3]
+ 128:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     ptr[2u] = (uint8) (value >> 16u);    
+ 214              		.loc 1 128 0
+ 215 001e 7B68     		ldr	r3, [r7, #4]
+ 216 0020 0233     		add	r3, r3, #2
+ 217 0022 3A68     		ldr	r2, [r7]
+ 218 0024 120C     		lsr	r2, r2, #16
+ 219 0026 D2B2     		uxtb	r2, r2
+ 220 0028 1A70     		strb	r2, [r3]
+ 129:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     ptr[3u] = (uint8) (value >> 24u);
+ 221              		.loc 1 129 0
+ 222 002a 7B68     		ldr	r3, [r7, #4]
+ 223 002c 0333     		add	r3, r3, #3
+ 224 002e 3A68     		ldr	r2, [r7]
+ 225 0030 120E     		lsr	r2, r2, #24
+ 226 0032 D2B2     		uxtb	r2, r2
+ 227 0034 1A70     		strb	r2, [r3]
+ 130:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** }
+ 228              		.loc 1 130 0
+ 229 0036 BD46     		mov	sp, r7
+ 230 0038 02B0     		add	sp, sp, #8
+ 231              		@ sp needed
+ 232 003a 80BD     		pop	{r7, pc}
+ 233              		.cfi_endproc
+ 234              	.LFE39:
+ 235              		.size	Set32ByPtr, .-Set32ByPtr
+ 236              		.section	.text.Get32ByPtr,"ax",%progbits
+ 237              		.align	2
+ 238              		.global	Get32ByPtr
+ 239              		.code	16
+ 240              		.thumb_func
+ 241              		.type	Get32ByPtr, %function
+ 242              	Get32ByPtr:
+ 243              	.LFB40:
+ 131:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+ 132:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** uint32 Get32ByPtr(uint8 ptr[])
+ 133:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** {
+ 244              		.loc 1 133 0
+ 245              		.cfi_startproc
+ 246 0000 80B5     		push	{r7, lr}
+ 247              		.cfi_def_cfa_offset 8
+ 248              		.cfi_offset 7, -8
+ 249              		.cfi_offset 14, -4
+ 250 0002 82B0     		sub	sp, sp, #8
+ 251              		.cfi_def_cfa_offset 16
+ 252 0004 00AF     		add	r7, sp, #0
+ 253              		.cfi_def_cfa_register 7
+ 254 0006 7860     		str	r0, [r7, #4]
+ 134:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     return ((uint32) ptr[0u] | ((uint32) ptr[1u] << 8u) | ((uint32) ptr[2u] << 16u) | ((uint32) ptr
+ 255              		.loc 1 134 0
+ 256 0008 7B68     		ldr	r3, [r7, #4]
+ 257 000a 1B78     		ldrb	r3, [r3]
+ 258 000c 1A1C     		mov	r2, r3
+ 259 000e 7B68     		ldr	r3, [r7, #4]
+ 260 0010 0133     		add	r3, r3, #1
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 8
+
+
+ 261 0012 1B78     		ldrb	r3, [r3]
+ 262 0014 1B02     		lsl	r3, r3, #8
+ 263 0016 1A43     		orr	r2, r3
+ 264 0018 7B68     		ldr	r3, [r7, #4]
+ 265 001a 0233     		add	r3, r3, #2
+ 266 001c 1B78     		ldrb	r3, [r3]
+ 267 001e 1B04     		lsl	r3, r3, #16
+ 268 0020 1A43     		orr	r2, r3
+ 269 0022 7B68     		ldr	r3, [r7, #4]
+ 270 0024 0333     		add	r3, r3, #3
+ 271 0026 1B78     		ldrb	r3, [r3]
+ 272 0028 1B06     		lsl	r3, r3, #24
+ 273 002a 1343     		orr	r3, r2
+ 135:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** }
+ 274              		.loc 1 135 0
+ 275 002c 181C     		mov	r0, r3
+ 276 002e BD46     		mov	sp, r7
+ 277 0030 02B0     		add	sp, sp, #8
+ 278              		@ sp needed
+ 279 0032 80BD     		pop	{r7, pc}
+ 280              		.cfi_endproc
+ 281              	.LFE40:
+ 282              		.size	Get32ByPtr, .-Get32ByPtr
+ 283              		.section	.text.ShowError,"ax",%progbits
+ 284              		.align	2
+ 285              		.global	ShowError
+ 286              		.code	16
+ 287              		.thumb_func
+ 288              		.type	ShowError, %function
+ 289              	ShowError:
+ 290              	.LFB41:
+ 136:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** 
+ 137:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** /*******************************************************************************
+ 138:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * Function Name: ShowError()
+ 139:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** ********************************************************************************
+ 140:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *
+ 141:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** * Summary:
+ 142:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *   Shows error condition: Turn On all leds - white colour will indicate error.
+ 143:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *
+ 144:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** *******************************************************************************/
+ 145:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** void ShowError(void)
+ 146:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** {
+ 291              		.loc 1 146 0
+ 292              		.cfi_startproc
+ 293 0000 80B5     		push	{r7, lr}
+ 294              		.cfi_def_cfa_offset 8
+ 295              		.cfi_offset 7, -8
+ 296              		.cfi_offset 14, -4
+ 297 0002 00AF     		add	r7, sp, #0
+ 298              		.cfi_def_cfa_register 7
+ 147:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** //    Disconnect_LED_Write(LED_ON);
+ 148:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** //    Advertising_LED_Write(LED_ON);
+ 149:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** //    CapsLock_LED_Write(LED_ON);
+ 150:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     /* Halt CPU in Debug mode */
+ 151:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c ****     CYASSERT(0u != 0u);
+ 299              		.loc 1 151 0
+ 300 0004 0020     		mov	r0, #0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 9
+
+
+ 301 0006 FFF7FEFF 		bl	CyHalt
+ 152:..\..\BleWifiProject\BLE_Wireless_Power_Transmitter01.cydsn/debug.c **** }
+ 302              		.loc 1 152 0
+ 303 000a BD46     		mov	sp, r7
+ 304              		@ sp needed
+ 305 000c 80BD     		pop	{r7, pc}
+ 306              		.cfi_endproc
+ 307              	.LFE41:
+ 308              		.size	ShowError, .-ShowError
+ 309 000e C046     		.text
+ 310              	.Letext0:
+ 311              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 312              		.file 3 "Generated_Source\\PSoC4/BLE_StackGatt.h"
+ 313              		.section	.debug_info,"",%progbits
+ 314              	.Ldebug_info0:
+ 315 0000 1F020000 		.4byte	0x21f
+ 316 0004 0400     		.2byte	0x4
+ 317 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 318 000a 04       		.byte	0x4
+ 319 000b 01       		.uleb128 0x1
+ 320 000c B0000000 		.4byte	.LASF27
+ 321 0010 01       		.byte	0x1
+ 322 0011 24000000 		.4byte	.LASF28
+ 323 0015 71010000 		.4byte	.LASF29
+ 324 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 325 001d 00000000 		.4byte	0
+ 326 0021 00000000 		.4byte	.Ldebug_line0
+ 327 0025 02       		.uleb128 0x2
+ 328 0026 01       		.byte	0x1
+ 329 0027 06       		.byte	0x6
+ 330 0028 15020000 		.4byte	.LASF0
+ 331 002c 02       		.uleb128 0x2
+ 332 002d 01       		.byte	0x1
+ 333 002e 08       		.byte	0x8
+ 334 002f 7D000000 		.4byte	.LASF1
+ 335 0033 02       		.uleb128 0x2
+ 336 0034 02       		.byte	0x2
+ 337 0035 05       		.byte	0x5
+ 338 0036 D2010000 		.4byte	.LASF2
+ 339 003a 02       		.uleb128 0x2
+ 340 003b 02       		.byte	0x2
+ 341 003c 07       		.byte	0x7
+ 342 003d 06000000 		.4byte	.LASF3
+ 343 0041 02       		.uleb128 0x2
+ 344 0042 04       		.byte	0x4
+ 345 0043 05       		.byte	0x5
+ 346 0044 02020000 		.4byte	.LASF4
+ 347 0048 02       		.uleb128 0x2
+ 348 0049 04       		.byte	0x4
+ 349 004a 07       		.byte	0x7
+ 350 004b 97000000 		.4byte	.LASF5
+ 351 004f 02       		.uleb128 0x2
+ 352 0050 08       		.byte	0x8
+ 353 0051 05       		.byte	0x5
+ 354 0052 BD010000 		.4byte	.LASF6
+ 355 0056 02       		.uleb128 0x2
+ 356 0057 08       		.byte	0x8
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 10
+
+
+ 357 0058 07       		.byte	0x7
+ 358 0059 35020000 		.4byte	.LASF7
+ 359 005d 03       		.uleb128 0x3
+ 360 005e 04       		.byte	0x4
+ 361 005f 05       		.byte	0x5
+ 362 0060 696E7400 		.ascii	"int\000"
+ 363 0064 02       		.uleb128 0x2
+ 364 0065 04       		.byte	0x4
+ 365 0066 07       		.byte	0x7
+ 366 0067 5F010000 		.4byte	.LASF8
+ 367 006b 04       		.uleb128 0x4
+ 368 006c F1010000 		.4byte	.LASF9
+ 369 0070 02       		.byte	0x2
+ 370 0071 9801     		.2byte	0x198
+ 371 0073 2C000000 		.4byte	0x2c
+ 372 0077 04       		.uleb128 0x4
+ 373 0078 3E010000 		.4byte	.LASF10
+ 374 007c 02       		.byte	0x2
+ 375 007d 9901     		.2byte	0x199
+ 376 007f 3A000000 		.4byte	0x3a
+ 377 0083 04       		.uleb128 0x4
+ 378 0084 45010000 		.4byte	.LASF11
+ 379 0088 02       		.byte	0x2
+ 380 0089 9A01     		.2byte	0x19a
+ 381 008b 48000000 		.4byte	0x48
+ 382 008f 04       		.uleb128 0x4
+ 383 0090 91000000 		.4byte	.LASF12
+ 384 0094 02       		.byte	0x2
+ 385 0095 9C01     		.2byte	0x19c
+ 386 0097 33000000 		.4byte	0x33
+ 387 009b 02       		.uleb128 0x2
+ 388 009c 04       		.byte	0x4
+ 389 009d 04       		.byte	0x4
+ 390 009e 72000000 		.4byte	.LASF13
+ 391 00a2 02       		.uleb128 0x2
+ 392 00a3 08       		.byte	0x8
+ 393 00a4 04       		.byte	0x4
+ 394 00a5 A9000000 		.4byte	.LASF14
+ 395 00a9 04       		.uleb128 0x4
+ 396 00aa 8B000000 		.4byte	.LASF15
+ 397 00ae 02       		.byte	0x2
+ 398 00af A901     		.2byte	0x1a9
+ 399 00b1 B5000000 		.4byte	0xb5
+ 400 00b5 02       		.uleb128 0x2
+ 401 00b6 01       		.byte	0x1
+ 402 00b7 08       		.byte	0x8
+ 403 00b8 6C010000 		.4byte	.LASF16
+ 404 00bc 02       		.uleb128 0x2
+ 405 00bd 04       		.byte	0x4
+ 406 00be 07       		.byte	0x7
+ 407 00bf B4010000 		.4byte	.LASF17
+ 408 00c3 05       		.uleb128 0x5
+ 409 00c4 04       		.byte	0x4
+ 410 00c5 B5000000 		.4byte	0xb5
+ 411 00c9 05       		.uleb128 0x5
+ 412 00ca 04       		.byte	0x4
+ 413 00cb 6B000000 		.4byte	0x6b
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 11
+
+
+ 414 00cf 06       		.uleb128 0x6
+ 415 00d0 08       		.byte	0x8
+ 416 00d1 03       		.byte	0x3
+ 417 00d2 C701     		.2byte	0x1c7
+ 418 00d4 00010000 		.4byte	0x100
+ 419 00d8 07       		.uleb128 0x7
+ 420 00d9 76616C00 		.ascii	"val\000"
+ 421 00dd 03       		.byte	0x3
+ 422 00de CA01     		.2byte	0x1ca
+ 423 00e0 C9000000 		.4byte	0xc9
+ 424 00e4 00       		.byte	0
+ 425 00e5 07       		.uleb128 0x7
+ 426 00e6 6C656E00 		.ascii	"len\000"
+ 427 00ea 03       		.byte	0x3
+ 428 00eb CD01     		.2byte	0x1cd
+ 429 00ed 77000000 		.4byte	0x77
+ 430 00f1 04       		.byte	0x4
+ 431 00f2 08       		.uleb128 0x8
+ 432 00f3 21020000 		.4byte	.LASF18
+ 433 00f7 03       		.byte	0x3
+ 434 00f8 D401     		.2byte	0x1d4
+ 435 00fa 77000000 		.4byte	0x77
+ 436 00fe 06       		.byte	0x6
+ 437 00ff 00       		.byte	0
+ 438 0100 04       		.uleb128 0x4
+ 439 0101 4C010000 		.4byte	.LASF19
+ 440 0105 03       		.byte	0x3
+ 441 0106 D601     		.2byte	0x1d6
+ 442 0108 CF000000 		.4byte	0xcf
+ 443 010c 09       		.uleb128 0x9
+ 444 010d CB010000 		.4byte	.LASF25
+ 445 0111 01       		.byte	0x1
+ 446 0112 5B       		.byte	0x5b
+ 447 0113 5D000000 		.4byte	0x5d
+ 448 0117 00000000 		.4byte	.LFB37
+ 449 011b 38000000 		.4byte	.LFE37-.LFB37
+ 450 011f 01       		.uleb128 0x1
+ 451 0120 9C       		.byte	0x9c
+ 452 0121 73010000 		.4byte	0x173
+ 453 0125 0A       		.uleb128 0xa
+ 454 0126 78000000 		.4byte	.LASF20
+ 455 012a 01       		.byte	0x1
+ 456 012b 5B       		.byte	0x5b
+ 457 012c 5D000000 		.4byte	0x5d
+ 458 0130 02       		.uleb128 0x2
+ 459 0131 91       		.byte	0x91
+ 460 0132 6C       		.sleb128 -20
+ 461 0133 0B       		.uleb128 0xb
+ 462 0134 70747200 		.ascii	"ptr\000"
+ 463 0138 01       		.byte	0x1
+ 464 0139 5B       		.byte	0x5b
+ 465 013a C3000000 		.4byte	0xc3
+ 466 013e 02       		.uleb128 0x2
+ 467 013f 91       		.byte	0x91
+ 468 0140 68       		.sleb128 -24
+ 469 0141 0B       		.uleb128 0xb
+ 470 0142 6C656E00 		.ascii	"len\000"
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 12
+
+
+ 471 0146 01       		.byte	0x1
+ 472 0147 5B       		.byte	0x5b
+ 473 0148 5D000000 		.4byte	0x5d
+ 474 014c 02       		.uleb128 0x2
+ 475 014d 91       		.byte	0x91
+ 476 014e 64       		.sleb128 -28
+ 477 014f 0C       		.uleb128 0xc
+ 478 0150 6900     		.ascii	"i\000"
+ 479 0152 01       		.byte	0x1
+ 480 0153 5D       		.byte	0x5d
+ 481 0154 5D000000 		.4byte	0x5d
+ 482 0158 02       		.uleb128 0x2
+ 483 0159 91       		.byte	0x91
+ 484 015a 74       		.sleb128 -12
+ 485 015b 0D       		.uleb128 0xd
+ 486 015c 12000000 		.4byte	.LBB2
+ 487 0160 0E000000 		.4byte	.LBE2-.LBB2
+ 488 0164 0E       		.uleb128 0xe
+ 489 0165 DC010000 		.4byte	.LASF30
+ 490 0169 01       		.byte	0x1
+ 491 016a 61       		.byte	0x61
+ 492 016b 5D000000 		.4byte	0x5d
+ 493 016f 0F       		.uleb128 0xf
+ 494 0170 00       		.byte	0
+ 495 0171 00       		.byte	0
+ 496 0172 00       		.byte	0
+ 497 0173 10       		.uleb128 0x10
+ 498 0174 68000000 		.4byte	.LASF23
+ 499 0178 01       		.byte	0x1
+ 500 0179 69       		.byte	0x69
+ 501 017a 00000000 		.4byte	.LFB38
+ 502 017e 8C000000 		.4byte	.LFE38-.LFB38
+ 503 0182 01       		.uleb128 0x1
+ 504 0183 9C       		.byte	0x9c
+ 505 0184 B1010000 		.4byte	0x1b1
+ 506 0188 0A       		.uleb128 0xa
+ 507 0189 00000000 		.4byte	.LASF21
+ 508 018d 01       		.byte	0x1
+ 509 018e 69       		.byte	0x69
+ 510 018f B1010000 		.4byte	0x1b1
+ 511 0193 02       		.uleb128 0x2
+ 512 0194 91       		.byte	0x91
+ 513 0195 6C       		.sleb128 -20
+ 514 0196 0A       		.uleb128 0xa
+ 515 0197 2B020000 		.4byte	.LASF22
+ 516 019b 01       		.byte	0x1
+ 517 019c 69       		.byte	0x69
+ 518 019d 6B000000 		.4byte	0x6b
+ 519 01a1 02       		.uleb128 0x2
+ 520 01a2 91       		.byte	0x91
+ 521 01a3 6B       		.sleb128 -21
+ 522 01a4 0C       		.uleb128 0xc
+ 523 01a5 6900     		.ascii	"i\000"
+ 524 01a7 01       		.byte	0x1
+ 525 01a8 6B       		.byte	0x6b
+ 526 01a9 8F000000 		.4byte	0x8f
+ 527 01ad 02       		.uleb128 0x2
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 13
+
+
+ 528 01ae 91       		.byte	0x91
+ 529 01af 76       		.sleb128 -10
+ 530 01b0 00       		.byte	0
+ 531 01b1 05       		.uleb128 0x5
+ 532 01b2 04       		.byte	0x4
+ 533 01b3 00010000 		.4byte	0x100
+ 534 01b7 11       		.uleb128 0x11
+ 535 01b8 19000000 		.4byte	.LASF24
+ 536 01bc 01       		.byte	0x1
+ 537 01bd 7C       		.byte	0x7c
+ 538 01be 00000000 		.4byte	.LFB39
+ 539 01c2 3C000000 		.4byte	.LFE39-.LFB39
+ 540 01c6 01       		.uleb128 0x1
+ 541 01c7 9C       		.byte	0x9c
+ 542 01c8 E9010000 		.4byte	0x1e9
+ 543 01cc 0B       		.uleb128 0xb
+ 544 01cd 70747200 		.ascii	"ptr\000"
+ 545 01d1 01       		.byte	0x1
+ 546 01d2 7C       		.byte	0x7c
+ 547 01d3 C9000000 		.4byte	0xc9
+ 548 01d7 02       		.uleb128 0x2
+ 549 01d8 91       		.byte	0x91
+ 550 01d9 74       		.sleb128 -12
+ 551 01da 0A       		.uleb128 0xa
+ 552 01db 00000000 		.4byte	.LASF21
+ 553 01df 01       		.byte	0x1
+ 554 01e0 7C       		.byte	0x7c
+ 555 01e1 83000000 		.4byte	0x83
+ 556 01e5 02       		.uleb128 0x2
+ 557 01e6 91       		.byte	0x91
+ 558 01e7 70       		.sleb128 -16
+ 559 01e8 00       		.byte	0
+ 560 01e9 12       		.uleb128 0x12
+ 561 01ea F7010000 		.4byte	.LASF26
+ 562 01ee 01       		.byte	0x1
+ 563 01ef 84       		.byte	0x84
+ 564 01f0 83000000 		.4byte	0x83
+ 565 01f4 00000000 		.4byte	.LFB40
+ 566 01f8 34000000 		.4byte	.LFE40-.LFB40
+ 567 01fc 01       		.uleb128 0x1
+ 568 01fd 9C       		.byte	0x9c
+ 569 01fe 11020000 		.4byte	0x211
+ 570 0202 0B       		.uleb128 0xb
+ 571 0203 70747200 		.ascii	"ptr\000"
+ 572 0207 01       		.byte	0x1
+ 573 0208 84       		.byte	0x84
+ 574 0209 C9000000 		.4byte	0xc9
+ 575 020d 02       		.uleb128 0x2
+ 576 020e 91       		.byte	0x91
+ 577 020f 74       		.sleb128 -12
+ 578 0210 00       		.byte	0
+ 579 0211 13       		.uleb128 0x13
+ 580 0212 0B020000 		.4byte	.LASF31
+ 581 0216 01       		.byte	0x1
+ 582 0217 91       		.byte	0x91
+ 583 0218 00000000 		.4byte	.LFB41
+ 584 021c 0E000000 		.4byte	.LFE41-.LFB41
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 14
+
+
+ 585 0220 01       		.uleb128 0x1
+ 586 0221 9C       		.byte	0x9c
+ 587 0222 00       		.byte	0
+ 588              		.section	.debug_abbrev,"",%progbits
+ 589              	.Ldebug_abbrev0:
+ 590 0000 01       		.uleb128 0x1
+ 591 0001 11       		.uleb128 0x11
+ 592 0002 01       		.byte	0x1
+ 593 0003 25       		.uleb128 0x25
+ 594 0004 0E       		.uleb128 0xe
+ 595 0005 13       		.uleb128 0x13
+ 596 0006 0B       		.uleb128 0xb
+ 597 0007 03       		.uleb128 0x3
+ 598 0008 0E       		.uleb128 0xe
+ 599 0009 1B       		.uleb128 0x1b
+ 600 000a 0E       		.uleb128 0xe
+ 601 000b 55       		.uleb128 0x55
+ 602 000c 17       		.uleb128 0x17
+ 603 000d 11       		.uleb128 0x11
+ 604 000e 01       		.uleb128 0x1
+ 605 000f 10       		.uleb128 0x10
+ 606 0010 17       		.uleb128 0x17
+ 607 0011 00       		.byte	0
+ 608 0012 00       		.byte	0
+ 609 0013 02       		.uleb128 0x2
+ 610 0014 24       		.uleb128 0x24
+ 611 0015 00       		.byte	0
+ 612 0016 0B       		.uleb128 0xb
+ 613 0017 0B       		.uleb128 0xb
+ 614 0018 3E       		.uleb128 0x3e
+ 615 0019 0B       		.uleb128 0xb
+ 616 001a 03       		.uleb128 0x3
+ 617 001b 0E       		.uleb128 0xe
+ 618 001c 00       		.byte	0
+ 619 001d 00       		.byte	0
+ 620 001e 03       		.uleb128 0x3
+ 621 001f 24       		.uleb128 0x24
+ 622 0020 00       		.byte	0
+ 623 0021 0B       		.uleb128 0xb
+ 624 0022 0B       		.uleb128 0xb
+ 625 0023 3E       		.uleb128 0x3e
+ 626 0024 0B       		.uleb128 0xb
+ 627 0025 03       		.uleb128 0x3
+ 628 0026 08       		.uleb128 0x8
+ 629 0027 00       		.byte	0
+ 630 0028 00       		.byte	0
+ 631 0029 04       		.uleb128 0x4
+ 632 002a 16       		.uleb128 0x16
+ 633 002b 00       		.byte	0
+ 634 002c 03       		.uleb128 0x3
+ 635 002d 0E       		.uleb128 0xe
+ 636 002e 3A       		.uleb128 0x3a
+ 637 002f 0B       		.uleb128 0xb
+ 638 0030 3B       		.uleb128 0x3b
+ 639 0031 05       		.uleb128 0x5
+ 640 0032 49       		.uleb128 0x49
+ 641 0033 13       		.uleb128 0x13
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 15
+
+
+ 642 0034 00       		.byte	0
+ 643 0035 00       		.byte	0
+ 644 0036 05       		.uleb128 0x5
+ 645 0037 0F       		.uleb128 0xf
+ 646 0038 00       		.byte	0
+ 647 0039 0B       		.uleb128 0xb
+ 648 003a 0B       		.uleb128 0xb
+ 649 003b 49       		.uleb128 0x49
+ 650 003c 13       		.uleb128 0x13
+ 651 003d 00       		.byte	0
+ 652 003e 00       		.byte	0
+ 653 003f 06       		.uleb128 0x6
+ 654 0040 13       		.uleb128 0x13
+ 655 0041 01       		.byte	0x1
+ 656 0042 0B       		.uleb128 0xb
+ 657 0043 0B       		.uleb128 0xb
+ 658 0044 3A       		.uleb128 0x3a
+ 659 0045 0B       		.uleb128 0xb
+ 660 0046 3B       		.uleb128 0x3b
+ 661 0047 05       		.uleb128 0x5
+ 662 0048 01       		.uleb128 0x1
+ 663 0049 13       		.uleb128 0x13
+ 664 004a 00       		.byte	0
+ 665 004b 00       		.byte	0
+ 666 004c 07       		.uleb128 0x7
+ 667 004d 0D       		.uleb128 0xd
+ 668 004e 00       		.byte	0
+ 669 004f 03       		.uleb128 0x3
+ 670 0050 08       		.uleb128 0x8
+ 671 0051 3A       		.uleb128 0x3a
+ 672 0052 0B       		.uleb128 0xb
+ 673 0053 3B       		.uleb128 0x3b
+ 674 0054 05       		.uleb128 0x5
+ 675 0055 49       		.uleb128 0x49
+ 676 0056 13       		.uleb128 0x13
+ 677 0057 38       		.uleb128 0x38
+ 678 0058 0B       		.uleb128 0xb
+ 679 0059 00       		.byte	0
+ 680 005a 00       		.byte	0
+ 681 005b 08       		.uleb128 0x8
+ 682 005c 0D       		.uleb128 0xd
+ 683 005d 00       		.byte	0
+ 684 005e 03       		.uleb128 0x3
+ 685 005f 0E       		.uleb128 0xe
+ 686 0060 3A       		.uleb128 0x3a
+ 687 0061 0B       		.uleb128 0xb
+ 688 0062 3B       		.uleb128 0x3b
+ 689 0063 05       		.uleb128 0x5
+ 690 0064 49       		.uleb128 0x49
+ 691 0065 13       		.uleb128 0x13
+ 692 0066 38       		.uleb128 0x38
+ 693 0067 0B       		.uleb128 0xb
+ 694 0068 00       		.byte	0
+ 695 0069 00       		.byte	0
+ 696 006a 09       		.uleb128 0x9
+ 697 006b 2E       		.uleb128 0x2e
+ 698 006c 01       		.byte	0x1
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 16
+
+
+ 699 006d 3F       		.uleb128 0x3f
+ 700 006e 19       		.uleb128 0x19
+ 701 006f 03       		.uleb128 0x3
+ 702 0070 0E       		.uleb128 0xe
+ 703 0071 3A       		.uleb128 0x3a
+ 704 0072 0B       		.uleb128 0xb
+ 705 0073 3B       		.uleb128 0x3b
+ 706 0074 0B       		.uleb128 0xb
+ 707 0075 27       		.uleb128 0x27
+ 708 0076 19       		.uleb128 0x19
+ 709 0077 49       		.uleb128 0x49
+ 710 0078 13       		.uleb128 0x13
+ 711 0079 11       		.uleb128 0x11
+ 712 007a 01       		.uleb128 0x1
+ 713 007b 12       		.uleb128 0x12
+ 714 007c 06       		.uleb128 0x6
+ 715 007d 40       		.uleb128 0x40
+ 716 007e 18       		.uleb128 0x18
+ 717 007f 9642     		.uleb128 0x2116
+ 718 0081 19       		.uleb128 0x19
+ 719 0082 01       		.uleb128 0x1
+ 720 0083 13       		.uleb128 0x13
+ 721 0084 00       		.byte	0
+ 722 0085 00       		.byte	0
+ 723 0086 0A       		.uleb128 0xa
+ 724 0087 05       		.uleb128 0x5
+ 725 0088 00       		.byte	0
+ 726 0089 03       		.uleb128 0x3
+ 727 008a 0E       		.uleb128 0xe
+ 728 008b 3A       		.uleb128 0x3a
+ 729 008c 0B       		.uleb128 0xb
+ 730 008d 3B       		.uleb128 0x3b
+ 731 008e 0B       		.uleb128 0xb
+ 732 008f 49       		.uleb128 0x49
+ 733 0090 13       		.uleb128 0x13
+ 734 0091 02       		.uleb128 0x2
+ 735 0092 18       		.uleb128 0x18
+ 736 0093 00       		.byte	0
+ 737 0094 00       		.byte	0
+ 738 0095 0B       		.uleb128 0xb
+ 739 0096 05       		.uleb128 0x5
+ 740 0097 00       		.byte	0
+ 741 0098 03       		.uleb128 0x3
+ 742 0099 08       		.uleb128 0x8
+ 743 009a 3A       		.uleb128 0x3a
+ 744 009b 0B       		.uleb128 0xb
+ 745 009c 3B       		.uleb128 0x3b
+ 746 009d 0B       		.uleb128 0xb
+ 747 009e 49       		.uleb128 0x49
+ 748 009f 13       		.uleb128 0x13
+ 749 00a0 02       		.uleb128 0x2
+ 750 00a1 18       		.uleb128 0x18
+ 751 00a2 00       		.byte	0
+ 752 00a3 00       		.byte	0
+ 753 00a4 0C       		.uleb128 0xc
+ 754 00a5 34       		.uleb128 0x34
+ 755 00a6 00       		.byte	0
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 17
+
+
+ 756 00a7 03       		.uleb128 0x3
+ 757 00a8 08       		.uleb128 0x8
+ 758 00a9 3A       		.uleb128 0x3a
+ 759 00aa 0B       		.uleb128 0xb
+ 760 00ab 3B       		.uleb128 0x3b
+ 761 00ac 0B       		.uleb128 0xb
+ 762 00ad 49       		.uleb128 0x49
+ 763 00ae 13       		.uleb128 0x13
+ 764 00af 02       		.uleb128 0x2
+ 765 00b0 18       		.uleb128 0x18
+ 766 00b1 00       		.byte	0
+ 767 00b2 00       		.byte	0
+ 768 00b3 0D       		.uleb128 0xd
+ 769 00b4 0B       		.uleb128 0xb
+ 770 00b5 01       		.byte	0x1
+ 771 00b6 11       		.uleb128 0x11
+ 772 00b7 01       		.uleb128 0x1
+ 773 00b8 12       		.uleb128 0x12
+ 774 00b9 06       		.uleb128 0x6
+ 775 00ba 00       		.byte	0
+ 776 00bb 00       		.byte	0
+ 777 00bc 0E       		.uleb128 0xe
+ 778 00bd 2E       		.uleb128 0x2e
+ 779 00be 01       		.byte	0x1
+ 780 00bf 3F       		.uleb128 0x3f
+ 781 00c0 19       		.uleb128 0x19
+ 782 00c1 03       		.uleb128 0x3
+ 783 00c2 0E       		.uleb128 0xe
+ 784 00c3 3A       		.uleb128 0x3a
+ 785 00c4 0B       		.uleb128 0xb
+ 786 00c5 3B       		.uleb128 0x3b
+ 787 00c6 0B       		.uleb128 0xb
+ 788 00c7 49       		.uleb128 0x49
+ 789 00c8 13       		.uleb128 0x13
+ 790 00c9 3C       		.uleb128 0x3c
+ 791 00ca 19       		.uleb128 0x19
+ 792 00cb 00       		.byte	0
+ 793 00cc 00       		.byte	0
+ 794 00cd 0F       		.uleb128 0xf
+ 795 00ce 18       		.uleb128 0x18
+ 796 00cf 00       		.byte	0
+ 797 00d0 00       		.byte	0
+ 798 00d1 00       		.byte	0
+ 799 00d2 10       		.uleb128 0x10
+ 800 00d3 2E       		.uleb128 0x2e
+ 801 00d4 01       		.byte	0x1
+ 802 00d5 3F       		.uleb128 0x3f
+ 803 00d6 19       		.uleb128 0x19
+ 804 00d7 03       		.uleb128 0x3
+ 805 00d8 0E       		.uleb128 0xe
+ 806 00d9 3A       		.uleb128 0x3a
+ 807 00da 0B       		.uleb128 0xb
+ 808 00db 3B       		.uleb128 0x3b
+ 809 00dc 0B       		.uleb128 0xb
+ 810 00dd 27       		.uleb128 0x27
+ 811 00de 19       		.uleb128 0x19
+ 812 00df 11       		.uleb128 0x11
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 18
+
+
+ 813 00e0 01       		.uleb128 0x1
+ 814 00e1 12       		.uleb128 0x12
+ 815 00e2 06       		.uleb128 0x6
+ 816 00e3 40       		.uleb128 0x40
+ 817 00e4 18       		.uleb128 0x18
+ 818 00e5 9642     		.uleb128 0x2116
+ 819 00e7 19       		.uleb128 0x19
+ 820 00e8 01       		.uleb128 0x1
+ 821 00e9 13       		.uleb128 0x13
+ 822 00ea 00       		.byte	0
+ 823 00eb 00       		.byte	0
+ 824 00ec 11       		.uleb128 0x11
+ 825 00ed 2E       		.uleb128 0x2e
+ 826 00ee 01       		.byte	0x1
+ 827 00ef 3F       		.uleb128 0x3f
+ 828 00f0 19       		.uleb128 0x19
+ 829 00f1 03       		.uleb128 0x3
+ 830 00f2 0E       		.uleb128 0xe
+ 831 00f3 3A       		.uleb128 0x3a
+ 832 00f4 0B       		.uleb128 0xb
+ 833 00f5 3B       		.uleb128 0x3b
+ 834 00f6 0B       		.uleb128 0xb
+ 835 00f7 27       		.uleb128 0x27
+ 836 00f8 19       		.uleb128 0x19
+ 837 00f9 11       		.uleb128 0x11
+ 838 00fa 01       		.uleb128 0x1
+ 839 00fb 12       		.uleb128 0x12
+ 840 00fc 06       		.uleb128 0x6
+ 841 00fd 40       		.uleb128 0x40
+ 842 00fe 18       		.uleb128 0x18
+ 843 00ff 9742     		.uleb128 0x2117
+ 844 0101 19       		.uleb128 0x19
+ 845 0102 01       		.uleb128 0x1
+ 846 0103 13       		.uleb128 0x13
+ 847 0104 00       		.byte	0
+ 848 0105 00       		.byte	0
+ 849 0106 12       		.uleb128 0x12
+ 850 0107 2E       		.uleb128 0x2e
+ 851 0108 01       		.byte	0x1
+ 852 0109 3F       		.uleb128 0x3f
+ 853 010a 19       		.uleb128 0x19
+ 854 010b 03       		.uleb128 0x3
+ 855 010c 0E       		.uleb128 0xe
+ 856 010d 3A       		.uleb128 0x3a
+ 857 010e 0B       		.uleb128 0xb
+ 858 010f 3B       		.uleb128 0x3b
+ 859 0110 0B       		.uleb128 0xb
+ 860 0111 27       		.uleb128 0x27
+ 861 0112 19       		.uleb128 0x19
+ 862 0113 49       		.uleb128 0x49
+ 863 0114 13       		.uleb128 0x13
+ 864 0115 11       		.uleb128 0x11
+ 865 0116 01       		.uleb128 0x1
+ 866 0117 12       		.uleb128 0x12
+ 867 0118 06       		.uleb128 0x6
+ 868 0119 40       		.uleb128 0x40
+ 869 011a 18       		.uleb128 0x18
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 19
+
+
+ 870 011b 9742     		.uleb128 0x2117
+ 871 011d 19       		.uleb128 0x19
+ 872 011e 01       		.uleb128 0x1
+ 873 011f 13       		.uleb128 0x13
+ 874 0120 00       		.byte	0
+ 875 0121 00       		.byte	0
+ 876 0122 13       		.uleb128 0x13
+ 877 0123 2E       		.uleb128 0x2e
+ 878 0124 00       		.byte	0
+ 879 0125 3F       		.uleb128 0x3f
+ 880 0126 19       		.uleb128 0x19
+ 881 0127 03       		.uleb128 0x3
+ 882 0128 0E       		.uleb128 0xe
+ 883 0129 3A       		.uleb128 0x3a
+ 884 012a 0B       		.uleb128 0xb
+ 885 012b 3B       		.uleb128 0x3b
+ 886 012c 0B       		.uleb128 0xb
+ 887 012d 27       		.uleb128 0x27
+ 888 012e 19       		.uleb128 0x19
+ 889 012f 11       		.uleb128 0x11
+ 890 0130 01       		.uleb128 0x1
+ 891 0131 12       		.uleb128 0x12
+ 892 0132 06       		.uleb128 0x6
+ 893 0133 40       		.uleb128 0x40
+ 894 0134 18       		.uleb128 0x18
+ 895 0135 9642     		.uleb128 0x2116
+ 896 0137 19       		.uleb128 0x19
+ 897 0138 00       		.byte	0
+ 898 0139 00       		.byte	0
+ 899 013a 00       		.byte	0
+ 900              		.section	.debug_aranges,"",%progbits
+ 901 0000 3C000000 		.4byte	0x3c
+ 902 0004 0200     		.2byte	0x2
+ 903 0006 00000000 		.4byte	.Ldebug_info0
+ 904 000a 04       		.byte	0x4
+ 905 000b 00       		.byte	0
+ 906 000c 0000     		.2byte	0
+ 907 000e 0000     		.2byte	0
+ 908 0010 00000000 		.4byte	.LFB37
+ 909 0014 38000000 		.4byte	.LFE37-.LFB37
+ 910 0018 00000000 		.4byte	.LFB38
+ 911 001c 8C000000 		.4byte	.LFE38-.LFB38
+ 912 0020 00000000 		.4byte	.LFB39
+ 913 0024 3C000000 		.4byte	.LFE39-.LFB39
+ 914 0028 00000000 		.4byte	.LFB40
+ 915 002c 34000000 		.4byte	.LFE40-.LFB40
+ 916 0030 00000000 		.4byte	.LFB41
+ 917 0034 0E000000 		.4byte	.LFE41-.LFB41
+ 918 0038 00000000 		.4byte	0
+ 919 003c 00000000 		.4byte	0
+ 920              		.section	.debug_ranges,"",%progbits
+ 921              	.Ldebug_ranges0:
+ 922 0000 00000000 		.4byte	.LFB37
+ 923 0004 38000000 		.4byte	.LFE37
+ 924 0008 00000000 		.4byte	.LFB38
+ 925 000c 8C000000 		.4byte	.LFE38
+ 926 0010 00000000 		.4byte	.LFB39
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 20
+
+
+ 927 0014 3C000000 		.4byte	.LFE39
+ 928 0018 00000000 		.4byte	.LFB40
+ 929 001c 34000000 		.4byte	.LFE40
+ 930 0020 00000000 		.4byte	.LFB41
+ 931 0024 0E000000 		.4byte	.LFE41
+ 932 0028 00000000 		.4byte	0
+ 933 002c 00000000 		.4byte	0
+ 934              		.section	.debug_line,"",%progbits
+ 935              	.Ldebug_line0:
+ 936 0000 1B010000 		.section	.debug_str,"MS",%progbits,1
+ 936      02009100 
+ 936      00000201 
+ 936      FB0E0D00 
+ 936      01010101 
+ 937              	.LASF21:
+ 938 0000 76616C75 		.ascii	"value\000"
+ 938      6500
+ 939              	.LASF3:
+ 940 0006 73686F72 		.ascii	"short unsigned int\000"
+ 940      7420756E 
+ 940      7369676E 
+ 940      65642069 
+ 940      6E7400
+ 941              	.LASF24:
+ 942 0019 53657433 		.ascii	"Set32ByPtr\000"
+ 942      32427950 
+ 942      747200
+ 943              	.LASF28:
+ 944 0024 2E2E5C2E 		.ascii	"..\\..\\BleWifiProject\\BLE_Wireless_Power_Transmit"
+ 944      2E5C426C 
+ 944      65576966 
+ 944      6950726F 
+ 944      6A656374 
+ 945 0054 74657230 		.ascii	"ter01.cydsn\\debug.c\000"
+ 945      312E6379 
+ 945      64736E5C 
+ 945      64656275 
+ 945      672E6300 
+ 946              	.LASF23:
+ 947 0068 53686F77 		.ascii	"ShowValue\000"
+ 947      56616C75 
+ 947      6500
+ 948              	.LASF13:
+ 949 0072 666C6F61 		.ascii	"float\000"
+ 949      7400
+ 950              	.LASF20:
+ 951 0078 66696C65 		.ascii	"file\000"
+ 951      00
+ 952              	.LASF1:
+ 953 007d 756E7369 		.ascii	"unsigned char\000"
+ 953      676E6564 
+ 953      20636861 
+ 953      7200
+ 954              	.LASF15:
+ 955 008b 63686172 		.ascii	"char8\000"
+ 955      3800
+ 956              	.LASF12:
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 21
+
+
+ 957 0091 696E7431 		.ascii	"int16\000"
+ 957      3600
+ 958              	.LASF5:
+ 959 0097 6C6F6E67 		.ascii	"long unsigned int\000"
+ 959      20756E73 
+ 959      69676E65 
+ 959      6420696E 
+ 959      7400
+ 960              	.LASF14:
+ 961 00a9 646F7562 		.ascii	"double\000"
+ 961      6C6500
+ 962              	.LASF27:
+ 963 00b0 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 963      4320342E 
+ 963      392E3320 
+ 963      32303135 
+ 963      30333033 
+ 964 00e3 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 964      20726576 
+ 964      6973696F 
+ 964      6E203232 
+ 964      31323230 
+ 965 0116 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 965      66756E63 
+ 965      74696F6E 
+ 965      2D736563 
+ 965      74696F6E 
+ 966              	.LASF10:
+ 967 013e 75696E74 		.ascii	"uint16\000"
+ 967      313600
+ 968              	.LASF11:
+ 969 0145 75696E74 		.ascii	"uint32\000"
+ 969      333200
+ 970              	.LASF19:
+ 971 014c 4359424C 		.ascii	"CYBLE_GATT_VALUE_T\000"
+ 971      455F4741 
+ 971      54545F56 
+ 971      414C5545 
+ 971      5F5400
+ 972              	.LASF8:
+ 973 015f 756E7369 		.ascii	"unsigned int\000"
+ 973      676E6564 
+ 973      20696E74 
+ 973      00
+ 974              	.LASF16:
+ 975 016c 63686172 		.ascii	"char\000"
+ 975      00
+ 976              	.LASF29:
+ 977 0171 443A5C57 		.ascii	"D:\\Work\\Projects\\Accelerometer_Controlled_Car\\P"
+ 977      6F726B5C 
+ 977      50726F6A 
+ 977      65637473 
+ 977      5C416363 
+ 978 01a0 536F435F 		.ascii	"SoC_4_BLE_CAR.cydsn\000"
+ 978      345F424C 
+ 978      455F4341 
+ 978      522E6379 
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 22
+
+
+ 978      64736E00 
+ 979              	.LASF17:
+ 980 01b4 73697A65 		.ascii	"sizetype\000"
+ 980      74797065 
+ 980      00
+ 981              	.LASF6:
+ 982 01bd 6C6F6E67 		.ascii	"long long int\000"
+ 982      206C6F6E 
+ 982      6720696E 
+ 982      7400
+ 983              	.LASF25:
+ 984 01cb 5F777269 		.ascii	"_write\000"
+ 984      746500
+ 985              	.LASF2:
+ 986 01d2 73686F72 		.ascii	"short int\000"
+ 986      7420696E 
+ 986      7400
+ 987              	.LASF30:
+ 988 01dc 55415254 		.ascii	"UART_DEB_UartPutChar\000"
+ 988      5F444542 
+ 988      5F556172 
+ 988      74507574 
+ 988      43686172 
+ 989              	.LASF9:
+ 990 01f1 75696E74 		.ascii	"uint8\000"
+ 990      3800
+ 991              	.LASF26:
+ 992 01f7 47657433 		.ascii	"Get32ByPtr\000"
+ 992      32427950 
+ 992      747200
+ 993              	.LASF4:
+ 994 0202 6C6F6E67 		.ascii	"long int\000"
+ 994      20696E74 
+ 994      00
+ 995              	.LASF31:
+ 996 020b 53686F77 		.ascii	"ShowError\000"
+ 996      4572726F 
+ 996      7200
+ 997              	.LASF0:
+ 998 0215 7369676E 		.ascii	"signed char\000"
+ 998      65642063 
+ 998      68617200 
+ 999              	.LASF18:
+ 1000 0221 61637475 		.ascii	"actualLen\000"
+ 1000      616C4C65 
+ 1000      6E00
+ 1001              	.LASF22:
+ 1002 022b 76616C75 		.ascii	"valueType\000"
+ 1002      65547970 
+ 1002      6500
+ 1003              	.LASF7:
+ 1004 0235 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1004      206C6F6E 
+ 1004      6720756E 
+ 1004      7369676E 
+ 1004      65642069 
+ 1005              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
+ARM GAS  C:\Users\Midori\AppData\Local\Temp\ccyYKxtZ.s 			page 23
+
+
